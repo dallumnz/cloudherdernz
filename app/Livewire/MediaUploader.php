@@ -1,0 +1,138 @@
+<?php
+
+namespace App\Livewire;
+
+use Illuminate\Pagination\LengthAwarePaginator;
+use Illuminate\View\View;
+use Livewire\Attributes\Validate;
+use Livewire\Component;
+use Livewire\Features\SupportFileUploads\TemporaryUploadedFile;
+use Livewire\WithFileUploads;
+use Livewire\WithPagination;
+use Spatie\MediaLibrary\MediaCollections\Models\Media;
+
+class MediaUploader extends Component
+{
+    use WithFileUploads;
+    use WithPagination;
+
+    #[Validate(['required', 'array', 'max:20'])]
+    public array $files = [];
+
+    #[Validate(['nullable', 'string', 'max:255'])]
+    public string $collectionName = 'default';
+
+    public bool $isUploading = false;
+
+    public ?string $message = null;
+
+    public string $messageType = 'success';
+
+    public string $search = '';
+
+    public string $sortField = 'created_at';
+
+    public string $sortDirection = 'desc';
+
+    public int $perPage = 12;
+
+    public function updatedFiles(): void
+    {
+        $this->validate([
+            'files' => ['required', 'array', 'max:20'],
+            'files.*' => ['file', 'max:10240'],
+        ]);
+
+        $this->isUploading = true;
+    }
+
+    public function save(): void
+    {
+        $this->validate([
+            'files' => ['required', 'array', 'max:20'],
+            'files.*' => ['file', 'max:10240'],
+        ]);
+
+        // Check authorization
+        if (! auth()->user()?->can('upload media')) {
+            $this->setMessage('You do not have permission to upload media.', 'error');
+
+            return;
+        }
+
+        try {
+            $uploadedCount = 0;
+
+            foreach ($this->files as $file) {
+                if ($file instanceof TemporaryUploadedFile) {
+                    // Store to default disk without model association
+                    $path = $file->store('media', config('media-library.disk_name', 'public'));
+
+                    if ($path) {
+                        $uploadedCount++;
+                    }
+                }
+            }
+
+            $this->files = [];
+            $this->isUploading = false;
+            $this->setMessage("{$uploadedCount} files uploaded successfully.", 'success');
+        } catch (\Exception $e) {
+            $this->setMessage('Failed to upload files: '.$e->getMessage(), 'error');
+            $this->isUploading = false;
+        }
+    }
+
+    public function deleteMedia(int $mediaId): void
+    {
+        if (! auth()->user()?->can('delete media')) {
+            $this->setMessage('You do not have permission to delete media.', 'error');
+
+            return;
+        }
+
+        try {
+            $media = Media::find($mediaId);
+
+            if ($media) {
+                $media->delete();
+                $this->setMessage('Media deleted successfully.', 'success');
+            }
+        } catch (\Exception $e) {
+            $this->setMessage('Failed to delete media: '.$e->getMessage(), 'error');
+        }
+    }
+
+    public function sortBy(string $field): void
+    {
+        if ($this->sortField === $field) {
+            $this->sortDirection = $this->sortDirection === 'asc' ? 'desc' : 'asc';
+        } else {
+            $this->sortField = $field;
+            $this->sortDirection = 'asc';
+        }
+    }
+
+    private function setMessage(string $message, string $type): void
+    {
+        $this->message = $message;
+        $this->messageType = $type;
+    }
+
+    public function render(): View
+    {
+        $query = Media::query()
+            ->when($this->search, function ($query) {
+                $query->where('name', 'like', '%'.$this->search.'%')
+                    ->orWhere('file_name', 'like', '%'.$this->search.'%');
+            })
+            ->orderBy($this->sortField, $this->sortDirection);
+
+        /** @var LengthAwarePaginator $media */
+        $media = $query->paginate($this->perPage);
+
+        return view('livewire.media-uploader', [
+            'media' => $media,
+        ]);
+    }
+}

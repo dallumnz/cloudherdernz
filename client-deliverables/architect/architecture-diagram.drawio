@@ -1,0 +1,118 @@
+<mxfile host="Electron" agent="Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) draw.io/29.3.6 Chrome/140.0.7339.249 Electron/38.8.0 Safari/537.36" version="29.3.6">
+  <diagram id="architecture-diagram" name="Layered Architecture">
+    <mxGraphModel dx="570" dy="336" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1169" pageHeight="827" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="pres-layer" parent="1" style="swimlane;horizontal=0;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;swimlaneFillColor=#dae8fc;" value="Presentation Layer&lt;br&gt;&lt;i&gt;Routes/Controllers&lt;/i&gt;" vertex="1">
+          <mxGeometry height="200" width="300" x="40" y="40" as="geometry" />
+        </mxCell>
+        <mxCell id="A0lie3fEW6FNIB9ew77j-1" parent="pres-layer" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;" value="Web Routes" vertex="1">
+          <mxGeometry height="40" width="120" x="20" y="30" as="geometry" />
+        </mxCell>
+        <mxCell id="A0lie3fEW6FNIB9ew77j-2" parent="pres-layer" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;" value="API Routes" vertex="1">
+          <mxGeometry height="40" width="120" x="160" y="30" as="geometry" />
+        </mxCell>
+        <mxCell id="A0lie3fEW6FNIB9ew77j-3" parent="pres-layer" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;" value="Controllers" vertex="1">
+          <mxGeometry height="40" width="120" x="20" y="85" as="geometry" />
+        </mxCell>
+        <mxCell id="A0lie3fEW6FNIB9ew77j-4" parent="pres-layer" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;" value="Form Requests" vertex="1">
+          <mxGeometry height="40" width="120" x="160" y="85" as="geometry" />
+        </mxCell>
+        <mxCell id="A0lie3fEW6FNIB9ew77j-5" parent="pres-layer" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;" value="API Resources" vertex="1">
+          <mxGeometry height="40" width="120" x="20" y="140" as="geometry" />
+        </mxCell>
+        <mxCell id="A0lie3fEW6FNIB9ew77j-6" parent="pres-layer" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;" value="Middleware" vertex="1">
+          <mxGeometry height="40" width="120" x="160" y="140" as="geometry" />
+        </mxCell>
+        <mxCell id="app-layer" parent="1" style="swimlane;horizontal=0;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#666666;swimlaneFillColor=#f5f5f5;" value="Application Layer&lt;br&gt;&lt;i&gt;Services&lt;/i&gt;" vertex="1">
+          <mxGeometry height="180" width="300" x="40" y="280" as="geometry" />
+        </mxCell>
+        <mxCell id="A0lie3fEW6FNIB9ew77j-7" parent="app-layer" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;" value="PostServices" vertex="1">
+          <mxGeometry height="40" width="120" x="20" y="30" as="geometry" />
+        </mxCell>
+        <mxCell id="A0lie3fEW6FNIB9ew77j-8" parent="app-layer" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;" value="MediaServices" vertex="1">
+          <mxGeometry height="40" width="120" x="160" y="30" as="geometry" />
+        </mxCell>
+        <mxCell id="A0lie3fEW6FNIB9ew77j-9" parent="app-layer" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;" value="TagServices" vertex="1">
+          <mxGeometry height="40" width="120" x="20" y="85" as="geometry" />
+        </mxCell>
+        <mxCell id="A0lie3fEW6FNIB9ew77j-10" parent="app-layer" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;" value="UserServices" vertex="1">
+          <mxGeometry height="40" width="120" x="160" y="85" as="geometry" />
+        </mxCell>
+        <mxCell id="A0lie3fEW6FNIB9ew77j-11" parent="app-layer" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;" value="PermissionServices" vertex="1">
+          <mxGeometry height="40" width="120" x="90" y="130" as="geometry" />
+        </mxCell>
+        <mxCell id="domain-layer" parent="1" style="swimlane;horizontal=0;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;swimlaneFillColor=#d5e8d4;" value="Domain Layer&lt;br&gt;&lt;i&gt;Models&lt;/i&gt;" vertex="1">
+          <mxGeometry height="260" width="330" x="25" y="500" as="geometry" />
+        </mxCell>
+        <mxCell id="A0lie3fEW6FNIB9ew77j-12" parent="domain-layer" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;" value="User" vertex="1">
+          <mxGeometry height="30" width="80" x="20" y="30" as="geometry" />
+        </mxCell>
+        <mxCell id="A0lie3fEW6FNIB9ew77j-13" parent="domain-layer" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;" value="Role" vertex="1">
+          <mxGeometry height="30" width="80" x="110" y="30" as="geometry" />
+        </mxCell>
+        <mxCell id="A0lie3fEW6FNIB9ew77j-14" parent="domain-layer" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;" value="Permission" vertex="1">
+          <mxGeometry height="30" width="80" x="200" y="30" as="geometry" />
+        </mxCell>
+        <mxCell id="A0lie3fEW6FNIB9ew77j-15" parent="domain-layer" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;" value="Post (Polymorphic)" vertex="1">
+          <mxGeometry height="30" width="120" x="20" y="75" as="geometry" />
+        </mxCell>
+        <mxCell id="A0lie3fEW6FNIB9ew77j-16" parent="domain-layer" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;" value="ImagePost" vertex="1">
+          <mxGeometry height="30" width="80" x="150" y="75" as="geometry" />
+        </mxCell>
+        <mxCell id="A0lie3fEW6FNIB9ew77j-17" parent="domain-layer" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;" value="VideoPost" vertex="1">
+          <mxGeometry height="30" width="80" x="20" y="120" as="geometry" />
+        </mxCell>
+        <mxCell id="A0lie3fEW6FNIB9ew77j-18" parent="domain-layer" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;" value="AudioPost" vertex="1">
+          <mxGeometry height="30" width="80" x="110" y="120" as="geometry" />
+        </mxCell>
+        <mxCell id="A0lie3fEW6FNIB9ew77j-19" parent="domain-layer" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;" value="Tag" vertex="1">
+          <mxGeometry height="30" width="80" x="240" y="75" as="geometry" />
+        </mxCell>
+        <mxCell id="A0lie3fEW6FNIB9ew77j-20" parent="domain-layer" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;" value="Category" vertex="1">
+          <mxGeometry height="30" width="80" x="20" y="165" as="geometry" />
+        </mxCell>
+        <mxCell id="A0lie3fEW6FNIB9ew77j-21" parent="domain-layer" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;" value="Media" vertex="1">
+          <mxGeometry height="30" width="80" x="110" y="165" as="geometry" />
+        </mxCell>
+        <mxCell id="A0lie3fEW6FNIB9ew77j-22" parent="domain-layer" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;" value="Traits: HasRoles, Polymorphic, HasMedia" vertex="1">
+          <mxGeometry height="40" width="260" x="20" y="210" as="geometry" />
+        </mxCell>
+        <mxCell id="infra-layer" parent="1" style="swimlane;horizontal=0;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;swimlaneFillColor=#f8cecc;" value="Infrastructure Layer&lt;br&gt;&lt;i&gt;Database/Filesystem&lt;/i&gt;" vertex="1">
+          <mxGeometry height="160" width="300" x="40" y="800" as="geometry" />
+        </mxCell>
+        <mxCell id="A0lie3fEW6FNIB9ew77j-23" parent="infra-layer" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;" value="Migrations" vertex="1">
+          <mxGeometry height="30" width="120" x="20" y="30" as="geometry" />
+        </mxCell>
+        <mxCell id="A0lie3fEW6FNIB9ew77j-24" parent="infra-layer" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;" value="Model Factories" vertex="1">
+          <mxGeometry height="30" width="120" x="160" y="30" as="geometry" />
+        </mxCell>
+        <mxCell id="A0lie3fEW6FNIB9ew77j-25" parent="infra-layer" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;" value="Seeders" vertex="1">
+          <mxGeometry height="30" width="120" x="20" y="75" as="geometry" />
+        </mxCell>
+        <mxCell id="A0lie3fEW6FNIB9ew77j-26" parent="infra-layer" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;" value="Filesystem Config" vertex="1">
+          <mxGeometry height="30" width="120" x="160" y="75" as="geometry" />
+        </mxCell>
+        <mxCell id="A0lie3fEW6FNIB9ew77j-27" parent="infra-layer" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;" value="Policy Classes" vertex="1">
+          <mxGeometry height="35" width="120" x="90" y="115" as="geometry" />
+        </mxCell>
+        <mxCell id="A0lie3fEW6FNIB9ew77j-28" edge="1" parent="1" source="pres-layer" style="endArrow=classic;html=1;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" target="app-layer" value="">
+          <mxGeometry height="50" relative="1" width="50" as="geometry">
+            <mxPoint x="190" y="240" as="sourcePoint" />
+            <mxPoint x="190" y="280" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="A0lie3fEW6FNIB9ew77j-29" edge="1" parent="1" source="app-layer" style="endArrow=classic;html=1;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" target="domain-layer" value="">
+          <mxGeometry height="50" relative="1" width="50" as="geometry">
+            <mxPoint x="190" y="460" as="sourcePoint" />
+            <mxPoint x="190" y="500" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="title" parent="1" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=20;fontStyle=1;" value="CloudHerder.nz - CMS Architecture" vertex="1">
+          <mxGeometry height="40" width="500" x="400" y="20" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
