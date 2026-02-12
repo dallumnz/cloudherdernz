@@ -16,6 +16,11 @@ return Application::configure(basePath: dirname(__DIR__))
             'permission' => \App\Http\Middleware\EnsureUserHasPermission::class,
             'media' => \App\Http\Middleware\EnsureUserHasPermission::class,
             'cache.api' => \App\Http\Middleware\CacheApiResponses::class,
+            'analytics' => \App\Http\Middleware\CaptureAnalytics::class,
+        ]);
+
+        $middleware->web([
+            \App\Http\Middleware\CaptureAnalytics::class,
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {
