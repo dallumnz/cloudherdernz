@@ -33,7 +33,7 @@ SNAPSHOT_PATH="$ARCHITECTURE_DIR/ARCHITECTURE_${DATE_UTC}.md"
 
 cp "$ARCHITECTURE_FILE" "$SNAPSHOT_PATH"
 
-# Clear the working copy
-> "$ARCHITECTURE_FILE"
+# Remove the working copy - ensures fresh ARCHITECTURE.md for next feature
+rm -f "$ARCHITECTURE_FILE"
 
-echo "✓ Snapshotted to $(basename "$SNAPSHOT_PATH") and cleared ARCHITECTURE.md"
+echo "✓ Snapshotted to $(basename "$SNAPSHOT_PATH") - ARCHITECTURE.md removed"
