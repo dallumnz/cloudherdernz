@@ -4,9 +4,13 @@ use App\Http\Controllers\Admin\ContactController as AdminContactController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\ContactController;
 use App\Http\Controllers\PostController;
+use App\Http\Controllers\SitemapController;
 use App\Http\Controllers\TagController;
 use App\Http\Controllers\TaxonomyController;
 use App\Http\Controllers\TaxonomyTermController;
+
+// Sitemap Route
+Route::get('/sitemap.xml', [SitemapController::class, 'index'])->name('sitemap');
 
 // Public Routes
 Route::get('/', \App\Livewire\PublicHomepage::class)->name('home');
