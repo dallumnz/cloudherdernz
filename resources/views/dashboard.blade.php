@@ -95,6 +95,30 @@
                         Manage Roles
                     </flux:button>
                 @endcan
+
+                @can('view newsletter subscribers')
+                    <flux:button href="{{ route('admin.newsletter-subscribers.index') }}" variant="outline" icon="newspaper">
+                        Newsletter Subscribers
+                    </flux:button>
+                @endcan
+
+                @can('view contacts')
+                    <flux:button href="{{ route('admin.inbox.index') }}" variant="outline" icon="envelope">
+                        Contact Inbox
+                    </flux:button>
+                @endcan
+
+                @can('view pages')
+                    <flux:button href="{{ route('admin.pages') }}" variant="outline" icon="document">
+                        Manage Pages
+                    </flux:button>
+                @endcan
+
+                @can('view analytics')
+                    <flux:button href="{{ route('admin.analytics') }}" variant="outline" icon="chart-bar">
+                        Analytics
+                    </flux:button>
+                @endcan
             </div>
         </flux:card>
 

@@ -1,69 +1,116 @@
-# CloudHerder NZ Architecture
+# CloudHerder NZ
 
 **Date:** 2026-02-13
-**Feature:** Sitemap Generation
+**Feature:** Static Pages (About, Terms, Privacy Policy, etc.)
 
 ## Implementation Plan
 
 ### 1. Requirements Summary
-- Expose `/sitemap.xml` route returning XML sitemap.
-- Include URLs for posts, categories, and tags.
-- Follow standard protocol: `xmlns`, `<lastmod>`, `<changefreq>`, `<priority>`.
-- Cache the generated sitemap for 1 hour.
-- Provide unit/feature tests covering generation logic and HTTP response.
+- A `pages` table with columns: `id`, `title`, `slug` (unique), `content`, `status` (`draft`, `published`, `archived`), timestamps.
+- Admin CRUD for pages via a dedicated controller and resource routes, protected by authentication & admin policy.
+- Public route `/pages/{slug}` that resolves to the page if status is `published`; otherwise 404.
+- Status workflow: draft → published → archived. Only `published` pages are visible publicly.
+- Validation: unique slug, required title/content, status enum.
 
 ### 2. Database Schema Changes
-No new tables required; existing `posts`, `categories`, `tags` tables are sufficient.
+```php
+// database/migrations/2026_02_13_000000_create_pages_table.php
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
+
+class CreatePagesTable extends Migration
+{
+    public function up(): void
+    {
+        Schema::create('pages', function (Blueprint $table) {
+            $table->id();
+            $table->string('title');
+            $table->string('slug')->unique();
+            $table->text('content');
+            $table->enum('status', ['draft','published','archived'])->default('draft');
+            $table->timestamps();
+        });
+    }
+
+    public function down(): void
+    {
+        Schema::dropIfExists('pages');
+    }
+}
+```
 
 ### 3. Models Required
-Existing models:
-| Model | Purpose |
-|-------|---------|
-| Post | Blog posts |
-| Category | Post categories |
-| Tag | Post tags |
+| Model | Location | Purpose |
+|-------|----------|---------|
+| Page | `app/Models/Page.php` | Eloquent model for static pages, casts status to enum and provides scopes.
 
-No new models needed.
+**Page.php**
+```php
+namespace App\Models;
 
-### 4. Controllers & Routes
-- **Route**: `GET /sitemap.xml` → `SitemapController@index`
-- **Controller**: `app/Http/Controllers/SitemapController.php`
-  - Delegates to a dedicated service for XML generation.
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Builder;
 
-### 5. Service Layer
-- **Service**: `app/Services/SitemapGenerator.php`
-  - Builds the sitemap XML string.
-  - Pulls latest updated timestamps from posts, categories, tags.
-  - Applies changefreq and priority heuristics.
-  - Caches result using Laravel Cache (1 hour).
+class Page extends Model
+{
+    protected $fillable = ['title','slug','content','status'];
 
-### 6. Tests
-- **Unit Test**: `tests/Unit/SitemapGeneratorTest.php`
-  - Verify XML structure, correct URLs, timestamps, caching behavior.
-- **Feature Test**: `tests/Feature/SitemapRouteTest.php`
-  - Hit `/sitemap.xml`, assert status 200, content type `application/xml` and presence of expected tags.
+    public function scopePublished(Builder $query): Builder
+    {
+        return $query->where('status', 'published');
+    }
+}
+```
 
-### 7. Edge Cases & Validation
-- Handle empty tables gracefully (no URLs).
-- Ensure timestamps are ISO8601 compliant.
-- Avoid duplicate URLs if a post belongs to multiple categories/tags.
-- Cache invalidation: manual flush via artisan command if needed.
+### 4. Controllers Required
+| Controller | Location | Methods |
+|------------|----------|---------|
+| PageController | `app/Http/Controllers/Admin/PageController.php` | index, create, store, edit, update, destroy (resource). Uses Form Requests for validation.
+| PublicPageController | `app/Http/Controllers/PublicPageController.php` | show (by slug).
 
-### 8. Integration Points
-- No new migrations required.
-- Service will use existing Eloquent models; no changes to relationships.
-- Route will be added to `routes/web.php` (or a dedicated sitemap route file). 
-- Cache key: `sitemap_xml`. 
-- Use Laravel's `Cache::remember()` for 1 hour.
+### 5. Routes Required
+```php
+// routes/admin/web.php
+Route::middleware(['auth', 'admin'])
+    ->prefix('pages')
+    ->name('pages.')
+    ->resource('', App\Http\Controllers\Admin\\PageController::class);
 
-### 9. Next Steps
-1. Create `SitemapGenerator` service with XML building logic.
-2. Implement `SitemapController@index` to return response with appropriate headers.
-3. Add route `/sitemap.xml` pointing to controller.
-4. Write unit tests for generator and feature test for route.
-5. Run tests, ensure coverage passes.
-6. Commit changes and review.
+// routes/public/web.php
+Route::get('/pages/{slug}', [App\Http\Controllers\PublicPageController::class, 'show'])->name('page.show');
+```
+
+### 6. Policies & Middleware
+- `PagePolicy` in `app/Policies/PagePolicy.php` to restrict CRUD to admins.
+- Admin middleware already exists (`admin`). If not, create a simple gate that checks `user->is_admin`.
+
+### 7. Tests Required
+| Test | Location | Purpose |
+|------|----------|---------|
+| PageModelTest | `tests/Unit/PageModelTest.php` | Ensure status enum and slug uniqueness.
+| PageControllerTest | `tests/Feature/Admin/PageControllerTest.php` | CRUD flow, validation, status transitions.
+| PublicPageRouteTest | `tests/Feature/PublicPageRouteTest.php` | 200 for published, 404 for draft/archived.
+
+### 8. Edge Cases to Handle
+- Duplicate slug: unique constraint + form request validation.
+- Attempting to view non‑published page: return 404.
+- Deleting a page that is referenced elsewhere (none in this feature).
+- Status transition rules enforced via policy or business logic.
+
+### 9. Integration Points
+- Admin panel routes under `/admin/pages`.
+- Blade templates for listing, editing pages; can reuse existing admin layout.
+- Public view uses `resources/views/page/show.blade.php` with minimal styling.
 
 ---
 
-**Note:** All code will follow existing coding standards (PSR‑12, Laravel 12 conventions). No new migrations or models are required for this feature.
+**Next Steps**
+1. Create migration and run `php artisan migrate`.
+2. Implement Page model, scopes, casts.
+3. Generate controllers via Artisan (`make:controller`).
+4. Add Form Requests for validation.
+5. Define routes in `routes/admin/web.php` and `routes/public/web.php`.
+6. Create policies and register them.
+7. Write tests and run `php artisan test --compact`.
+8. Review code with Pint and Pest compliance.

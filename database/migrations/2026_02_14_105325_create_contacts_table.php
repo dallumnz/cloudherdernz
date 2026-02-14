@@ -17,14 +17,14 @@ return new class extends Migration
             $table->string('email');
             $table->string('subject')->nullable();
             $table->text('message');
-            $table->enum('status', ['unread', 'read', 'archived'])->default('unread');
+            $table->string('status')->default('unread');
             $table->timestamp('read_at')->nullable();
-            $table->ipAddress('sender_ip')->nullable();
+            $table->string('sender_ip')->nullable();
             $table->timestamps();
             $table->softDeletes();
-
-            $table->index(['status', 'created_at']);
-            $table->index('email');
+            
+            $table->index('status');
+            $table->index('created_at');
         });
     }
 

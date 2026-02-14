@@ -5,9 +5,28 @@
 
 set -e
 
+# Parse arguments
+while [[ $# -gt 0 ]]; do
+    case $1 in
+        --project)
+            PROJECT_PATH="$2"
+            shift 2
+            ;;
+        *)
+            echo "Unknown option: $1"
+            exit 1
+            ;;
+    esac
+done
+
+# Default to current directory if not specified
+if [ -z "$PROJECT_PATH" ]; then
+    PROJECT_PATH="."
+fi
+
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-ARCHITECTURE_FILE="$SCRIPT_DIR/../../ARCHITECTURE.md"
-ARCHITECTURE_DIR="$SCRIPT_DIR/../../documentation/architecture"
+ARCHITECTURE_FILE="$PROJECT_PATH/ARCHITECTURE.md"
+ARCHITECTURE_DIR="$PROJECT_PATH/documentation/architecture"
 
 # Ensure directory exists
 mkdir -p "$ARCHITECTURE_DIR"
@@ -27,9 +46,9 @@ if [ -n "$LATEST_SNAPSHOT" ] && diff -q "$ARCHITECTURE_FILE" "$LATEST_SNAPSHOT" 
     exit 0
 fi
 
-# Create snapshot with today's UTC date
-DATE_UTC=$(date -u +%Y-%m-%d)
-SNAPSHOT_PATH="$ARCHITECTURE_DIR/ARCHITECTURE_${DATE_UTC}.md"
+# Create snapshot with today's date (UTC+12)
+DATE_NZ=$(TZ='Pacific/Auckland' date +%Y-%m-%d)
+SNAPSHOT_PATH="$ARCHITECTURE_DIR/ARCHITECTURE_${DATE_NZ}.md"
 
 cp "$ARCHITECTURE_FILE" "$SNAPSHOT_PATH"
 

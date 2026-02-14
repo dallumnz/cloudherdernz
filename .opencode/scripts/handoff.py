@@ -25,8 +25,10 @@ except ImportError:
     class Style:
         RESET_ALL = ""
 
-DEFAULT_OUTPUT_DIR = "handoffs"
+DEFAULT_OUTPUT_DIR = "documentation/handoffs"
 TEMPLATE_FILE = Path(__file__).parent / "handoff-template.md"
+ARCHITECTURE_FILE = Path(__file__).parent.parent.parent / "ARCHITECTURE.md"
+ARCHITECTURE_DIR = Path(__file__).parent.parent.parent / "documentation" / "architecture"
 
 
 def colorize(text: str, color: str) -> str:
@@ -143,7 +145,8 @@ def generate_handoff(
     if output_file is None:
         output_dir = path / DEFAULT_OUTPUT_DIR
         output_dir.mkdir(exist_ok=True)
-        output_file = output_dir / f"HANDOFF_{date_only}.md"
+        timestamp = datetime.now(timezone.utc).strftime("%Y-%m-%d_%H%M")
+        output_file = output_dir / f"HANDOFF_{timestamp}.md"
     
     # Collect git info
     git_info = {}
@@ -365,6 +368,94 @@ def check_status(path: Path) -> dict:
     return status
 
 
+def get_latest_architecture_snapshot() -> Optional[Path]:
+    """Find the most recent ARCHITECTURE snapshot."""
+    if not ARCHITECTURE_DIR.exists():
+        return None
+    
+    snapshots = sorted(ARCHITECTURE_DIR.glob("ARCHITECTURE_*.md"), reverse=True)
+    return snapshots[0] if snapshots else None
+
+
+def has_architecture_changes() -> bool:
+    """Check if ARCHITECTURE.md has changes from the latest snapshot."""
+    if not ARCHITECTURE_FILE.exists():
+        return False
+    
+    current_content = ARCHITECTURE_FILE.read_text().strip()
+    if not current_content:
+        return False
+    
+    latest_snapshot = get_latest_architecture_snapshot()
+    
+    if latest_snapshot is None:
+        # No previous snapshot - consider any content as a change
+        return bool(current_content)
+    
+    # Compare with latest snapshot
+    snapshot_content = latest_snapshot.read_text().strip()
+    return current_content != snapshot_content
+
+
+def snapshot_architecture() -> dict:
+    """Snapshot ARCHITECTURE.md if changes exist. Returns status dict."""
+    result = {
+        'snapshot_created': False,
+        'snapshot_path': None,
+        'architecture_cleared': False,
+        'message': ''
+    }
+    
+    # Ensure architecture directory exists
+    ARCHITECTURE_DIR.mkdir(parents=True, exist_ok=True)
+    
+    if not ARCHITECTURE_FILE.exists():
+        result['message'] = 'No ARCHITECTURE.md file found'
+        return result
+    
+    current_content = ARCHITECTURE_FILE.read_text().strip()
+    if not current_content:
+        result['message'] = 'ARCHITECTURE.md is empty - no changes to snapshot'
+        return result
+    
+    latest_snapshot = get_latest_architecture_snapshot()
+    
+    # Check if content differs from latest snapshot
+    if latest_snapshot:
+        snapshot_content = latest_snapshot.read_text().strip()
+        if current_content == snapshot_content:
+            result['message'] = 'ARCHITECTURE.md unchanged from latest snapshot - skipping'
+            return result
+    
+    # Create snapshot with today's date
+    date_str = datetime.now(timezone.utc).strftime("%Y-%m-%d")
+    snapshot_path = ARCHITECTURE_DIR / f"ARCHITECTURE_{date_str}.md"
+    
+    # Write snapshot
+    snapshot_path.write_text(current_content)
+    result['snapshot_created'] = True
+    result['snapshot_path'] = str(snapshot_path)
+    
+    # Clear the working copy
+    ARCHITECTURE_FILE.write_text('')
+    result['architecture_cleared'] = True
+    
+    result['message'] = f'Snapshotted to {snapshot_path.name} and cleared ARCHITECTURE.md'
+    return result
+
+
+def version_architecture(args) -> dict:
+    """Handle architecture versioning command."""
+    result = snapshot_architecture()
+    
+    if result['snapshot_created']:
+        print(colorize(f"✓ {result['message']}", 'green'))
+    else:
+        print(colorize(f"→ {result['message']}", 'yellow'))
+    
+    return result
+
+
 def show_template():
     """Show the default handoff template."""
     print("""
@@ -459,6 +550,10 @@ def main():
     # Template command
     subparsers.add_parser('template', help='Show handoff template')
     
+    # Architecture versioning command
+    arch_parser = subparsers.add_parser('architecture', help='Version ARCHITECTURE.md if changed')
+    arch_parser.add_argument('--check-only', action='store_true', help='Only check if changes exist, do not snapshot')
+    
     # Interactive command
     subparsers.add_parser('interactive', help='Interactive handoff creation')
     
@@ -497,6 +592,15 @@ def main():
     
     elif args.command == 'template':
         show_template()
+    
+    elif args.command == 'architecture':
+        if args.check_only:
+            if has_architecture_changes():
+                print(colorize("ARCHITECTURE.md has changes that should be versioned", 'yellow'))
+            else:
+                print(colorize("ARCHITECTURE.md unchanged - no snapshot needed", 'green'))
+        else:
+            version_architecture(args)
     
     elif args.command == 'interactive':
         print(colorize("\n🗣️  Interactive Handoff Creation", 'cyan'))

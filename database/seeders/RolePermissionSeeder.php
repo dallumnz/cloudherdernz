@@ -59,6 +59,22 @@ class RolePermissionSeeder extends Seeder
             'view contacts',
             'delete contacts',
             'manage contacts',
+
+            // Page permissions
+            'view pages',
+            'create pages',
+            'edit pages',
+            'delete pages',
+
+            // Analytics permissions
+            'view analytics',
+
+            // Newsletter subscriber permissions
+            'view newsletter subscribers',
+            'create newsletter subscribers',
+            'edit newsletter subscribers',
+            'delete newsletter subscribers',
+            'export newsletter subscribers',
         ];
 
         // Create permissions
@@ -72,7 +88,7 @@ class RolePermissionSeeder extends Seeder
         $adminRole = Role::firstOrCreate(['name' => 'Admin', 'guard_name' => 'web']);
         $adminRole->givePermissionTo(Permission::all());
 
-        // Editor - can manage posts, tags, categories but not users or roles
+        // Editor - can manage posts, tags, categories, pages but not users or roles
         $editorRole = Role::firstOrCreate(['name' => 'Editor', 'guard_name' => 'web']);
         $editorRole->givePermissionTo([
             // Post permissions
@@ -91,6 +107,11 @@ class RolePermissionSeeder extends Seeder
             'create categories',
             'edit categories',
             'delete categories',
+            // Page permissions
+            'view pages',
+            'create pages',
+            'edit pages',
+            'delete pages',
         ]);
 
         // Author - can create and edit own posts, view tags and categories

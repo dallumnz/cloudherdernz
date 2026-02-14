@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\MorphTo;
 use Illuminate\Database\Eloquent\Relations\MorphToMany;
+use Laravel\Scout\Searchable;
 use Spatie\Image\Enums\Fit;
 use Spatie\MediaLibrary\HasMedia;
 use Spatie\MediaLibrary\InteractsWithMedia;
@@ -44,6 +45,7 @@ class Post extends Model implements HasMedia
     use HasFactory;
 
     use InteractsWithMedia;
+    use Searchable;
 
     /**
      * The attributes that are mass assignable.
@@ -246,5 +248,35 @@ class Post extends Model implements HasMedia
         return $this->getMedia('gallery')
             ->map(fn (Media $media) => $media->getUrl($conversion))
             ->toArray();
+    }
+
+    /**
+     * Determine if the model should be searchable.
+     *
+     * Only published posts should be indexed for search.
+     */
+    public function shouldBeSearchable(): bool
+    {
+        return $this->status === 'published'
+            && $this->published_at !== null
+            && $this->published_at <= now();
+    }
+
+    /**
+     * Get the indexable data array for the model.
+     *
+     * @return array<string, mixed>
+     */
+    public function toSearchableArray(): array
+    {
+        return [
+            'id' => $this->id,
+            'title' => $this->title,
+            'content' => $this->content,
+            'excerpt' => $this->excerpt,
+            'slug' => $this->slug,
+            'status' => $this->status,
+            'published_at' => $this->published_at?->toIso8601String(),
+        ];
     }
 }

@@ -67,6 +67,28 @@
                 </span>
             </div>
         </flux:card>
+
+        {{-- Newsletter Stats --}}
+        <flux:card>
+            <div class="flex items-center justify-between">
+                <div>
+                    <flux:text variant="secondary" size="sm">Newsletter</flux:text>
+                    <flux:heading size="2xl">{{ $stats['active_subscribers'] }}</flux:heading>
+                </div>
+                <div class="p-3 bg-orange-100 dark:bg-orange-900 rounded-lg">
+                    <flux:icon name="newspaper" class="w-6 h-6 text-orange-600 dark:text-orange-400" />
+                </div>
+            </div>
+            <div class="mt-4 flex items-center space-x-4 text-sm">
+                <span class="text-orange-600 dark:text-orange-400">
+                    {{ $stats['active_subscribers'] }} active
+                </span>
+                <span class="text-gray-400">|</span>
+                <span class="text-gray-500">
+                    {{ $stats['total_subscribers'] }} total
+                </span>
+            </div>
+        </flux:card>
     </div>
 
     {{-- Quick Actions --}}
@@ -94,6 +116,30 @@
             @can('edit roles')
                 <flux:button href="{{ route('roles.manage') }}" variant="outline" icon="shield-check">
                     Manage Roles
+                </flux:button>
+            @endcan
+
+            @can('view newsletter subscribers')
+                <flux:button href="{{ route('admin.newsletter-subscribers.index') }}" variant="outline" icon="newspaper">
+                    Newsletter Subscribers
+                </flux:button>
+            @endcan
+
+            @can('view contacts')
+                <flux:button href="{{ route('admin.inbox.index') }}" variant="outline" icon="envelope">
+                    Contact Inbox
+                </flux:button>
+            @endcan
+
+            @can('view pages')
+                <flux:button href="{{ route('admin.pages') }}" variant="outline" icon="document">
+                    Manage Pages
+                </flux:button>
+            @endcan
+
+            @can('view analytics')
+                <flux:button href="{{ route('admin.analytics') }}" variant="outline" icon="chart-bar">
+                    Analytics
                 </flux:button>
             @endcan
         </div>

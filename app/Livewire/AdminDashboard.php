@@ -5,6 +5,7 @@ namespace App\Livewire;
 use App\Models\Post;
 use App\Models\TaxonomyTerm;
 use App\Models\User;
+use App\Models\NewsletterSubscriber;
 use Illuminate\View\View;
 use Livewire\Component;
 use Spatie\Permission\Models\Role;
@@ -20,6 +21,8 @@ class AdminDashboard extends Component
             'total_users' => User::count(),
             'total_tags' => TaxonomyTerm::whereHas('taxonomy', fn ($q) => $q->where('type', 'tag'))->count(),
             'total_categories' => TaxonomyTerm::whereHas('taxonomy', fn ($q) => $q->where('type', 'category'))->count(),
+            'total_subscribers' => NewsletterSubscriber::count(),
+            'active_subscribers' => NewsletterSubscriber::where('status', 'active')->count(),
         ];
 
         $recentPosts = Post::query()

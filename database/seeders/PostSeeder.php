@@ -5,6 +5,7 @@ namespace Database\Seeders;
 use App\Enums\PostType;
 use App\Models\AudioPost;
 use App\Models\ImagePost;
+use App\Models\NewsletterPost;
 use App\Models\Post;
 use App\Models\User;
 use App\Models\VideoPost;
@@ -78,6 +79,11 @@ class PostSeeder extends Seeder
         // Create a few draft posts
         foreach (range(1, 3) as $i) {
             $type = fake()->randomElement(PostType::cases());
+
+            // Skip NewsletterPost for now - uses UUIDs which don't work with bigint postable_id
+            if ($type === PostType::NEWSLETTER) {
+                continue;
+            }
 
             $postable = match ($type) {
                 PostType::IMAGE => ImagePost::factory()->create(),

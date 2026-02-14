@@ -4,6 +4,8 @@ use App\Http\Controllers\Admin\ContactController as AdminContactController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\ContactController;
 use App\Http\Controllers\PostController;
+use App\Http\Controllers\RssFeedController;
+use App\Http\Controllers\SearchController;
 use App\Http\Controllers\SitemapController;
 use App\Http\Controllers\TagController;
 use App\Http\Controllers\TaxonomyController;
@@ -11,6 +13,9 @@ use App\Http\Controllers\TaxonomyTermController;
 
 // Sitemap Route
 Route::get('/sitemap.xml', [SitemapController::class, 'index'])->name('sitemap');
+
+// RSS Feed Route
+Route::get('/feed', [RssFeedController::class, 'index'])->name('feed');
 
 // Public Routes
 Route::get('/', \App\Livewire\PublicHomepage::class)->name('home');
@@ -21,6 +26,11 @@ Route::get('/posts/type/{type}', \App\Livewire\PostTypeFilter::class)->name('pos
 Route::get('/posts/{post}', [PostController::class, 'show'])
     ->name('posts.show')
     ->where('post', '[0-9]+'); // Only match numeric IDs to avoid conflicts with create/edit routes
+
+// Search Route
+Route::get('/search', [SearchController::class, 'index'])
+    ->name('search.index')
+    ->middleware('throttle:search');
 
 // Public Tag Routes
 Route::get('/tags', [TagController::class, 'index'])->name('tags.index');
@@ -87,6 +97,16 @@ Route::middleware(['auth'])->group(function () {
     Route::get('admin/categories', \App\Livewire\CategoryManager::class)
         ->middleware('permission:view categories')
         ->name('admin.categories');
+
+    // Page Manager Livewire
+    Route::get('admin/pages', \App\Livewire\PageManager::class)
+        ->middleware('permission:view pages')
+        ->name('admin.pages');
+
+    // Analytics Dashboard
+    Route::get('admin/analytics', \App\Livewire\AnalyticsDashboard::class)
+        ->middleware('permission:view analytics')
+        ->name('admin.analytics');
 
     // Media Library Routes
     Route::prefix('admin/media')->name('admin.media.')->middleware(['permission:view media'])->group(function () {

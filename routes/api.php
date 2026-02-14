@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Api\NewsletterSubscriptionController;
 use App\Http\Controllers\Api\PostApiController;
 use App\Http\Controllers\Api\TaxonomyApiController;
 use App\Http\Controllers\Api\TaxonomyTermApiController;
@@ -17,6 +18,19 @@ use Illuminate\Support\Facades\Route;
 
 // Public API routes (no authentication required)
 Route::prefix('v1')->group(function (): void {
+
+    // Newsletter subscription endpoints
+    Route::post('/newsletter/subscribe', [NewsletterSubscriptionController::class, 'subscribe'])
+        ->name('api.newsletter.subscribe');
+
+    Route::get('/newsletter/confirm/{token}', [NewsletterSubscriptionController::class, 'confirm'])
+        ->name('api.newsletter.confirm');
+
+    Route::post('/newsletter/unsubscribe', [NewsletterSubscriptionController::class, 'unsubscribe'])
+        ->name('api.newsletter.unsubscribe');
+
+    Route::get('/newsletter/status', [NewsletterSubscriptionController::class, 'status'])
+        ->name('api.newsletter.status');
 
     // Post endpoints - Public (read-only)
     Route::get('/posts', [PostApiController::class, 'index'])
