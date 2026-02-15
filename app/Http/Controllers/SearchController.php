@@ -28,4 +28,25 @@ class SearchController extends Controller
             'posts' => $posts,
         ]);
     }
+
+    /**
+     * Display dedicated search results page.
+     */
+    public function results(Request $request): View
+    {
+        $validated = $request->validate([
+            'q' => ['required', 'string', 'min:2', 'max:255', 'not_regex:/^\s+$/'],
+        ]);
+
+        $query = trim($validated['q']);
+
+        $posts = Post::search($query)
+            ->query(fn ($q) => $q->published()->with(['author', 'taxonomyTerms', 'postable']))
+            ->paginate(12);
+
+        return view('search.results', [
+            'query' => $query,
+            'posts' => $posts,
+        ]);
+    }
 }

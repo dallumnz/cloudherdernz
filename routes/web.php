@@ -27,9 +27,13 @@ Route::get('/posts/{post}', [PostController::class, 'show'])
     ->name('posts.show')
     ->where('post', '[0-9]+'); // Only match numeric IDs to avoid conflicts with create/edit routes
 
-// Search Route
+// Search Routes
 Route::get('/search', [SearchController::class, 'index'])
     ->name('search.index')
+    ->middleware('throttle:search');
+
+Route::get('/search/results', [SearchController::class, 'results'])
+    ->name('search.results')
     ->middleware('throttle:search');
 
 // Public Tag Routes

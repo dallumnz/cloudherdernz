@@ -1,12 +1,22 @@
 <x-layouts::public>
+    <x-slot:head>
+        <meta name="robots" content="noindex, follow">
+    </x-slot:head>
+
     <div class="container mx-auto px-4 py-12">
         {{-- Search Header --}}
         <div class="text-center mb-12">
-            <h1 class="text-4xl font-bold text-gray-900 dark:text-white mb-4">Search</h1>
-            <p class="text-xl text-gray-600 dark:text-gray-400 mb-8">Find posts by title or content</p>
+            <h1 class="text-4xl font-bold text-gray-900 dark:text-white mb-4">Search Results</h1>
+            <p class="text-xl text-gray-600 dark:text-gray-400 mb-8">
+                @isset($query)
+                    Found {{ $posts->total() }} {{ Str::plural('result', $posts->total()) }} for "<span class="font-semibold">{{ $query }}</span>"
+                @else
+                    Find posts by title or content
+                @endisset
+            </p>
 
             {{-- Search Form --}}
-            <form action="{{ route('search.index') }}" method="GET" class="max-w-2xl mx-auto">
+            <form action="{{ route('search.results') }}" method="GET" class="max-w-2xl mx-auto">
                 <div class="flex gap-2">
                     <input
                         type="text"
@@ -30,15 +40,6 @@
 
         {{-- Search Results --}}
         @isset($query)
-            <div class="mb-6">
-                <p class="text-gray-600 dark:text-gray-400">
-                    Search results for "<span class="font-semibold text-gray-900 dark:text-white">{{ $query }}</span>"
-                    @if ($posts->total() > 0)
-                        <span class="text-sm">({{ $posts->total() }} {{ Str::plural('result', $posts->total()) }})</span>
-                    @endif
-                </p>
-            </div>
-
             @if ($posts->count() > 0)
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                     @foreach ($posts as $post)
@@ -112,11 +113,26 @@
                     <flux:icon name="magnifying-glass" class="w-16 h-16 mx-auto mb-4 text-gray-300" />
                     <h3 class="text-xl font-semibold text-gray-900 dark:text-white mb-2">No results found</h3>
                     <p class="text-gray-500 dark:text-gray-400 mb-6">We couldn't find any posts matching "{{ $query }}"</p>
-                    <a href="{{ route('posts.index') }}" class="text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300 font-medium">
-                        Browse all posts →
-                    </a>
+                    <div class="flex flex-col sm:flex-row gap-4 justify-center">
+                        <a href="{{ route('search.index') }}" class="text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300 font-medium">
+                            Try a new search →
+                        </a>
+                        <a href="{{ route('posts.index') }}" class="text-gray-600 hover:text-gray-800 dark:text-gray-400 dark:hover:text-gray-300 font-medium">
+                            Browse all posts →
+                        </a>
+                    </div>
                 </div>
             @endif
+        @else
+            {{-- No Query State --}}
+            <div class="text-center py-16 bg-gray-50 dark:bg-gray-800 rounded-xl">
+                <flux:icon name="magnifying-glass" class="w-16 h-16 mx-auto mb-4 text-gray-300" />
+                <h3 class="text-xl font-semibold text-gray-900 dark:text-white mb-2">Enter a search term</h3>
+                <p class="text-gray-500 dark:text-gray-400 mb-6">Type in the search box above to find posts</p>
+                <a href="{{ route('posts.index') }}" class="text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300 font-medium">
+                    Browse all posts →
+                </a>
+            </div>
         @endisset
     </div>
 </x-layouts::public>
