@@ -15,6 +15,29 @@
         </flux:callout>
     @endif
 
+    {{-- Search and Filter --}}
+    <div class="flex flex-col sm:flex-row gap-4">
+        <div class="flex-1">
+            <flux:input
+                type="search"
+                wire:model.live.debounce.300ms="search"
+                placeholder="Search media..."
+                class="max-w-md"
+            />
+        </div>
+        <div class="flex gap-2">
+            <flux:select wire:model.live="sortField">
+                <option value="created_at">Date</option>
+                <option value="name">Name</option>
+                <option value="size">Size</option>
+            </flux:select>
+            <flux:select wire:model.live="sortDirection">
+                <option value="desc">Descending</option>
+                <option value="asc">Ascending</option>
+            </flux:select>
+        </div>
+    </div>
+
     {{-- Upload Section --}}
     <flux:card>
         <flux:heading size="md" class="mb-4">Upload Media</flux:heading>
@@ -74,28 +97,6 @@
             </div>
         </form>
     </flux:card>
-
-    {{-- Search and Filter --}}
-    <div class="flex flex-col sm:flex-row gap-4">
-        <div class="flex-1">
-            <flux:input
-                type="search"
-                wire:model.live="search"
-                placeholder="Search media..."
-            />
-        </div>
-        <div class="flex gap-2">
-            <flux:select wire:model.live="sortField">
-                <option value="created_at">Date</option>
-                <option value="name">Name</option>
-                <option value="size">Size</option>
-            </flux:select>
-            <flux:select wire:model.live="sortDirection">
-                <option value="desc">Descending</option>
-                <option value="asc">Ascending</option>
-            </flux:select>
-        </div>
-    </div>
 
     {{-- Media Grid --}}
     @if ($media->count() > 0)

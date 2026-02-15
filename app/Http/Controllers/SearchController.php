@@ -26,7 +26,7 @@ class SearchController extends Controller
         $query = trim($query);
 
         $posts = Post::search($query)
-            ->query(fn ($q) => $q->published()->with(['author', 'taxonomyTerms', 'postable']))
+            ->query(fn ($q) => $q->published()->with(['author', 'taxonomyTerms', 'postable', 'media']))
             ->paginate(12);
 
         return view('search.index', [
@@ -47,7 +47,7 @@ class SearchController extends Controller
         $query = trim($validated['q']);
 
         $posts = Post::search($query)
-            ->query(fn ($q) => $q->published()->with(['author', 'taxonomyTerms', 'postable']))
+            ->query(fn ($q) => $q->published()->with(['author', 'taxonomyTerms', 'postable', 'media']))
             ->paginate(12);
 
         return view('search.results', [

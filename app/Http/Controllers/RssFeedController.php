@@ -14,7 +14,7 @@ class RssFeedController extends Controller
     {
         $posts = Post::query()
             ->published()
-            ->with('taxonomyTerms')
+            ->with(['taxonomyTerms', 'media'])
             ->orderByDesc('published_at')
             ->limit(20)
             ->get();

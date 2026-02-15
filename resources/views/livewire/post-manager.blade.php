@@ -15,27 +15,29 @@
     @endif
 
     {{-- Filters --}}
-    <div class="flex flex-wrap items-center gap-4">
-        <flux:input
-            wire:model.live.debounce.300ms="search"
-            type="search"
-            placeholder="Search posts..."
-            class="max-w-md"
-        />
-
-        <flux:select wire:model.live="statusFilter" placeholder="All Statuses">
-            <option value="">All Statuses</option>
-            <option value="published">Published</option>
-            <option value="draft">Draft</option>
-            <option value="archived">Archived</option>
-        </flux:select>
-
-        <flux:select wire:model.live="postTypeFilter" placeholder="All Types">
-            <option value="">All Types</option>
-            @foreach ($this->postTypes as $type)
-                <option value="{{ $type['value'] }}">{{ $type['label'] }}</option>
-            @endforeach
-        </flux:select>
+    <div class="flex flex-col sm:flex-row gap-4">
+        <div class="flex-1">
+            <flux:input
+                wire:model.live.debounce.300ms="search"
+                type="search"
+                placeholder="Search posts..."
+                class="max-w-md"
+            />
+        </div>
+        <div class="flex gap-2">
+            <flux:select wire:model.live="statusFilter" placeholder="All Statuses">
+                <option value="">All Statuses</option>
+                <option value="published">Published</option>
+                <option value="draft">Draft</option>
+                <option value="archived">Archived</option>
+            </flux:select>
+            <flux:select wire:model.live="postTypeFilter" placeholder="All Types">
+                <option value="">All Types</option>
+                @foreach ($this->postTypes as $type)
+                    <option value="{{ $type['value'] }}">{{ $type['label'] }}</option>
+                @endforeach
+            </flux:select>
+        </div>
     </div>
 
     {{-- Form --}}

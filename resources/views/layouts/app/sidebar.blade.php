@@ -21,6 +21,11 @@
                     {{-- Content Management --}}
                     @canany(['view posts', 'create posts'])
                         <flux:sidebar.group :heading="__('Content')" class="grid">
+                            @can('view pages')
+                                <flux:sidebar.item icon="document" :href="route('admin.pages')" :current="request()->routeIs('admin.pages')" wire:navigate>
+                                    {{ __('Pages') }}
+                                </flux:sidebar.item>
+                            @endcan
                             @can('view posts')
                                 <flux:sidebar.item icon="document-text" :href="route('admin.posts')" :current="request()->routeIs('admin.posts')" wire:navigate>
                                     {{ __('Posts') }}
@@ -47,6 +52,27 @@
                             </flux:sidebar.item>
                         </flux:sidebar.group>
                     @endcan
+                    
+                    {{-- Engagement and Feedback --}}
+                    @canany(['view newsletter subscribers', 'view contacts'])
+                        <flux:sidebar.group :heading="__('Engagement & Feedback')" class="grid">
+                            @can('view analytics')
+                                <flux:sidebar.item icon="chart-bar" :href="route('admin.analytics')" :current="request()->routeIs('admin.analytics')" wire:navigate>
+                                    {{ __('Analytics') }}
+                                </flux:sidebar.item>
+                            @endcan
+                            @can('view newsletter subscribers')
+                                <flux:sidebar.item icon="newspaper" :href="route('admin.newsletter-subscribers.index')" :current="request()->routeIs('admin.newsletter-subscribers.index')" wire:navigate>
+                                    {{ __('Newsletter Subscribers') }}
+                                </flux:sidebar.item>
+                            @endcan
+                            @can('view contacts')
+                                <flux:sidebar.item icon="envelope" :href="route('admin.inbox.index')" :current="request()->routeIs('admin.inbox.index')" wire:navigate>
+                                    {{ __('Contact Inbox') }}
+                                </flux:sidebar.item>
+                            @endcan
+                        </flux:sidebar.group>
+                    @endcanany
 
                     {{-- User Management --}}
                     @canany(['view users', 'edit roles'])

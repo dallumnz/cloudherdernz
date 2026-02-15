@@ -32,7 +32,7 @@ class PostController extends Controller
     public function index(): View
     {
         $posts = Post::query()
-            ->with(['postable', 'author'])
+            ->with(['postable', 'author', 'media'])
             ->latest()
             ->paginate(20);
 
@@ -46,7 +46,7 @@ class PostController extends Controller
      */
     public function show(Post $post): View
     {
-        $post->load(['postable', 'author', 'taxonomyTerms']);
+        $post->load(['postable', 'author', 'taxonomyTerms', 'media']);
 
         return view('posts.show', compact('post'));
     }

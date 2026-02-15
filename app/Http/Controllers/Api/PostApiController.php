@@ -34,7 +34,7 @@ class PostApiController extends Controller
     public function index(Request $request): AnonymousResourceCollection
     {
         $query = Post::query()
-            ->with(['author', 'postable', 'taxonomyTerms.taxonomy']);
+            ->with(['author', 'postable', 'taxonomyTerms.taxonomy', 'media']);
 
         // Filter by status (default to published for public access)
         $status = $request->input('status', 'published');
@@ -229,7 +229,7 @@ class PostApiController extends Controller
 
         $query = Post::query()
             ->where('postable_type', $postType->model())
-            ->with(['author', 'postable', 'taxonomyTerms.taxonomy']);
+            ->with(['author', 'postable', 'taxonomyTerms.taxonomy', 'media']);
 
         // Filter by status
         $status = $request->input('status', 'published');
@@ -281,7 +281,7 @@ class PostApiController extends Controller
         }
 
         $posts = Post::query()
-            ->with(['author', 'postable', 'taxonomyTerms.taxonomy'])
+            ->with(['author', 'postable', 'taxonomyTerms.taxonomy', 'media'])
             ->where(function ($q) use ($query): void {
                 $q->where('title', 'like', "%{$query}%")
                     ->orWhere('excerpt', 'like', "%{$query}%")
