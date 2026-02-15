@@ -9,15 +9,21 @@ use Illuminate\View\View;
 class SearchController extends Controller
 {
     /**
-     * Display search results.
+     * Display search form or results.
      */
     public function index(Request $request): View
     {
-        $validated = $request->validate([
-            'q' => ['required', 'string', 'min:2', 'max:255', 'not_regex:/^\s+$/'],
-        ]);
+        $query = $request->input('q', '');
+        
+        // If no query, show empty search form
+        if (strlen(trim($query)) < 2) {
+            return view('search.index', [
+                'query' => '',
+                'posts' => null,
+            ]);
+        }
 
-        $query = trim($validated['q']);
+        $query = trim($query);
 
         $posts = Post::search($query)
             ->query(fn ($q) => $q->published()->with(['author', 'taxonomyTerms', 'postable']))

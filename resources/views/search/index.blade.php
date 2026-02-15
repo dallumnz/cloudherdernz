@@ -37,13 +37,13 @@
             <div class="mb-6">
                 <p class="text-gray-600 dark:text-gray-400">
                     Search results for "<span class="font-semibold text-gray-900 dark:text-white">{{ $query }}</span>"
-                    @if ($posts->total() > 0)
+                    @if ($posts && $posts->total() > 0)
                         <span class="text-sm">({{ $posts->total() }} {{ Str::plural('result', $posts->total()) }})</span>
                     @endif
                 </p>
             </div>
 
-            @if ($posts->count() > 0)
+            @if ($posts && $posts->count() > 0)
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                     @foreach ($posts as $post)
                         <article class="bg-white dark:bg-gray-800 rounded-xl shadow-sm overflow-hidden hover:shadow-lg transition">
