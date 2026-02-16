@@ -20,6 +20,10 @@ class PostManager extends Component
 
     public ?string $postTypeFilter = null;
 
+    public ?int $editId = null;
+
+    public bool $create = false;
+
     public ?int $editingId = null;
 
     public string $title = '';
@@ -45,6 +49,17 @@ class PostManager extends Component
     public string $messageType = 'success';
 
     public bool $showForm = false;
+
+    protected $queryString = ['editId' => ['except' => null], 'create' => ['except' => false]];
+
+    public function mount(): void
+    {
+        if ($this->editId) {
+            $this->edit($this->editId);
+        } elseif ($this->create) {
+            $this->create();
+        }
+    }
 
     public function updatedSearch(): void
     {

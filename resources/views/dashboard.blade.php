@@ -114,7 +114,7 @@
                         @foreach ($recentPosts as $post)
                             <div class="flex items-center justify-between p-3 bg-gray-50 dark:bg-gray-800 rounded-lg">
                                 <div class="flex-1 min-w-0">
-                                    <a href="{{ route('posts.edit', $post) }}" class="font-medium truncate hover:text-blue-600 dark:hover:text-blue-400">
+                                    <a href="{{ route('admin.posts', ['editId' => $post->id]) }}" class="font-medium truncate hover:text-blue-600 dark:hover:text-blue-400">
                                         {{ $post->title }}
                                     </a>
                                     <div class="flex items-center space-x-2 text-sm text-gray-500 mt-1">

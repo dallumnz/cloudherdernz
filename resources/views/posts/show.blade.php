@@ -100,7 +100,7 @@
                     </a>
                     @auth
                         @can('edit posts')
-                            <a href="{{ route('posts.edit', $post) }}" class="text-gray-600 hover:text-gray-800 dark:text-gray-400 dark:hover:text-gray-300 font-medium">
+                            <a href="{{ route('admin.posts', ['editId' => $post->id]) }}" class="text-gray-600 hover:text-gray-800 dark:text-gray-400 dark:hover:text-gray-300 font-medium">
                                 Edit Post →
                             </a>
                         @endcan

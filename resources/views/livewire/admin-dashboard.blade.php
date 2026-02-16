@@ -96,7 +96,7 @@
         <flux:heading size="lg" class="mb-4">Quick Actions</flux:heading>
         <div class="flex flex-wrap gap-3">
             @can('create posts')
-                <flux:button href="{{ route('posts.create') }}" variant="primary" icon="plus">
+                <flux:button href="{{ route('admin.posts', ['create' => 1]) }}" variant="primary" icon="plus">
                     New Post
                 </flux:button>
             @endcan
@@ -161,7 +161,7 @@
                     @foreach ($recentPosts as $post)
                         <div class="flex items-center justify-between p-3 bg-gray-50 dark:bg-gray-800 rounded-lg">
                             <div class="flex-1 min-w-0">
-                                <a href="{{ route('posts.edit', $post) }}" class="font-medium truncate hover:text-blue-600 dark:hover:text-blue-400">
+                                <a href="{{ route('admin.posts', ['editId' => $post->id]) }}" class="font-medium truncate hover:text-blue-600 dark:hover:text-blue-400">
                                     {{ $post->title }}
                                 </a>
                                 <div class="flex items-center space-x-2 text-sm text-gray-500 mt-1">
@@ -191,7 +191,7 @@
                     <flux:icon name="document" class="w-12 h-12 mx-auto mb-3" />
                     <p>No posts yet.</p>
                     @can('create posts')
-                        <flux:button href="{{ route('posts.create') }}" size="sm" variant="primary" class="mt-3">
+                        <flux:button href="{{ route('admin.posts', ['create' => 1]) }}" size="sm" variant="primary" class="mt-3">
                             Create First Post
                         </flux:button>
                     @endcan

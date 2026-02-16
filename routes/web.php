@@ -76,8 +76,6 @@ Route::middleware(['auth'])->group(function () {
         ->middleware('permission:view users')
         ->name('admin.users');
 
-    // Traditional Resource Routes (for fallback)
-    Route::resource('posts', PostController::class)->except(['index', 'show']);
     Route::resource('taxonomies', TaxonomyController::class);
     Route::resource('taxonomy-terms', TaxonomyTermController::class);
 
