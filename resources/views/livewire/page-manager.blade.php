@@ -103,7 +103,7 @@
                     </thead>
                     <tbody>
                         @foreach ($pages as $page)
-                            <tr class="border-b hover:bg-gray-50">
+                            <tr class="border-b hover:bg-gray-50 dark:hover:bg-gray-800">
                                 <td class="py-3 px-4">{{ $page->title }}</td>
                                 <td class="py-3 px-4">
                                     <a href="{{ route('pages.show', $page->slug) }}" target="_blank" class="text-blue-600 hover:underline">
