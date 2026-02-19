@@ -106,11 +106,6 @@ Route::middleware(['auth'])->group(function () {
         ->middleware('permission:view pages')
         ->name('admin.pages');
 
-    // Analytics Dashboard
-    Route::get('admin/analytics', \App\Livewire\AnalyticsDashboard::class)
-        ->middleware('permission:view analytics')
-        ->name('admin.analytics');
-
     // Media Library Routes
     Route::prefix('admin/media')->name('admin.media.')->middleware(['permission:view media'])->group(function () {
         Route::get('/', \App\Livewire\MediaUploader::class)->name('index');
