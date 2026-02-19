@@ -24,7 +24,7 @@
         <!-- Key Metrics Cards -->
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
             <flux:card>
-                <x-request-analytics::stats.count label="Views" :value='$average["views"]' class="text-gray-600 dark:text-gray-400"/>
+                <x-request-analytics::stats.count label="Views" :value='$average["views"]'/>
             </flux:card>
             <flux:card>
                 <x-request-analytics::stats.count label="Visitors" :value='$average["visitors"]'/>
