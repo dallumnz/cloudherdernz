@@ -1,35 +1,30 @@
-<!-- Chart.js for analytics charts -->
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-
-<div class="space-y-6">
-    <div class="flex items-center justify-between">
-        <flux:heading size="xl">Analytics</flux:heading>
-    </div>
+<div>
+    <!-- Chart.js for analytics charts -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
     <main class="space-y-6">
-        <!-- Filter Section -->
-        <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
-            <div class="w-full sm:w-auto">
-                <flux:text variant="secondary">Track your website performance and user insights</flux:text>
-            </div>
-            <div class="w-full sm:w-auto">
-                <form method="GET" action="{{ route('admin.analytics') }}" class="flex items-center gap-2 flex-wrap">
-                    <flux:input type="date" name="start_date" :value="request('start_date', now()->subDays(30)->format('Y-m-d'))" placeholder="Start Date" />
-                    <flux:input type="date" name="end_date" :value="request('end_date', now()->format('Y-m-d'))" placeholder="End Date" />
-                    <flux:select name="request_category" :value="request('request_category')">
-                        <flux:select.option value="">All Requests</flux:select.option>
-                        <flux:select.option value="web">Web Only</flux:select.option>
-                        <flux:select.option value="api">API Only</flux:select.option>
-                    </flux:select>
-                    <flux:button type="submit" variant="primary">Apply</flux:button>
-                </form>
-            </div>
-        </div>
+        <div class="flex items-center justify-between mb-8">
+        <flux:heading size="xl">Analytics</flux:heading>
+    </div>
+    
+    {{-- Filters --}}
+        
+            <form method="GET" action="{{ route('admin.analytics') }}" class="flex items-center gap-2 justify-end ml-auto">
+                <flux:input type="date" name="start_date" :value="request('start_date', now()->subDays(30)->format('Y-m-d'))" placeholder="Start Date" />
+                <flux:input type="date" name="end_date" :value="request('end_date', now()->format('Y-m-d'))" placeholder="End Date" />
+                <flux:select name="request_category" :value="request('request_category')">
+                    <flux:select.option value="">All Requests</flux:select.option>
+                    <flux:select.option value="web">Web Only</flux:select.option>
+                    <flux:select.option value="api">API Only</flux:select.option>
+                </flux:select>
+                <flux:button type="submit" variant="primary">Apply</flux:button>
+            </form>
+        
 
         <!-- Key Metrics Cards -->
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
             <flux:card>
-                <x-request-analytics::stats.count label="Views" :value='$average["views"]'/>
+                <x-request-analytics::stats.count label="Views" :value='$average["views"]' class="text-gray-600 dark:text-gray-400"/>
             </flux:card>
             <flux:card>
                 <x-request-analytics::stats.count label="Visitors" :value='$average["visitors"]'/>
@@ -119,3 +114,4 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 });
 </script>
+</div>
