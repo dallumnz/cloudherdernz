@@ -117,12 +117,7 @@ class CommentController extends Controller
      */
     public function show(Request $request, Comment $comment): CommentResource|JsonResponse
     {
-        // Check if user can view this comment
-        if (! $comment->is_approved && ! $request->user()?->can('moderate comments')) {
-            return response()->json([
-                'message' => 'This comment is not available.',
-            ], 403);
-        }
+        Gate::authorize('view', $comment);
 
         $comment->load(['user', 'children.user', 'commentable']);
 
