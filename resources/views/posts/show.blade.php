@@ -107,6 +107,11 @@
                     @endauth
                 </div>
             </div>
+
+            {{-- Comments Section --}}
+            <div class="mt-12 pt-8 border-t border-gray-200 dark:border-gray-700">
+                <livewire:comment-thread :post="$post" />
+            </div>
         </div>
     </article>
 </x-layouts::public>

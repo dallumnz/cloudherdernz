@@ -46,8 +46,8 @@ if [ -n "$LATEST_SNAPSHOT" ] && diff -q "$ARCHITECTURE_FILE" "$LATEST_SNAPSHOT" 
     exit 0
 fi
 
-# Create snapshot with today's date (UTC+12)
-DATE_NZ=$(TZ='Pacific/Auckland' date +%Y-%m-%d)
+# Create snapshot with today's date and time (NZST)
+DATE_NZ=$(TZ='Pacific/Auckland' date +%Y-%m-%d_%H%M)
 SNAPSHOT_PATH="$ARCHITECTURE_DIR/ARCHITECTURE_${DATE_NZ}.md"
 
 cp "$ARCHITECTURE_FILE" "$SNAPSHOT_PATH"

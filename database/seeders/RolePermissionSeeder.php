@@ -69,6 +69,9 @@ class RolePermissionSeeder extends Seeder
             // Analytics permissions
             'view analytics',
 
+            // Comment permissions
+            'moderate comments',
+
             // Newsletter subscriber permissions
             'view newsletter subscribers',
             'create newsletter subscribers',
@@ -87,6 +90,10 @@ class RolePermissionSeeder extends Seeder
         // Admin - has all permissions
         $adminRole = Role::firstOrCreate(['name' => 'Admin', 'guard_name' => 'web']);
         $adminRole->givePermissionTo(Permission::all());
+
+        // Ensure 'moderate comments' permission exists and assign to Admin
+        $moderateComments = Permission::firstOrCreate(['name' => 'moderate comments', 'guard_name' => 'web']);
+        $adminRole->givePermissionTo($moderateComments);
 
         // Editor - can manage posts, tags, categories, pages but not users or roles
         $editorRole = Role::firstOrCreate(['name' => 'Editor', 'guard_name' => 'web']);
