@@ -6,6 +6,7 @@ use App\Enums\PostType as PostTypeEnum;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Database\Eloquent\Relations\MorphTo;
 use Illuminate\Database\Eloquent\Relations\MorphToMany;
 use Laravel\Scout\Searchable;
@@ -133,6 +134,16 @@ class Post extends Model implements HasMedia
     public function taxonomyTerms(): MorphToMany
     {
         return $this->morphToMany(TaxonomyTerm::class, 'taggable', 'taggables');
+    }
+
+    /**
+     * Get all comments on the post.
+     *
+     * @return MorphMany<Comment, $this>
+     */
+    public function comments(): MorphMany
+    {
+        return $this->morphMany(Comment::class, 'commentable');
     }
 
     /**
