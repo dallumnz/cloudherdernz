@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Api\CommentController;
 use App\Http\Controllers\Api\NewsletterSubscriptionController;
 use App\Http\Controllers\Api\PostApiController;
 use App\Http\Controllers\Api\TaxonomyApiController;
@@ -77,6 +78,22 @@ Route::prefix('v1')->middleware(['auth:sanctum'])->group(function (): void {
     Route::delete('/posts/{post}', [PostApiController::class, 'destroy'])
         ->name('api.posts.destroy')
         ->middleware('permission:delete posts');
+
+    // Comment endpoints
+    Route::get('{type}/{id}/comments', [CommentController::class, 'index'])
+        ->name('api.comments.index');
+
+    Route::post('{type}/{id}/comments', [CommentController::class, 'store'])
+        ->name('api.comments.store');
+
+    Route::get('comments/{comment}', [CommentController::class, 'show'])
+        ->name('api.comments.show');
+
+    Route::put('comments/{comment}', [CommentController::class, 'update'])
+        ->name('api.comments.update');
+
+    Route::delete('comments/{comment}', [CommentController::class, 'destroy'])
+        ->name('api.comments.destroy');
 
     // Admin-only endpoints
     Route::middleware(['permission:view posts'])->group(function (): void {
