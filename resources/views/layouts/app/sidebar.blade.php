@@ -71,6 +71,11 @@
                                     {{ __('Contact Inbox') }}
                                 </flux:sidebar.item>
                             @endcan
+                            @can('moderate comments')
+                                <flux:sidebar.item icon="chat-bubble-left-right" :href="route('admin.comments')" :current="request()->routeIs('admin.comments')" wire:navigate>
+                                    {{ __('Comments') }}
+                                </flux:sidebar.item>
+                            @endcan
                         </flux:sidebar.group>
                     @endcanany
 

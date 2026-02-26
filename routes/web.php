@@ -1,6 +1,5 @@
 <?php
 
-use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin\ContactController as AdminContactController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\ContactController;
@@ -11,6 +10,7 @@ use App\Http\Controllers\SitemapController;
 use App\Http\Controllers\TagController;
 use App\Http\Controllers\TaxonomyController;
 use App\Http\Controllers\TaxonomyTermController;
+use Illuminate\Support\Facades\Route;
 
 // Sitemap Route
 Route::get('/sitemap.xml', [SitemapController::class, 'index'])->name('sitemap');
@@ -76,6 +76,11 @@ Route::middleware(['auth'])->group(function () {
     Route::get('admin/users', \App\Livewire\UserManager::class)
         ->middleware('permission:view users')
         ->name('admin.users');
+
+    // Comment Moderation (Livewire)
+    Route::get('admin/comments', \App\Livewire\CommentModeration::class)
+        ->middleware('permission:moderate comments')
+        ->name('admin.comments');
 
     Route::resource('taxonomies', TaxonomyController::class);
     Route::resource('taxonomy-terms', TaxonomyTermController::class);
