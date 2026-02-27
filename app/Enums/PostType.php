@@ -4,6 +4,7 @@ namespace App\Enums;
 
 enum PostType: string
 {
+    case STANDARD = 'standard';
     case IMAGE = 'image';
     case VIDEO = 'video';
     case AUDIO = 'audio';
@@ -12,6 +13,7 @@ enum PostType: string
     public function label(): string
     {
         return match ($this) {
+            self::STANDARD => 'Standard Post',
             self::IMAGE => 'Image Post',
             self::VIDEO => 'Video Post',
             self::AUDIO => 'Audio Post',
@@ -22,6 +24,7 @@ enum PostType: string
     public function model(): string
     {
         return match ($this) {
+            self::STANDARD => \App\Models\StandardPost::class,
             self::IMAGE => \App\Models\ImagePost::class,
             self::VIDEO => \App\Models\VideoPost::class,
             self::AUDIO => \App\Models\AudioPost::class,
@@ -32,6 +35,7 @@ enum PostType: string
     public function migration(): string
     {
         return match ($this) {
+            self::STANDARD => 'create_standard_posts_table',
             self::IMAGE => 'create_image_posts_table',
             self::VIDEO => 'create_video_posts_table',
             self::AUDIO => 'create_audio_posts_table',

@@ -135,16 +135,7 @@
                 <div class="bg-white dark:bg-slate-800 rounded-xl p-6 border border-slate-200 dark:border-slate-700">
                     <h3 class="text-lg font-bold text-slate-900 dark:text-slate-50 mb-2">Stay Updated</h3>
                     <p class="text-slate-600 dark:text-slate-400 text-sm mb-4">Subscribe to our newsletter for the latest updates.</p>
-                    <form class="flex">
-                        <input 
-                            type="email" 
-                            placeholder="Your email" 
-                            class="flex-1 px-4 py-2 bg-slate-100 dark:bg-slate-700 border border-slate-200 dark:border-slate-600 rounded-l-lg text-slate-900 dark:text-slate-100 text-sm focus:outline-none focus:border-indigo-500"
-                        >
-                        <button type="submit" class="px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-medium rounded-r-lg transition">
-                            Subscribe
-                        </button>
-                    </form>
+                    @livewire('newsletter-subscribe')
                 </div>
             </aside>
         </div>

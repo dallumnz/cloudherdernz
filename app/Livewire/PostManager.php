@@ -22,7 +22,7 @@ class PostManager extends Component
 
     public ?int $editId = null;
 
-    public bool $create = false;
+    public bool $showCreateForm = false;
 
     public ?int $editingId = null;
 
@@ -50,14 +50,14 @@ class PostManager extends Component
 
     public bool $showForm = false;
 
-    protected $queryString = ['editId' => ['except' => null], 'create' => ['except' => false]];
+    protected $queryString = ['editId' => ['except' => null], 'showCreateForm' => ['except' => false]];
 
     public function mount(): void
     {
         if ($this->editId) {
             $this->edit($this->editId);
-        } elseif ($this->create) {
-            $this->create();
+        } elseif ($this->showCreateForm) {
+            $this->showCreateForm();
         }
     }
 

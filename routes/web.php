@@ -144,4 +144,7 @@ Route::middleware(['auth'])->group(function () {
         ->middleware('permission:edit posts');
 });
 
+Route::get('/subscribe/confirm/{token}', [\App\Http\Controllers\SubscribeController::class, 'confirm']);
 require __DIR__.'/settings.php';
+Route::get('/subscribe/confirm/{token}', [\App\Http\Controllers\SubscribeController::class, 'confirm']);
+Route::get('/newsletter/{id}', [\App\Http\Controllers\NewsletterViewController::class, 'show']);
