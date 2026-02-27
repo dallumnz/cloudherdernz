@@ -11,3 +11,23 @@
 <link href="https://fonts.bunny.net/css?family=instrument-sans:400,500,600" rel="stylesheet" />
 
 @vite(['resources/css/frontend.css', 'resources/js/frontend.js'])
+
+<script>
+    // Initialize theme on page load
+    if (localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+        document.documentElement.classList.add('dark');
+    } else {
+        document.documentElement.classList.remove('dark');
+    }
+
+    // Toggle theme function
+    function toggleTheme() {
+        if (document.documentElement.classList.contains('dark')) {
+            document.documentElement.classList.remove('dark');
+            localStorage.theme = 'light';
+        } else {
+            document.documentElement.classList.add('dark');
+            localStorage.theme = 'dark';
+        }
+    }
+</script>

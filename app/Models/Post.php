@@ -80,6 +80,15 @@ class Post extends Model implements HasMedia
     }
 
     /**
+     * Get the route key for the model (use slug instead of id).
+     */
+    public function getRouteKeyName(): string
+    {
+        return 'slug';
+    }
+
+    /**
+     * Get the postable relationship.
      * Get the postable model (ImagePost, VideoPost, or AudioPost).
      *
      * @return MorphTo<Model, $this>

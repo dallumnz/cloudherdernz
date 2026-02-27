@@ -3,6 +3,7 @@
 use App\Http\Controllers\Admin\ContactController as AdminContactController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\ContactController;
+use App\Http\Controllers\HomeController;
 use App\Http\Controllers\PostController;
 use App\Http\Controllers\RssFeedController;
 use App\Http\Controllers\SearchController;
@@ -19,14 +20,13 @@ Route::get('/sitemap.xml', [SitemapController::class, 'index'])->name('sitemap')
 Route::get('/feed', [RssFeedController::class, 'index'])->name('feed');
 
 // Public Routes
-Route::get('/', \App\Livewire\PublicHomepage::class)->name('home');
+Route::get('/', [HomeController::class, '__invoke'])->name('home');
 
 // Public Post Routes
 Route::get('/posts', [PostController::class, 'index'])->name('posts.index');
 Route::get('/posts/type/{type}', \App\Livewire\PostTypeFilter::class)->name('posts.by-type');
 Route::get('/posts/{post}', [PostController::class, 'show'])
-    ->name('posts.show')
-    ->where('post', '[0-9]+'); // Only match numeric IDs to avoid conflicts with create/edit routes
+    ->name('posts.show');
 
 // Search Routes
 Route::get('/search', [SearchController::class, 'index'])

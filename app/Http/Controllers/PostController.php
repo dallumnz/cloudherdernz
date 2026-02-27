@@ -32,11 +32,26 @@ class PostController extends Controller
     public function index(): View
     {
         $posts = Post::query()
-            ->with(['postable', 'author', 'media'])
-            ->latest()
-            ->paginate(20);
+            ->published()
+            ->with(['postable', 'author', 'taxonomyTerms', 'media'])
+            ->latest('published_at')
+            ->paginate(12);
 
-        return view('posts.index', compact('posts'));
+        $categories = TaxonomyTerm::query()
+            ->whereHas('taxonomy', fn ($q) => $q->where('type', 'category'))
+            ->withCount('posts')
+            ->whereNull('parent_id')
+            ->orderBy('name')
+            ->get();
+
+        $popularTags = TaxonomyTerm::query()
+            ->whereHas('taxonomy', fn ($q) => $q->where('type', 'tag'))
+            ->withCount('posts')
+            ->orderByDesc('posts_count')
+            ->take(10)
+            ->get();
+
+        return view('posts.index', compact('posts', 'categories', 'popularTags'));
     }
 
     /**
