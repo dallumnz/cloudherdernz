@@ -94,12 +94,17 @@
                     rows="3"
                 />
 
-                <flux:textarea
-                    wire:model="content"
-                    label="Content"
-                    placeholder="Full post content"
-                    rows="10"
-                />
+                {{-- Markdown Editor --}}
+                @if($editingId)
+                    <livewire:markdown-editor :post-id="$editingId" />
+                @else
+                    <flux:textarea
+                        wire:model="content"
+                        label="Content"
+                        placeholder="Full post content (markdown supported)"
+                        rows="10"
+                    />
+                @endif
 
                 {{-- Tags --}}
                 <div>

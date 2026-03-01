@@ -12,6 +12,7 @@ use App\Models\TaxonomyTerm;
 use App\Models\VideoPost;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Support\Str;
 use Illuminate\View\View;
 
 /**
@@ -61,7 +62,7 @@ class PostController extends Controller
      */
     public function show(Post $post): View
     {
-        $post->load(['postable', 'author', 'taxonomyTerms', 'media']);
+        $post->content_html = Str::markdown($post->content);
 
         return view('posts.show', compact('post'));
     }

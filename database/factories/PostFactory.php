@@ -18,7 +18,16 @@ class PostFactory extends Factory
 {
     public function definition(): array
     {
-        $type = fake()->randomElement(PostType::cases());
+        // Exclude STANDARD type since it requires additional setup
+        $types = array_filter(PostType::cases(), fn ($type) => $type !== PostType::STANDARD);
+        $type = fake()->randomElement($types);
+
+        $postable = match ($type) {
+            PostType::IMAGE => ImagePost::factory()->create(),
+            PostType::VIDEO => VideoPost::factory()->create(),
+            PostType::AUDIO => AudioPost::factory()->create(),
+            PostType::NEWSLETTER => NewsletterPost::factory()->create(),
+        };
 
         return [
             'author_id' => User::factory(),
@@ -30,7 +39,7 @@ class PostFactory extends Factory
             'status' => fake()->randomElement(['draft', 'published']),
             'published_at' => fake()->optional()->dateTime(),
             'postable_type' => $type->model(),
-            'postable_id' => null, // Must be set explicitly
+            'postable_id' => $postable->id,
         ];
     }
 

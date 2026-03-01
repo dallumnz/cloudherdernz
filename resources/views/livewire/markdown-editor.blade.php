@@ -125,11 +125,13 @@
                 wire:click="toggleFullscreen"
                 variant="ghost"
                 size="sm"
+                aria-label="Toggle fullscreen mode"
+                title="Toggle fullscreen"
             >
                 @if ($isFullscreen)
-                    <flux:icon name="arrows-pointing-in" class="w-5 h-5" />
+                    <flux:icon name="arrows-pointing-in" class="w-5 h-5" aria-hidden="true" />
                 @else
-                    <flux:icon name="arrows-pointing-out" class="w-5 h-5" />
+                    <flux:icon name="arrows-pointing-out" class="w-5 h-5" aria-hidden="true" />
                 @endif
             </flux:button>
 
@@ -139,8 +141,11 @@
                 wire:click="save"
                 variant="primary"
                 size="sm"
+                wire:loading.attr="disabled"
+                wire:target="save"
             >
-                Save Content
+                <span wire:loading.remove wire:target="save">Save Content</span>
+                <span wire:loading wire:target="save">Saving...</span>
             </flux:button>
         </div>
     </div>
