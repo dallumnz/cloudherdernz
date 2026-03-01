@@ -183,6 +183,33 @@ class PostApiController extends Controller
     }
 
     /**
+     * Update only the content field of a post.
+     * Used for auto-save and markdown editor updates.
+     *
+     * Requires authentication and 'edit posts' permission.
+     */
+    public function updateContent(Request $request, Post $post): PostResource|JsonResponse
+    {
+        if (! $request->user()?->can('edit posts')) {
+            return response()->json([
+                'message' => 'Unauthorized.',
+            ], 403);
+        }
+
+        $validated = $request->validate([
+            'content' => ['nullable', 'string', 'max:50000'],
+        ]);
+
+        $post->update([
+            'content' => $validated['content'] ?? null,
+        ]);
+
+        $post->load(['author', 'postable', 'taxonomyTerms.taxonomy', 'media']);
+
+        return new PostResource($post);
+    }
+
+    /**
      * Remove the specified post.
      *
      * Requires authentication and 'delete posts' permission.

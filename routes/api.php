@@ -75,6 +75,10 @@ Route::prefix('v1')->middleware(['auth:sanctum'])->group(function (): void {
         ->name('api.posts.update')
         ->middleware('permission:edit posts');
 
+    Route::patch('/posts/{post}/content', [PostApiController::class, 'updateContent'])
+        ->name('api.posts.update-content')
+        ->middleware('permission:edit posts');
+
     Route::delete('/posts/{post}', [PostApiController::class, 'destroy'])
         ->name('api.posts.destroy')
         ->middleware('permission:delete posts');

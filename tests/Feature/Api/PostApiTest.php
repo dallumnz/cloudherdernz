@@ -357,3 +357,70 @@ describe('Post API Search', function (): void {
             ->assertJsonCount(2, 'data');
     });
 });
+
+describe('Post API Content Update', function (): void {
+    it('updates post content via patch endpoint', function (): void {
+        $post = createPostWithType(PostType::IMAGE, [
+            'status' => 'draft',
+            'content' => 'Initial content',
+        ]);
+
+        $response = $this->actingAs($this->author)
+            ->patchJson(route('api.posts.update-content', $post), [
+                'content' => '# Updated Markdown Content\n\nWith **bold** text.',
+            ]);
+
+        $response->assertStatus(200)
+            ->assertJsonPath('data.content', '# Updated Markdown Content\n\nWith **bold** text.');
+
+        expect($post->fresh()->content)->toBe('# Updated Markdown Content\n\nWith **bold** text.');
+    });
+
+    it('returns 403 when updating content without permission', function (): void {
+        $post = createPostWithType(PostType::IMAGE, [
+            'status' => 'draft',
+            'content' => 'Initial content',
+        ]);
+
+        $response = $this->actingAs($this->viewer)
+            ->patchJson(route('api.posts.update-content', $post), [
+                'content' => 'New content',
+            ]);
+
+        $response->assertStatus(403)
+            ->assertJson(['message' => 'Unauthorized.']);
+
+        expect($post->fresh()->content)->toBe('Initial content');
+    });
+
+    it('validates content max length', function (): void {
+        $post = createPostWithType(PostType::IMAGE, [
+            'status' => 'draft',
+        ]);
+
+        $longContent = str_repeat('a', 50001);
+
+        $response = $this->actingAs($this->author)
+            ->patchJson(route('api.posts.update-content', $post), [
+                'content' => $longContent,
+            ]);
+
+        $response->assertStatus(422)
+            ->assertJsonValidationErrors(['content']);
+    });
+
+    it('allows null content', function (): void {
+        $post = createPostWithType(PostType::IMAGE, [
+            'status' => 'draft',
+            'content' => 'Initial content',
+        ]);
+
+        $response = $this->actingAs($this->author)
+            ->patchJson(route('api.posts.update-content', $post), [
+                'content' => null,
+            ]);
+
+        $response->assertStatus(200);
+        expect($post->fresh()->content)->toBeNull();
+    });
+});

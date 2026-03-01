@@ -9,7 +9,9 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Database\Eloquent\Relations\MorphTo;
 use Illuminate\Database\Eloquent\Relations\MorphToMany;
+use Illuminate\Support\Facades\Cache;
 use Laravel\Scout\Searchable;
+use League\CommonMark\CommonMarkConverter;
 use Spatie\Image\Enums\Fit;
 use Spatie\MediaLibrary\HasMedia;
 use Spatie\MediaLibrary\InteractsWithMedia;
@@ -298,5 +300,65 @@ class Post extends Model implements HasMedia
             'status' => $this->status,
             'published_at' => $this->published_at?->toIso8601String(),
         ];
+    }
+
+    /**
+     * Get the content rendered as HTML from Markdown.
+     * Cached for performance.
+     */
+    public function getContentHtmlAttribute(): ?string
+    {
+        if (empty($this->content)) {
+            return null;
+        }
+
+        $cacheKey = "post:{$this->id}:content_html";
+
+        return Cache::remember($cacheKey, now()->addHours(24), function () {
+            $converter = new CommonMarkConverter([
+                'html_input' => 'strip',
+                'allow_unsafe_links' => false,
+            ]);
+
+            return $converter->convert($this->content)->getContent();
+        });
+    }
+
+    /**
+     * Get the excerpt rendered as HTML from Markdown.
+     * Cached for performance.
+     */
+    public function getExcerptHtmlAttribute(): ?string
+    {
+        if (empty($this->excerpt)) {
+            return null;
+        }
+
+        $cacheKey = "post:{$this->id}:excerpt_html";
+
+        return Cache::remember($cacheKey, now()->addHours(24), function () {
+            $converter = new CommonMarkConverter([
+                'html_input' => 'strip',
+                'allow_unsafe_links' => false,
+            ]);
+
+            return $converter->convert($this->excerpt)->getContent();
+        });
+    }
+
+    /**
+     * Clear the HTML content cache when the post is updated.
+     */
+    protected static function booted(): void
+    {
+        static::updated(function (Post $post): void {
+            Cache::forget("post:{$post->id}:content_html");
+            Cache::forget("post:{$post->id}:excerpt_html");
+        });
+
+        static::deleted(function (Post $post): void {
+            Cache::forget("post:{$post->id}:content_html");
+            Cache::forget("post:{$post->id}:excerpt_html");
+        });
     }
 }
