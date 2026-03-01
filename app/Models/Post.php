@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Enums\PostType as PostTypeEnum;
+use App\Services\MarkdownService;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -59,6 +60,7 @@ class Post extends Model implements HasMedia
         'slug',
         'excerpt',
         'content',
+        'markdown',
         'metadata',
         'status',
         'published_at',
@@ -177,6 +179,31 @@ class Post extends Model implements HasMedia
     public function scopeDraft($query)
     {
         return $query->where('status', 'draft');
+    }
+
+    /**
+     * Get the rendered HTML from markdown content.
+     *
+     * Returns rendered HTML if markdown exists, otherwise returns
+     * the plain content. This allows gradual migration to markdown.
+     */
+    public function getRenderedHtmlAttribute(): string
+    {
+        if (filled($this->markdown)) {
+            $service = app(MarkdownService::class);
+
+            return $service->toHtml($this->markdown);
+        }
+
+        return $this->content ?? '';
+    }
+
+    /**
+     * Determine if the post has markdown content.
+     */
+    public function hasMarkdown(): bool
+    {
+        return filled($this->markdown);
     }
 
     /**

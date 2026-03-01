@@ -7,6 +7,7 @@ use App\Http\Requests\Post\StorePostRequest;
 use App\Http\Requests\Post\UpdatePostRequest;
 use App\Models\AudioPost;
 use App\Models\ImagePost;
+use App\Models\NewsletterPost;
 use App\Models\Post;
 use App\Models\TaxonomyTerm;
 use App\Models\VideoPost;
@@ -106,6 +107,7 @@ class PostController extends Controller
             'slug' => $validated['slug'],
             'excerpt' => $validated['excerpt'] ?? null,
             'content' => $validated['content'] ?? null,
+            'markdown' => $validated['markdown'] ?? null,
             'status' => $validated['status'],
             'published_at' => $validated['published_at'] ?? null,
             'postable_type' => $postType->model(),
@@ -171,6 +173,7 @@ class PostController extends Controller
             'slug' => $validated['slug'],
             'excerpt' => $validated['excerpt'] ?? null,
             'content' => $validated['content'] ?? null,
+            'markdown' => $validated['markdown'] ?? null,
             'status' => $validated['status'],
             'published_at' => $validated['published_at'] ?? null,
         ]);

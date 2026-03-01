@@ -25,7 +25,7 @@
                         <span>•</span>
                         <span>{{ $post->published_at?->format('F d, Y') }}</span>
                         <span>•</span>
-                        <span>{{ $post->content ? Str::wordCount(strip_tags($post->content)) . ' words' : '0 words' }}</span>
+                        <span>{{ $post->rendered_html ? Str::wordCount(strip_tags($post->rendered_html)) . ' words' : '0 words' }}</span>
                     </div>
                 </header>
 
@@ -63,7 +63,7 @@
                             @includeWhen($post->postable, 'partials.content.gallery', ['post' => $post])
                             @break
                         @default
-                            @includeWhen($post->content, 'partials.content.standard', ['post' => $post])
+                            @includeWhen($post->content || $post->markdown, 'partials.content.standard', ['post' => $post])
                     @endswitch
                 </div>
 

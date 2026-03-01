@@ -39,7 +39,7 @@
                                     {{ $post->title }}
                                 </h3>
                                 <p class="text-slate-600 dark:text-slate-400 text-sm line-clamp-2 mb-4">
-                                    {{ $post->excerpt ?? Str::limit(strip_tags($post->content), 100) }}
+                                    {{ $post->excerpt ?? Str::limit(strip_tags($post->rendered_html), 100) }}
                                 </p>
                                 <div class="flex items-center justify-between text-xs text-slate-500 dark:text-slate-400">
                                     <span>{{ $post->author?->name ?? 'Admin' }}</span>

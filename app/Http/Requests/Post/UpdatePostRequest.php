@@ -43,6 +43,7 @@ class UpdatePostRequest extends FormRequest
             ],
             'excerpt' => ['nullable', 'string'],
             'content' => ['nullable', 'string'],
+            'markdown' => ['nullable', 'string'],
             'post_type' => ['required', 'string', 'in:'.implode(',', $postTypeValues)],
             'status' => ['required', 'in:draft,published,archived'],
             'published_at' => ['nullable', 'date'],
@@ -97,6 +98,7 @@ class UpdatePostRequest extends FormRequest
             'audio_url.url' => 'The audio URL must be a valid web address.',
             'template.in' => 'Please select a valid template (default, minimal, or promotional).',
             'subscriber_settings.json' => 'Subscriber settings must be valid JSON format.',
+            'markdown.string' => 'The markdown content must be text.',
         ];
     }
 

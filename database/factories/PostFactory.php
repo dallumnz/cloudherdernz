@@ -26,6 +26,7 @@ class PostFactory extends Factory
             'slug' => Str::slug(fake()->sentence()),
             'excerpt' => fake()->paragraph(),
             'content' => fake()->paragraphs(5, true),
+            'markdown' => null,
             'metadata' => null,
             'status' => fake()->randomElement(['draft', 'published']),
             'published_at' => fake()->optional()->dateTime(),
@@ -75,6 +76,14 @@ class PostFactory extends Factory
     {
         return $this->state(fn (array $attributes) => [
             'postable_type' => NewsletterPost::class,
+        ]);
+    }
+
+    public function withMarkdown(): static
+    {
+        return $this->state(fn (array $attributes) => [
+            'markdown' => '# '.fake()->sentence()."\n\n".fake()->paragraph()."\n\n## ".fake()->sentence()."\n\n".fake()->paragraph(),
+            'content' => null,
         ]);
     }
 }

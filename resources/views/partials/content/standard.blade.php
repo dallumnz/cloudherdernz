@@ -1,4 +1,4 @@
-{{-- Standard text content --}}
-<div class="text-slate-700 dark:text-slate-300 leading-relaxed">
-    {!! $post->content !!}
+{{-- Standard text content with Markdown support --}}
+<div class="prose prose-slate dark:prose-invert max-w-none">
+    {!! $post->rendered_html !!}
 </div>
