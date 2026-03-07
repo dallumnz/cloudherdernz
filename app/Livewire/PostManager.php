@@ -44,6 +44,8 @@ class PostManager extends Component
 
     public array $selectedCategories = [];
 
+    public array $seoData = [];
+
     public string $message = '';
 
     public string $messageType = 'success';
@@ -103,6 +105,7 @@ class PostManager extends Component
             ->whereHas('taxonomy', fn ($q) => $q->where('type', 'category'))
             ->pluck('taxonomy_terms.id')
             ->toArray();
+        $this->seoData = $post->seo?->toArray() ?? [];
         $this->showForm = true;
     }
 
@@ -165,10 +168,22 @@ class PostManager extends Component
             $post = Post::findOrFail($this->editingId);
             $post->update($data);
             $post->taxonomyTerms()->sync(array_merge($this->selectedTags, $this->selectedCategories));
+            
+            // Update SEO data
+            if (!empty($this->seoData)) {
+                $post->seo->update($this->seoData);
+            }
+            
             $this->setMessage("Post '{$post->title}' updated successfully.", 'success');
         } else {
             $post = Post::create($data);
             $post->taxonomyTerms()->attach(array_merge($this->selectedTags, $this->selectedCategories));
+            
+            // Create SEO data for new post
+            if (!empty($this->seoData)) {
+                $post->seo->update($this->seoData);
+            }
+            
             $this->setMessage("Post '{$post->title}' created successfully.", 'success');
         }
 
@@ -211,6 +226,7 @@ class PostManager extends Component
         $this->publishedAt = null;
         $this->selectedTags = [];
         $this->selectedCategories = [];
+        $this->seoData = [];
         $this->resetValidation();
     }
 

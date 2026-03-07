@@ -12,6 +12,7 @@ use Illuminate\Database\Eloquent\Relations\MorphToMany;
 use Illuminate\Support\Facades\Cache;
 use Laravel\Scout\Searchable;
 use League\CommonMark\CommonMarkConverter;
+use RalphJSmit\Laravel\SEO\Support\HasSEO;
 use Spatie\Image\Enums\Fit;
 use Spatie\MediaLibrary\HasMedia;
 use Spatie\MediaLibrary\InteractsWithMedia;
@@ -46,7 +47,7 @@ class Post extends Model implements HasMedia
 {
     /** @use HasFactory<\Database\Factories\PostFactory> */
     use HasFactory;
-
+    use HasSEO;
     use InteractsWithMedia;
     use Searchable;
 

@@ -113,6 +113,11 @@ class PostController extends Controller
             'postable_id' => $postable->id,
         ]);
 
+        // Handle SEO data
+        if (! empty($validated['seo'])) {
+            $post->seo->update($validated['seo']);
+        }
+
         // Attach taxonomy terms
         if (! empty($validated['taxonomy_terms'])) {
             $post->taxonomyTerms()->attach($validated['taxonomy_terms']);
@@ -175,6 +180,11 @@ class PostController extends Controller
             'status' => $validated['status'],
             'published_at' => $validated['published_at'] ?? null,
         ]);
+
+        // Handle SEO data
+        if (! empty($validated['seo'])) {
+            $post->seo->update($validated['seo']);
+        }
 
         // Sync taxonomy terms
         $post->taxonomyTerms()->sync($validated['taxonomy_terms'] ?? []);

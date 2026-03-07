@@ -97,6 +97,11 @@
                 {{-- Markdown Editor --}}
                 @if($editingId)
                     <livewire:markdown-editor :post-id="$editingId" />
+                    
+                    {{-- SEO Meta Box --}}
+                    @if($editingId && $post)
+                        <livewire:seo-meta-box :seo-data="$post->seo->getAttributes() ?? []" />
+                    @endif
                 @else
                     <flux:textarea
                         wire:model="content"

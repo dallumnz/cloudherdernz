@@ -60,6 +60,12 @@ class UpdatePostRequest extends FormRequest
             // Newsletter Post Fields
             'template' => ['nullable', 'string', 'in:default,minimal,promotional'],
             'subscriber_settings' => ['nullable', 'json'],
+            // SEO Fields
+            'seo' => ['nullable', 'array'],
+            'seo.title' => ['nullable', 'string', 'max:70'],
+            'seo.description' => ['nullable', 'string', 'max:160'],
+            'seo.image' => ['nullable', 'string'],
+            'seo.robots' => ['nullable', 'string', 'in:index,follow,noindex,nofollow,noindex,nofollow'],
         ];
     }
 
