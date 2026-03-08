@@ -26,10 +26,12 @@ class GalleryManager extends Component
 
     public string $messageType = 'success';
 
-    public function mount(?int $postId = null): void
+    public function mount(Post|int|null $post = null): void
     {
-        if ($postId) {
-            $this->post = Post::find($postId);
+        if ($post instanceof Post) {
+            $this->post = $post;
+        } elseif ($post) {
+            $this->post = Post::find($post);
         }
     }
 
@@ -64,17 +66,19 @@ class GalleryManager extends Component
         }
 
         try {
+            $uploadedCount = 0;
             foreach ($this->images as $image) {
                 if ($image instanceof TemporaryUploadedFile) {
                     $this->post->addMedia($image->getRealPath())
                         ->usingName($image->getClientOriginalName())
                         ->toMediaCollection($this->collection);
+                    $uploadedCount++;
                 }
             }
 
             $this->images = [];
             $this->isUploading = false;
-            $this->setMessage(count($this->images).' images uploaded successfully.', 'success');
+            $this->setMessage($uploadedCount.' images uploaded successfully.', 'success');
 
             // Refresh the post to get updated media
             $this->post->refresh();

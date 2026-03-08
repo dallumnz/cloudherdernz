@@ -176,9 +176,15 @@ class Page extends Model
 
     /**
      * Get dynamic SEO data from page fields.
+     *
+     * Note: Callers should eager load relations for performance:
+     * Page::with(['author'])->...
      */
     public function getDynamicSEOData(): \RalphJSmit\Laravel\SEO\Support\SEOData
     {
+        // Defensively load missing relations to prevent N+1
+        $this->loadMissing(['author']);
+
         return new \RalphJSmit\Laravel\SEO\Support\SEOData(
             title: $this->meta_title ?? $this->title,
             description: $this->meta_description ?? ($this->content ? str(strip_tags($this->content))->limit(160) : null),

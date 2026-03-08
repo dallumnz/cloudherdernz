@@ -2,7 +2,8 @@
 
 namespace Database\Seeders;
 
-use App\Models\Role;
+use Spatie\Permission\Models\Permission;
+use Spatie\Permission\Models\Role;
 use App\Models\User;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
@@ -13,14 +14,12 @@ class ProductionAdminSeeder extends Seeder
     {
         // Ensure admin role exists
         $adminRole = Role::firstOrCreate(
-            ['slug' => 'admin'],
             [
-                'name' => 'Admin',
-                'description' => 'Full system access'
+                'name' => 'Admin'
             ]
         );
 
-        // Create/update admin user
+        // Create/update admin user (lookup by email, create if not exists)
         $user = User::firstOrCreate(
             ['email' => 'dallum.brown@gmail.com'],
             [

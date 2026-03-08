@@ -26,10 +26,12 @@ class FeaturedImageUploader extends Component
 
     public string $messageType = 'success';
 
-    public function mount(?int $postId = null): void
+    public function mount(Post|int|null $post = null): void
     {
-        if ($postId) {
-            $this->post = Post::find($postId);
+        if ($post instanceof Post) {
+            $this->post = $post;
+        } elseif ($post) {
+            $this->post = Post::find($post);
         }
     }
 

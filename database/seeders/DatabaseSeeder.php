@@ -24,7 +24,7 @@ class DatabaseSeeder extends Seeder
 
         // Create empty taxonomies (categories and tags available but empty)
         $this->call([
-            TaxonomySeeder::class,
+            //TaxonomySeeder::class,
         ]);
     }
 }
