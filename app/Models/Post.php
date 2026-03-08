@@ -336,19 +336,21 @@ class Post extends Model implements HasMedia
      */
     public function getContentHtmlAttribute(): ?string
     {
-        if (empty($this->content)) {
+        $content = $this->content;
+        
+        if (empty($content)) {
             return null;
         }
 
         $cacheKey = "post:{$this->id}:content_html";
 
-        return Cache::remember($cacheKey, now()->addHours(24), function () {
+        return Cache::remember($cacheKey, now()->addHours(24), function () use ($content) {
             $converter = new CommonMarkConverter([
                 'html_input' => 'strip',
                 'allow_unsafe_links' => false,
             ]);
 
-            return $converter->convert($this->content)->getContent();
+            return $converter->convert($content)->getContent();
         });
     }
 
@@ -358,19 +360,21 @@ class Post extends Model implements HasMedia
      */
     public function getExcerptHtmlAttribute(): ?string
     {
-        if (empty($this->excerpt)) {
+        $excerpt = $this->excerpt;
+        
+        if (empty($excerpt)) {
             return null;
         }
 
         $cacheKey = "post:{$this->id}:excerpt_html";
 
-        return Cache::remember($cacheKey, now()->addHours(24), function () {
+        return Cache::remember($cacheKey, now()->addHours(24), function () use ($excerpt) {
             $converter = new CommonMarkConverter([
                 'html_input' => 'strip',
                 'allow_unsafe_links' => false,
             ]);
 
-            return $converter->convert($this->excerpt)->getContent();
+            return $converter->convert($excerpt)->getContent();
         });
     }
 
