@@ -51,7 +51,7 @@
                 </div>
 
                 {{-- Post Content (Conditional based on post type) --}}
-                <div class="prose prose-lg dark:prose-invert max-w-none mb-8">
+                <div class="prose prose-lg dark:prose-invert text-slate-900 dark:text-slate-100 max-w-none mb-8">
                     @switch($post->post_type)
                         @case('video')
                             @includeWhen($post->postable, 'partials.content.video', ['post' => $post])
