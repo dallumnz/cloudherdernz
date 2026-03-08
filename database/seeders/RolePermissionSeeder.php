@@ -53,6 +53,7 @@ class RolePermissionSeeder extends Seeder
             // Media permissions
             'view media',
             'upload media',
+            'edit media',
             'delete media',
 
             // Contact permissions
@@ -119,6 +120,11 @@ class RolePermissionSeeder extends Seeder
             'create pages',
             'edit pages',
             'delete pages',
+            // Media permissions
+            'view media',
+            'upload media',
+            'edit media',
+            'delete media',
         ]);
 
         // Author - can create and edit own posts, view tags and categories

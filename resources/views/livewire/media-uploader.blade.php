@@ -117,7 +117,7 @@
                                 </div>
                             @endif
 
-                            <div class="text-xs text-gray-600 dark:text-gray-400 truncate">
+                            <div class="text-xs text-gray-600 dark:text-gray-400 truncate" title="{{ $item->name }}">
                                 {{ $item->name }}
                             </div>
 
@@ -125,12 +125,28 @@
                                 {{ number_format($item->size / 1024, 2) }} KB
                             </div>
 
+                            @if($item->getCustomProperty('credit_name'))
+                                <div class="text-xs text-indigo-600 dark:text-indigo-400 truncate" title="Credit: {{ $item->getCustomProperty('credit_name') }}">
+                                    {{ $item->getCustomProperty('credit_name') }}
+                                </div>
+                            @else
+                                <div class="text-xs text-gray-400 italic">
+                                    No credit set
+                                </div>
+                            @endif
+
                             <div class="flex gap-1">
+                                <flux:button
+                                    wire:click="editMedia({{ $item->id }})"
+                                    variant="ghost"
+                                    size="sm"
+                                >
+                                    Edit
+                                </flux:button>
                                 <flux:button
                                     wire:click="deleteMedia({{ $item->id }})"
                                     variant="danger"
                                     size="sm"
-                                    class="flex-1"
                                 >
                                     Delete
                                 </flux:button>
@@ -149,5 +165,69 @@
         <flux:callout variant="info">
             No media found. Upload some files to get started.
         </flux:callout>
+    @endif
+
+    {{-- Credit Edit Modal --}}
+    @if($editingMediaId)
+        <div class="fixed inset-0 z-50 bg-black/50 flex items-center justify-center p-4" wire:click.self="closeCreditModal">
+            <flux:card class="w-full max-w-lg max-h-[90vh] overflow-y-auto">
+                <div class="space-y-4">
+                    <flux:heading size="lg">Edit Media Credit</flux:heading>
+
+                    <div>
+                        <flux:label for="creditName">Photographer/Creator Name</flux:label>
+                        <flux:input
+                            type="text"
+                            id="creditName"
+                            wire:model="creditName"
+                            placeholder="e.g., John Doe"
+                        />
+                        <flux:error name="creditName" />
+                        <p class="mt-1 text-xs text-gray-500">
+                            Example: "Photo by John Doe on Unsplash"
+                        </p>
+                    </div>
+
+                    <div>
+                        <flux:label for="creditUrl">Credit URL (optional)</flux:label>
+                        <flux:input
+                            type="url"
+                            id="creditUrl"
+                            wire:model="creditUrl"
+                            placeholder="https://unsplash.com/@johndoe"
+                        />
+                        <flux:error name="creditUrl" />
+                    </div>
+
+                    <div>
+                        <flux:label for="altText">Alt Text (accessibility)</flux:label>
+                        <flux:textarea
+                            id="altText"
+                            wire:model="altText"
+                            rows="2"
+                            placeholder="Describe the image for screen readers"
+                        />
+                        <flux:error name="altText" />
+                    </div>
+
+                    <div class="flex justify-end gap-2 pt-4">
+                        <flux:button
+                            type="button"
+                            variant="ghost"
+                            wire:click="closeCreditModal"
+                        >
+                            Cancel
+                        </flux:button>
+                        <flux:button
+                            type="button"
+                            variant="primary"
+                            wire:click="saveCredit"
+                        >
+                            Save Credit
+                        </flux:button>
+                    </div>
+                </div>
+            </flux:card>
+        </div>
     @endif
 </div>

@@ -36,6 +36,18 @@ class MediaUploader extends Component
 
     public int $perPage = 12;
 
+    // Credit editing
+    public ?int $editingMediaId = null;
+
+    #[Validate(['nullable', 'string', 'max:255'])]
+    public string $creditName = '';
+
+    #[Validate(['nullable', 'string', 'max:500'])]
+    public string $creditUrl = '';
+
+    #[Validate(['nullable', 'string', 'max:1000'])]
+    public string $altText = '';
+
     public function updatedFiles(): void
     {
         $this->validate([
@@ -81,6 +93,72 @@ class MediaUploader extends Component
             $this->setMessage('Failed to upload files: '.$e->getMessage(), 'error');
             $this->isUploading = false;
         }
+    }
+
+    public function editMedia(int $mediaId): void
+    {
+        if (! auth()->user()?->can('edit media')) {
+            $this->setMessage('You do not have permission to edit media.', 'error');
+
+            return;
+        }
+
+        $media = Media::find($mediaId);
+
+        if (! $media) {
+            $this->setMessage('Media not found.', 'error');
+
+            return;
+        }
+
+        $this->editingMediaId = $mediaId;
+        $this->creditName = $media->getCustomProperty('credit_name', '');
+        $this->creditUrl = $media->getCustomProperty('credit_url', '');
+        $this->altText = $media->getCustomProperty('alt_text', '');
+    }
+
+    public function saveCredit(): void
+    {
+        if (! auth()->user()?->can('edit media')) {
+            $this->setMessage('You do not have permission to edit media.', 'error');
+
+            return;
+        }
+
+        $this->validate([
+            'creditName' => ['nullable', 'string', 'max:255'],
+            'creditUrl' => ['nullable', 'string', 'max:500', 'url'],
+            'altText' => ['nullable', 'string', 'max:1000'],
+        ]);
+
+        try {
+            $media = Media::find($this->editingMediaId);
+
+            if (! $media) {
+                $this->setMessage('Media not found.', 'error');
+
+                return;
+            }
+
+            $media->setCustomProperty('credit_name', $this->creditName ?: null);
+            $media->setCustomProperty('credit_url', $this->creditUrl ?: null);
+            $media->setCustomProperty('alt_text', $this->altText ?: null);
+            $media->save();
+
+            $this->closeCreditModal();
+            $this->setMessage('Credit information saved successfully.', 'success');
+        } catch (\Exception $e) {
+            $this->setMessage('Failed to save credit: '.$e->getMessage(), 'error');
+        }
+    }
+
+    public function closeCreditModal(): void
+    {
+        $this->editingMediaId = null;
+        $this->creditName = '';
+        $this->creditUrl = '';
+        $this->altText = '';
+        $this->resetValidation();
     }
 
     public function deleteMedia(int $mediaId): void
