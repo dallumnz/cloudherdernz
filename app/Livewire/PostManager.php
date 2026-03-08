@@ -287,8 +287,12 @@ class PostManager extends Component
         /** @var LengthAwarePaginator $posts */
         $posts = $query->latest()->paginate(10);
 
+        // Get current editing post for SEO meta box
+        $post = $this->editingId ? Post::find($this->editingId) : null;
+
         return view('livewire.post-manager', [
             'posts' => $posts,
+            'post' => $post,
         ]);
     }
 
