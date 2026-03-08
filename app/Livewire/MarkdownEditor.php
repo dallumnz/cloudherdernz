@@ -67,6 +67,11 @@ class MarkdownEditor extends Component
     public function updatedContent(): void
     {
         $this->updatePreview();
+        
+        // Notify parent component of content change (for create mode)
+        if (! $this->postId) {
+            $this->dispatch('markdown-updated', content: $this->content);
+        }
     }
 
     /**

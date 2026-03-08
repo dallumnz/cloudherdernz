@@ -291,4 +291,12 @@ class PostManager extends Component
             'posts' => $posts,
         ]);
     }
+
+    /**
+     * Handle content updates from MarkdownEditor component.
+     */
+    public function handleMarkdownUpdated(string $content): void
+    {
+        $this->content = $content;
+    }
 }

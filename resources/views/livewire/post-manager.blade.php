@@ -95,20 +95,11 @@
                 />
 
                 {{-- Markdown Editor --}}
-                @if($editingId)
-                    <livewire:markdown-editor :post-id="$editingId" />
-                    
-                    {{-- SEO Meta Box --}}
-                    @if($editingId && $post)
-                        <livewire:seo-meta-box :seo-data="$post->seo->getAttributes() ?? []" />
-                    @endif
-                @else
-                    <flux:textarea
-                        wire:model="content"
-                        label="Content"
-                        placeholder="Full post content (markdown supported)"
-                        rows="10"
-                    />
+                <livewire:markdown-editor :post-id="$editingId" />
+                
+                {{-- SEO Meta Box (only for editing) --}}
+                @if($editingId && $post)
+                    <livewire:seo-meta-box :seo-data="$post->seo->getAttributes() ?? []" />
                 @endif
 
                 {{-- Tags --}}
