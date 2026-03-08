@@ -33,6 +33,7 @@ class Page extends Model
     use HasFactory;
 
     use SoftDeletes;
+    use \RalphJSmit\Laravel\SEO\Support\HasSEO;
 
     /**
      * The attributes that are mass assignable.
@@ -171,5 +172,19 @@ class Page extends Model
         }
 
         return null;
+    }
+
+    /**
+     * Get dynamic SEO data from page fields.
+     */
+    public function getDynamicSEOData(): \RalphJSmit\Laravel\SEO\Support\SEOData
+    {
+        return new \RalphJSmit\Laravel\SEO\Support\SEOData(
+            title: $this->meta_title ?? $this->title,
+            description: $this->meta_description ?? ($this->content ? str(strip_tags($this->content))->limit(160) : null),
+            author: $this->author?->name ?? 'Admin',
+            published_time: $this->published_at ?? $this->created_at,
+            modified_time: $this->updated_at,
+        );
     }
 }

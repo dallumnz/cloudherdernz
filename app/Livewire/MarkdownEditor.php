@@ -227,6 +227,18 @@ class MarkdownEditor extends Component
         return strlen($this->content);
     }
 
+    /**
+     * Get the post model when editing.
+     */
+    public function getPostProperty(): ?Post
+    {
+        if (! $this->postId) {
+            return null;
+        }
+
+        return Post::find($this->postId);
+    }
+
     private function setMessage(string $message, string $type): void
     {
         $this->message = $message;

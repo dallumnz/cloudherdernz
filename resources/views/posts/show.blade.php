@@ -1,6 +1,4 @@
 <x-public-layout>
-    <title>{{ $post->title }} | {{ config('app.name') }}</title>
-
     {{-- Main Content Area --}}
     <section class="container mx-auto px-4 py-8">
         <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
@@ -28,6 +26,13 @@
                         <span>{{ $post->content ? Str::wordCount(strip_tags($post->content)) . ' words' : '0 words' }}</span>
                     </div>
                 </header>
+
+                {{-- Excerpt --}}
+                @if($post->excerpt)
+                <div class="mb-6 text-lg text-slate-600 dark:text-slate-400 leading-relaxed">
+                    {{ $post->excerpt }}
+                </div>
+                @endif
 
                 {{-- Featured Image --}}
                 @if($post->getFirstMediaUrl('featured'))

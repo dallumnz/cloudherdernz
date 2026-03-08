@@ -334,6 +334,22 @@ class Post extends Model implements HasMedia
      * Get the content rendered as HTML from Markdown.
      * Cached for performance.
      */
+    /**
+     * Get dynamic SEO data from post fields.
+     */
+    public function getDynamicSEOData(): \RalphJSmit\Laravel\SEO\Support\SEOData
+    {
+        return new \RalphJSmit\Laravel\SEO\Support\SEOData(
+            title: $this->seo->title ?? $this->title,
+            description: $this->seo->description ?? $this->excerpt,
+            image: $this->seo->image ?? $this->getFirstMediaUrl('featured'),
+            author: $this->author?->name ?? 'Admin',
+            published_time: $this->published_at ?? $this->created_at,
+            modified_time: $this->updated_at,
+            section: $this->taxonomyTerms->first()?->name,
+        );
+    }
+
     public function getContentHtmlAttribute(): ?string
     {
         $content = $this->content;

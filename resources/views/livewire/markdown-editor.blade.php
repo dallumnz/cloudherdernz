@@ -208,9 +208,9 @@
         </div>
         <div class="flex items-center gap-4">
             <span>Status: <span class="capitalize">{{ $status }}</span></span>
-            @if ($postId)
+            @if ($this->post)
                 <flux:button
-                    href="{{ route('posts.show', $postId) }}"
+                    href="{{ route('posts.show', $this->post) }}"
                     target="_blank"
                     variant="ghost"
                     size="sm"

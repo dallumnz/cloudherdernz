@@ -2,12 +2,9 @@
     <div class="flex items-center justify-between">
         <flux:heading size="xl">Post Management</flux:heading>
         @can('create posts')
-            <button wire:click="create" type="button" class="inline-flex items-center gap-2 px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-medium rounded-lg transition-colors">
-                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
-                </svg>
+            <flux:button wire:click="create" variant="primary">
                 Create Post
-            </button>
+            </flux:button>
         @endcan
     </div>
 
