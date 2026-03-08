@@ -13,42 +13,18 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        // Seed roles and permissions first
+        // Clean up any existing sample data first
+        $this->call(CleanupSeeder::class);
+
+        // Seed roles and permissions
         $this->call(RolePermissionSeeder::class);
 
-        // Create admin user
-        $adminUser = User::factory()->create([
-            'name' => 'Admin User',
-            'email' => 'admin@example.com',
-        ]);
-        $adminUser->assignRole('Admin');
+        // Create production admin (you)
+        $this->call(ProductionAdminSeeder::class);
 
-        // Create editor user
-        $editorUser = User::factory()->create([
-            'name' => 'Editor User',
-            'email' => 'editor@example.com',
-        ]);
-        $editorUser->assignRole('Editor');
-
-        // Create author user
-        $authorUser = User::factory()->create([
-            'name' => 'Author User',
-            'email' => 'author@example.com',
-        ]);
-        $authorUser->assignRole('Author');
-
-        // Create viewer user
-        $viewerUser = User::factory()->create([
-            'name' => 'Viewer User',
-            'email' => 'viewer@example.com',
-        ]);
-        $viewerUser->assignRole('Viewer');
-
-        // Taxonomy seeds
+        // Create empty taxonomies (categories and tags available but empty)
         $this->call([
-            TagSeeder::class,
-            CategorySeeder::class,
-            PostSeeder::class,
+            TaxonomySeeder::class,
         ]);
     }
 }
