@@ -33,7 +33,7 @@ class StorePostRequest extends FormRequest
 
         return [
             'title' => ['required', 'string', 'max:255'],
-            'slug' => ['required', 'string', 'max:255', 'unique:posts,slug'],
+            'slug' => ['nullable', 'string', 'max:255', 'unique:posts,slug'],
             'excerpt' => ['nullable', 'string'],
             'content' => ['nullable', 'string'],
             'post_type' => ['required', 'string', 'in:'.implode(',', $postTypeValues)],
