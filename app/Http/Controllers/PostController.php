@@ -62,8 +62,6 @@ class PostController extends Controller
      */
     public function show(Post $post): View
     {
-        $post->content_html = filled($post->content) ? Str::markdown($post->content) : '';
-
         return view('posts.show', compact('post'));
     }
 
