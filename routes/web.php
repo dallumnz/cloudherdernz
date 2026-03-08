@@ -134,14 +134,18 @@ Route::middleware(['auth'])->group(function () {
             ->middleware('permission:delete contacts');
     });
 
-    // Post Media Management
-    Route::get('posts/{post}/featured-image', \App\Livewire\FeaturedImageUploader::class)
+    // Post Media Management (use :id to bypass slug route binding)
+    Route::get('posts/{post:id}/featured-image', \App\Livewire\FeaturedImageUploader::class)
         ->name('posts.featured-image')
         ->middleware('permission:edit posts');
 
-    Route::get('posts/{post}/gallery', \App\Livewire\GalleryManager::class)
+    Route::get('posts/{post:id}/gallery', \App\Livewire\GalleryManager::class)
         ->name('posts.gallery')
         ->middleware('permission:edit posts');
+
+    // Spatie Media Library route
+    Route::get('media/{media}/{conversion?}', [\App\Http\Controllers\MediaController::class, 'show'])
+        ->name('media.show');
 });
 
 Route::get('/subscribe/confirm/{token}', [\App\Http\Controllers\SubscribeController::class, 'confirm']);

@@ -47,6 +47,10 @@
                     return preview.innerHTML;
                 },
                 onChange: function() {
+                    // Sync EasyMDE content to Livewire immediately
+                    const currentContent = self.easyMDE.value();
+                    self.$wire.$set('content', currentContent);
+                    
                     // Debounced auto-save
                     clearTimeout(self.saveTimeout);
                     self.saveTimeout = setTimeout(() => {
@@ -160,6 +164,13 @@
         </flux:callout>
     @endif
 
+    {{-- Validation Errors --}}
+    @if ($errors->has('content'))
+        <flux:callout variant="error" class="mb-4">
+            {{ $errors->first('content') }}
+        </flux:callout>
+    @endif
+
     {{-- Editor Container --}}
     <div class="grid grid-cols-1 lg:grid-cols-2 gap-4 h-full" style="min-height: 500px;">
         {{-- Markdown Input --}}
@@ -168,7 +179,6 @@
             <div class="flex-1 relative">
                 <textarea
                     x-ref="textarea"
-                    wire:model.live.debounce.500ms="content"
                     class="w-full h-full min-h-[400px] p-4 font-mono text-sm bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg resize-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
                     placeholder="Write your content in Markdown..."
                 ></textarea>

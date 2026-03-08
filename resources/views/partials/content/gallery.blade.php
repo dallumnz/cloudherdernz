@@ -1,10 +1,13 @@
 {{-- Gallery/Image content --}}
 <div class="mb-6">
     <div class="grid grid-cols-2 md:grid-cols-3 gap-4 mb-6">
-        @if($post->media && $post->media->count() > 0)
-            @foreach($post->media as $mediaItem)
+        @php
+            $galleryImages = $post->getMedia('featured');
+        @endphp
+        @if($galleryImages && $galleryImages->count() > 0)
+            @foreach($galleryImages as $mediaItem)
             <div class="aspect-square bg-slate-200 dark:bg-slate-700 rounded-lg overflow-hidden">
-                <img src="{{ $mediaItem->getUrl() }}" alt="{{ $mediaItem->alt ?? $post->title }}" class="w-full h-full object-cover">
+                <img src="{{ $mediaItem->getUrl() }}" alt="{{ $mediaItem->name ?? $post->title }}" class="w-full h-full object-cover">
             </div>
             @endforeach
         @else

@@ -134,9 +134,15 @@ class MarkdownEditor extends Component
             return;
         }
 
-        $this->validate([
-            'content' => 'nullable|string|max:50000',
-        ]);
+        // Force validation to run and catch errors
+        try {
+            $this->validate([
+                'content' => 'nullable|string|max:500000',
+            ]);
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            $this->setMessage('Validation failed: ' . $e->getMessage(), 'error');
+            throw $e;
+        }
 
         try {
             $post = Post::findOrFail($this->postId);
