@@ -52,6 +52,13 @@ class PostManager extends Component
 
     public bool $showForm = false;
 
+    /**
+     * Event listeners for child component communication.
+     */
+    protected $listeners = [
+        'markdown-updated' => 'handleMarkdownUpdated',
+    ];
+
     protected $queryString = ['editId' => ['except' => null], 'showCreateForm' => ['except' => false]];
 
     public function mount(): void
