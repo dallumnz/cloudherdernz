@@ -83,6 +83,33 @@ class Post extends Model implements HasMedia
     }
 
     /**
+     * Bootstrap the model and its traits.
+     */
+    protected static function boot(): void
+    {
+        parent::boot();
+
+        // Auto-generate slug from title if empty
+        static::creating(function (Post $post) {
+            if (empty($post->slug)) {
+                $post->slug = \Illuminate\Support\Str::slug($post->title);
+            }
+            
+            // Set published_at time to current time if only date provided
+            if ($post->published_at && $post->published_at->format('H:i:s') === '00:00:00') {
+                $post->published_at = $post->published_at->setTimeFromTimeString(now()->format('H:i:s'));
+            }
+        });
+
+        static::updating(function (Post $post) {
+            // Auto-generate slug from title if empty
+            if (empty($post->slug)) {
+                $post->slug = \Illuminate\Support\Str::slug($post->title);
+            }
+        });
+    }
+
+    /**
      * Get the route key for the model (use slug instead of id).
      */
     public function getRouteKeyName(): string
