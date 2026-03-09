@@ -4,7 +4,8 @@
 @php
 use RalphJSmit\Laravel\SEO\Support\SEOData;
 
-$seoModel = $post ?? $page ?? request()->route('post') ?? request()->route('page') ?? null;
+// Check for explicit SEO model from route first (avoids variable pollution from loops)
+$seoModel = request()->route('post') ?? request()->route('page') ?? null;
 @endphp
 
 @if($seoModel)
