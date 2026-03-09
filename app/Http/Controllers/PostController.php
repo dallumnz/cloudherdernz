@@ -62,7 +62,13 @@ class PostController extends Controller
      */
     public function show(Post $post): View
     {
-        return view('posts.show', compact('post'));
+        $popularPosts = Post::published()
+            ->with(['author', 'media'])
+            ->latest('published_at')
+            ->take(5)
+            ->get();
+
+        return view('posts.show', compact('post', 'popularPosts'));
     }
 
     /**

@@ -108,13 +108,6 @@
                 <div class="bg-white dark:bg-slate-800 rounded-xl p-6 border border-slate-200 dark:border-slate-700">
                     <h3 class="text-lg font-bold text-slate-900 dark:text-slate-50 mb-4">Popular Posts</h3>
                     <div class="space-y-4">
-                        @php
-                            $popularPosts = \App\Models\Post::published()
-                                ->with(['author', 'media'])
-                                ->latest('published_at')
-                                ->take(5)
-                                ->get();
-                        @endphp
                         @foreach($popularPosts as $popular)
                         <a href="{{ route('posts.show', $popular) }}" class="flex gap-3 group">
                             <div class="w-20 h-14 flex-shrink-0 bg-gradient-to-br from-blue-500 to-purple-600 rounded overflow-hidden">
