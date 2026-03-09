@@ -2,6 +2,7 @@
     x-data="{
         easyMDE: null,
         isFullscreen: @entangle('isFullscreen'),
+        contentLoaded: false,
         init() {
             this.initEasyMDE();
             this.$wire.on('toggle-fullscreen', (event) => {
@@ -13,6 +14,14 @@
             });
             this.$wire.on('clear-message', () => {
                 setTimeout(() => this.$wire.clearMessage(), 3000);
+            });
+            
+            // Watch for content changes from Livewire (for edit mode)
+            this.$watch('$wire.content', (value) => {
+                if (this.easyMDE && !this.contentLoaded && value) {
+                    this.easyMDE.value(value);
+                    this.contentLoaded = true;
+                }
             });
         },
         initEasyMDE() {
@@ -41,10 +50,9 @@
                     'preview', 'side-by-side', 'fullscreen', '|',
                     'guide'
                 ],
-                previewRender: function(plainText, preview) {
-                    // Trigger Livewire update for preview
-                    self.$wire.$set('content', plainText);
-                    return preview.innerHTML;
+                previewRender: function(plainText) {
+                    // Use Livewire's markdown conversion for accurate preview
+                    return self.$wire.getRenderedContent;
                 },
                 onChange: function() {
                     // Sync EasyMDE content to Livewire immediately
@@ -59,9 +67,10 @@
                 }
             });
 
-            // Set initial content
+            // Set initial content if already available
             if (this.$wire.content) {
                 this.easyMDE.value(this.$wire.content);
+                this.contentLoaded = true;
             }
         },
         openImageUpload() {
