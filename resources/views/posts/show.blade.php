@@ -82,6 +82,11 @@
                     @endforeach
                 </div>
                 @endif
+
+                {{-- Comments Section --}}
+                <section class="mt-12 pt-8 border-t border-slate-200 dark:border-slate-700">
+                    <livewire:comment-thread :post="$post" />
+                </section>
             </article>
 
             {{-- Sidebar --}}
