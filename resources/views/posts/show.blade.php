@@ -35,9 +35,22 @@
                 @endif
 
                 {{-- Featured Image --}}
-                @if($post->getFirstMediaUrl('featured'))
-                <div class="mb-6 rounded-xl overflow-hidden">
-                    <img src="{{ $post->getFirstMediaUrl('featured') }}" alt="{{ $post->title }}" class="w-full">
+                @php($featuredMedia = $post->getFirstMedia('featured'))
+                @if($featuredMedia)
+                <div class="mb-6">
+                    <div class="rounded-xl overflow-hidden">
+                        <img src="{{ $featuredMedia->getUrl() }}" alt="{{ $featuredMedia->getCustomProperty('alt_text') ?? $post->title }}" class="w-full">
+                    </div>
+                    @if($featuredMedia->getCustomProperty('credit_name'))
+                    <p class="text-sm text-slate-500 dark:text-slate-400 mt-2 text-right">
+                        Photo:
+                        @if($featuredMedia->getCustomProperty('credit_url'))
+                            <a href="{{ $featuredMedia->getCustomProperty('credit_url') }}" target="_blank" rel="noopener noreferrer" class="text-indigo-600 dark:text-indigo-400 hover:underline">{{ $featuredMedia->getCustomProperty('credit_name') }}</a>
+                        @else
+                            {{ $featuredMedia->getCustomProperty('credit_name') }}
+                        @endif
+                    </p>
+                    @endif
                 </div>
                 @endif
 

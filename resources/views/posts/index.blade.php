@@ -26,9 +26,21 @@
                     @forelse($posts as $post)
                     <a href="{{ route('posts.show', $post) }}" class="group block">
                         <article class="bg-white dark:bg-slate-800 rounded-xl overflow-hidden border border-slate-200 dark:border-slate-700 hover:border-indigo-500 dark:hover:border-indigo-500 transition-colors">
-                            <div class="aspect-video bg-gradient-to-br from-blue-500 to-purple-600 dark:from-blue-800 dark:to-purple-800">
-                                @if($post->getFirstMediaUrl('featured'))
-                                    <img src="{{ $post->getFirstMediaUrl('featured') }}" alt="{{ $post->title }}" class="w-full h-full object-cover">
+                            @php($featuredMedia = $post->getFirstMedia('featured'))
+                            <div class="aspect-video bg-gradient-to-br from-blue-500 to-purple-600 dark:from-blue-800 dark:to-purple-800 relative">
+                                @if($featuredMedia)
+                                    <img src="{{ $featuredMedia->getUrl() }}" alt="{{ $featuredMedia->getCustomProperty('alt_text') ?? $post->title }}" class="w-full h-full object-cover">
+                                    @if($featuredMedia->getCustomProperty('credit_name'))
+                                    <div class="absolute bottom-0 right-0 bg-black/50 px-2 py-1">
+                                        <p class="text-xs text-white/80">
+                                            @if($featuredMedia->getCustomProperty('credit_url'))
+                                                <a href="{{ $featuredMedia->getCustomProperty('credit_url') }}" target="_blank" rel="noopener noreferrer" class="hover:underline">{{ $featuredMedia->getCustomProperty('credit_name') }}</a>
+                                            @else
+                                                {{ $featuredMedia->getCustomProperty('credit_name') }}
+                                            @endif
+                                        </p>
+                                    </div>
+                                    @endif
                                 @endif
                             </div>
                             <div class="p-4">
