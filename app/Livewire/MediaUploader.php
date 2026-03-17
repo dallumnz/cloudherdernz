@@ -62,7 +62,7 @@ class MediaUploader extends Component
     {
         $this->validate([
             'files' => ['required', 'array', 'max:20'],
-            'files.*' => ['file', 'max:10240'],
+            'files.*' => ['file', 'max:10240', 'mimes:jpg,jpeg,png,webp,gif,svg,pdf,doc,docx,mp3,mp4,webm'],
         ]);
 
         // Check authorization

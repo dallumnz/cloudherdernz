@@ -44,6 +44,11 @@ class AppServiceProvider extends ServiceProvider
             app()->isProduction(),
         );
 
+        // Enforce HTTPS in production
+        if (app()->isProduction()) {
+            URL::forceScheme('https');
+        }
+
         Password::defaults(fn (): ?Password => app()->isProduction()
             ? Password::min(12)
                 ->mixedCase()
