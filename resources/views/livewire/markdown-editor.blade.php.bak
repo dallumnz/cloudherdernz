@@ -3,8 +3,13 @@
         easyMDE: null,
         isFullscreen: @entangle('isFullscreen'),
         contentLoaded: false,
+        isInitializing: false,
         init() {
-            this.initEasyMDE();
+            if (this.isInitializing || this.easyMDE) return; // Prevent double initialization
+            this.isInitializing = true;
+            this.$nextTick(() => {
+                this.initEasyMDE();
+            });
             this.$wire.on('toggle-fullscreen', (event) => {
                 if (event[0].isFullscreen) {
                     this.easyMDE.toggleFullScreen();
@@ -241,9 +246,7 @@
     </div>
 </div>
 
-{{-- EasyMDE Styles --}}
 @push('styles')
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/easymde/dist/easymde.min.css">
     <style>
         .EasyMDEContainer {
             border-radius: 0.5rem;
@@ -288,9 +291,4 @@
             z-index: 52;
         }
     </style>
-@endpush
-
-{{-- EasyMDE Script --}}
-@push('scripts')
-    <script src="https://cdn.jsdelivr.net/npm/easymde/dist/easymde.min.js"></script>
 @endpush

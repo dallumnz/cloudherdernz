@@ -39,7 +39,7 @@ class MarkdownEditor extends Component
 
     public function boot(): void
     {
-        $this->markdownConverter = new CommonMarkConverter([
+        $this->markdownConverter = new \League\CommonMark\GithubFlavoredMarkdownConverter([
             'html_input' => 'strip',
             'allow_unsafe_links' => false,
         ]);
@@ -68,10 +68,8 @@ class MarkdownEditor extends Component
     {
         $this->updatePreview();
         
-        // Notify parent component of content change (for create mode)
-        if (! $this->postId) {
-            $this->dispatch('markdown-updated', content: $this->content);
-        }
+        // Always notify parent component of content change
+        $this->dispatch('markdown-updated', content: $this->content);
     }
 
     /**

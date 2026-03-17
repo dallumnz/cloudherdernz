@@ -370,7 +370,7 @@ class Post extends Model implements HasMedia
         $cacheKey = "post:{$this->id}:content_html";
 
         return Cache::remember($cacheKey, now()->addHours(24), function () use ($content) {
-            $converter = new CommonMarkConverter([
+            $converter = new \League\CommonMark\GithubFlavoredMarkdownConverter([
                 'html_input' => 'strip',
                 'allow_unsafe_links' => false,
             ]);
@@ -394,7 +394,7 @@ class Post extends Model implements HasMedia
         $cacheKey = "post:{$this->id}:excerpt_html";
 
         return Cache::remember($cacheKey, now()->addHours(24), function () use ($excerpt) {
-            $converter = new CommonMarkConverter([
+            $converter = new \League\CommonMark\GithubFlavoredMarkdownConverter([
                 'html_input' => 'strip',
                 'allow_unsafe_links' => false,
             ]);
@@ -404,11 +404,11 @@ class Post extends Model implements HasMedia
     }
 
     /**
-     * Clear the HTML content cache when the post is updated.
+     * Clear the HTML content cache when the post is saved or deleted.
      */
     protected static function booted(): void
     {
-        static::updated(function (Post $post): void {
+        static::saved(function (Post $post): void {
             Cache::forget("post:{$post->id}:content_html");
             Cache::forget("post:{$post->id}:excerpt_html");
         });

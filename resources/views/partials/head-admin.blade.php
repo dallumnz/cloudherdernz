@@ -12,3 +12,5 @@
 
 @vite(['resources/css/admin.css', 'resources/js/admin.js'])
 @fluxAppearance
+
+@stack('styles')

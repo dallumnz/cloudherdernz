@@ -92,7 +92,10 @@
                 />
 
                 {{-- Markdown Editor --}}
-                <livewire:markdown-editor :post-id="$editingId" />
+                <div class="space-y-2">
+                    <flux:text variant="secondary" size="sm">Content</flux:text>
+                    <livewire-markdown-editor wire:model="content" placeholder="Write your post content in Markdown..." />
+                </div>
                 
                 {{-- SEO Meta Box (only for editing) --}}
                 @if($editingId && $post)
