@@ -31,7 +31,7 @@
                     <nav class="flex items-center space-x-6">
                         <a href="#" class="text-slate-600 dark:text-slate-400 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors">Follow Us</a>
                         <a href="{{ route('contact.show') }}" class="text-slate-600 dark:text-slate-400 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors">Contact</a>
-                        <a href="#" class="text-slate-600 dark:text-slate-400 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors">Privacy</a>
+                        <a href="{{ route('privacy') }}" class="text-slate-600 dark:text-slate-400 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors">Privacy</a>
                     </nav>
                 </div>
                 
@@ -40,6 +40,11 @@
                 </div>
             </div>
         </footer>
+
+        @fluxScripts
+    </body>
+</html>
+ter>
 
         @fluxScripts
     </body>

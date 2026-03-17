@@ -170,6 +170,9 @@
 
         {{ $slot }}
 
+        {{-- Cookie Notice --}}
+        <livewire:cookie-notice />
+
         @fluxScripts
         @stack('scripts')
     </body>

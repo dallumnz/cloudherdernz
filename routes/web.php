@@ -55,6 +55,9 @@ Route::post('/contact', [ContactController::class, 'store'])
     ->name('contact.store')
     ->middleware('throttle:contact-submissions');
 
+// Privacy Policy
+Route::view('/privacy', 'privacy')->name('privacy');
+
 // Authenticated Routes
 Route::middleware(['auth'])->group(function () {
     // Dashboard
