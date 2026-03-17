@@ -13,6 +13,9 @@
             {{ $slot }}
         </main>
 
+        {{-- Cookie Notice --}}
+        <livewire:cookie-notice />
+
         {{-- Footer --}}
         <footer class="bg-slate-100 dark:bg-slate-800 border-t border-slate-200 dark:border-slate-700 mt-12 transition-colors">
             <div class="container mx-auto px-4 py-8">
@@ -40,11 +43,6 @@
                 </div>
             </div>
         </footer>
-
-        @fluxScripts
-    </body>
-</html>
-ter>
 
         @fluxScripts
     </body>
