@@ -11,7 +11,7 @@
             </div>
             <div class="mb-4">
                 <strong>Content:</strong>
-                <div class="mt-2 prose">{!! $page->content !!}</div>
+                <div class="mt-2 prose">{!! clean($page->content) !!}</div>
             </div>
             @if($page->meta_title)
                 <div class="mb-4">

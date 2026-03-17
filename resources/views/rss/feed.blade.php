@@ -14,7 +14,7 @@
                 <link>{{ route('posts.show', $post) }}</link>
                 <guid isPermaLink="true">{{ route('posts.show', $post) }}</guid>
                 <pubDate>{{ $post->published_at->toRssString() }}</pubDate>
-                <description><![CDATA[{{ $post->excerpt ?? $post->content }}]]></description>
+                <description>{{ strip_tags($post->excerpt ?? $post->content) }}</description>
 
                 @foreach ($post->taxonomyTerms as $term)
                     <category>{{ $term->name }}</category>

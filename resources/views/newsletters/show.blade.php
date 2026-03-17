@@ -44,7 +44,7 @@
     </div>
     
     <div class="content">
-        {!! $post->content !!}
+        {!! clean($post->content) !!}
     </div>
     
     <div class="footer">

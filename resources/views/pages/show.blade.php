@@ -5,7 +5,7 @@
 
             @if($page->content)
                 <div class="content">
-                    {!! $page->content !!}
+                    {!! clean($page->content) !!}
                 </div>
             @endif
         </article>

@@ -20,18 +20,22 @@ use Illuminate\Support\Facades\Route;
 // Public API routes (no authentication required)
 Route::prefix('v1')->group(function (): void {
 
-    // Newsletter subscription endpoints
+    // Newsletter subscription endpoints (rate limited)
     Route::post('/newsletter/subscribe', [NewsletterSubscriptionController::class, 'subscribe'])
-        ->name('api.newsletter.subscribe');
+        ->name('api.newsletter.subscribe')
+        ->middleware('throttle:newsletter');
 
     Route::get('/newsletter/confirm/{token}', [NewsletterSubscriptionController::class, 'confirm'])
-        ->name('api.newsletter.confirm');
+        ->name('api.newsletter.confirm')
+        ->middleware('throttle:newsletter');
 
     Route::post('/newsletter/unsubscribe', [NewsletterSubscriptionController::class, 'unsubscribe'])
-        ->name('api.newsletter.unsubscribe');
+        ->name('api.newsletter.unsubscribe')
+        ->middleware('throttle:newsletter');
 
     Route::get('/newsletter/status', [NewsletterSubscriptionController::class, 'status'])
-        ->name('api.newsletter.status');
+        ->name('api.newsletter.status')
+        ->middleware('throttle:newsletter');
 
     // Post endpoints - Public (read-only)
     Route::get('/posts', [PostApiController::class, 'index'])
@@ -64,7 +68,7 @@ Route::prefix('v1')->group(function (): void {
 });
 
 // Protected API routes (authentication required)
-Route::prefix('v1')->middleware(['auth:sanctum'])->group(function (): void {
+Route::prefix('v1')->middleware(['auth:sanctum', 'throttle:api'])->group(function (): void {
 
     // Post management endpoints (require authentication and appropriate permissions)
     Route::post('/posts', [PostApiController::class, 'store'])
