@@ -14,6 +14,7 @@ use App\Models\VideoPost;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
+use Illuminate\Support\Facades\DB;
 
 class PostApiController extends Controller
 {
@@ -99,38 +100,40 @@ class PostApiController extends Controller
     {
         $validated = $request->validated();
 
-        // Create the type-specific postable entity
-        $postable = $this->createPostable($validated['post_type'], $validated);
+        return DB::transaction(function () use ($request, $validated) {
+            // Create the type-specific postable entity
+            $postable = $this->createPostable($validated['post_type'], $validated);
 
-        if (! $postable) {
-            return response()->json([
-                'message' => 'Invalid post type.',
-            ], 422);
-        }
+            if (! $postable) {
+                return response()->json([
+                    'message' => 'Invalid post type.',
+                ], 422);
+            }
 
-        // Create the main post
-        $post = Post::create([
-            'author_id' => $request->user()->id,
-            'title' => $validated['title'],
-            'slug' => $validated['slug'],
-            'excerpt' => $validated['excerpt'] ?? null,
-            'content' => $validated['content'] ?? null,
-            'status' => $validated['status'],
-            'published_at' => $validated['published_at'] ?? now(),
-            'postable_type' => get_class($postable),
-            'postable_id' => $postable->id,
-        ]);
+            // Create the main post
+            $post = Post::create([
+                'author_id' => $request->user()->id,
+                'title' => $validated['title'],
+                'slug' => $validated['slug'],
+                'excerpt' => $validated['excerpt'] ?? null,
+                'content' => $validated['content'] ?? null,
+                'status' => $validated['status'],
+                'published_at' => $validated['published_at'] ?? now(),
+                'postable_type' => get_class($postable),
+                'postable_id' => $postable->id,
+            ]);
 
-        // Attach taxonomy terms if provided
-        if (! empty($validated['taxonomy_terms'])) {
-            $post->taxonomyTerms()->attach($validated['taxonomy_terms']);
-        }
+            // Attach taxonomy terms if provided
+            if (! empty($validated['taxonomy_terms'])) {
+                $post->taxonomyTerms()->attach($validated['taxonomy_terms']);
+            }
 
-        $post->load(['author', 'postable', 'taxonomyTerms.taxonomy', 'media']);
+            $post->load(['author', 'postable', 'taxonomyTerms.taxonomy', 'media']);
 
-        return (new PostResource($post))
-            ->response()
-            ->setStatusCode(201);
+            return (new PostResource($post))
+                ->response()
+                ->setStatusCode(201);
+        });
     }
 
     /**
@@ -222,15 +225,17 @@ class PostApiController extends Controller
             ], 403);
         }
 
-        // Delete the type-specific entity first
-        $post->postable?->delete();
+        return DB::transaction(function () use ($post) {
+            // Delete the type-specific entity first
+            $post->postable?->delete();
 
-        // Delete the post (this will also detach taxonomy terms via pivot table)
-        $post->delete();
+            // Delete the post (this will also detach taxonomy terms via pivot table)
+            $post->delete();
 
-        return response()->json([
-            'message' => 'Post deleted successfully.',
-        ], 200);
+            return response()->json([
+                'message' => 'Post deleted successfully.',
+            ], 200);
+        });
     }
 
     /**
