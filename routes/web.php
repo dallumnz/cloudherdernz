@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Admin\ContactController as AdminContactController;
+use App\Http\Controllers\Admin\NewsletterActivityController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\ContactController;
 use App\Http\Controllers\HomeController;
@@ -137,6 +138,16 @@ Route::middleware(['auth'])->group(function () {
             ->middleware('permission:delete contacts');
     });
 
+    // Newsletter Activities (Admin)
+    Route::prefix('admin/newsletters')->name('admin.newsletter-activities.')->middleware(['permission:view posts'])->group(function () {
+        Route::get('/activities', [NewsletterActivityController::class, 'index'])->name('index');
+        Route::get('/activities/create', [NewsletterActivityController::class, 'create'])->name('create');
+        Route::post('/activities', [NewsletterActivityController::class, 'store'])->name('store');
+        Route::get('/activities/{activity}', [NewsletterActivityController::class, 'show'])->name('show');
+        Route::delete('/activities/{activity}', [NewsletterActivityController::class, 'destroy'])->name('destroy');
+        Route::post('/activities/{activity}/retry', [NewsletterActivityController::class, 'retry'])->name('retry');
+    });
+
     // Post Media Management (use :id to bypass slug route binding)
     Route::get('posts/{post:id}/featured-image', \App\Livewire\FeaturedImageUploader::class)
         ->name('posts.featured-image')
@@ -146,12 +157,24 @@ Route::middleware(['auth'])->group(function () {
         ->name('posts.gallery')
         ->middleware('permission:edit posts');
 
-    // Spatie Media Library route
-    Route::get('media/{media}/{conversion?}', [\App\Http\Controllers\MediaController::class, 'show'])
-        ->name('media.show');
+
 });
 
 Route::get('/subscribe/confirm/{token}', [\App\Http\Controllers\SubscribeController::class, 'confirm']);
 require __DIR__.'/settings.php';
-Route::get('/subscribe/confirm/{token}', [\App\Http\Controllers\SubscribeController::class, 'confirm']);
-Route::get('/newsletter/{id}', [\App\Http\Controllers\NewsletterViewController::class, 'show']);
+// Newsletter subscription routes
+Route::get('/subscribe/confirm/{token}', [\App\Http\Controllers\SubscribeController::class, 'confirm'])
+    ->name('subscribe.confirm');
+
+// Newsletter web view (public)
+Route::get('/newsletter/{uuid}', [\App\Http\Controllers\NewsletterViewController::class, 'show'])
+    ->name('newsletter.show')
+    ->where('uuid', '[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}');
+
+// Newsletter tracking pixel
+Route::get('/newsletter/{uuid}/open', [\App\Http\Controllers\NewsletterViewController::class, 'trackOpen'])
+    ->name('newsletter.track-open');
+
+// Newsletter unsubscribe web
+Route::get('/newsletter/unsubscribe', [\App\Http\Controllers\SubscribeController::class, 'showUnsubscribe'])
+    ->name('newsletter.unsubscribe-web');

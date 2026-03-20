@@ -62,8 +62,13 @@
                                 </flux:sidebar.item>
                             @endcan
                             @can('view newsletter subscribers')
-                                <flux:sidebar.item icon="newspaper" :href="route('admin.newsletter-subscribers.index')" :current="request()->routeIs('admin.newsletter-subscribers.index')" wire:navigate>
+                                <flux:sidebar.item icon="newspaper" :href="route('admin.newsletter-subscribers.index')" :current="request()->routeIs('admin.newsletter-subscribers.*')" wire:navigate>
                                     {{ __('Newsletter Subscribers') }}
+                                </flux:sidebar.item>
+                            @endcan
+                            @can('view posts')
+                                <flux:sidebar.item icon="paper-airplane" :href="route('admin.newsletter-activities.index')" :current="request()->routeIs('admin.newsletter-activities.*')" wire:navigate>
+                                    {{ __('Send Newsletter') }}
                                 </flux:sidebar.item>
                             @endcan
                             @can('view contacts')
