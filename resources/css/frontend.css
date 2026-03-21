@@ -9,4 +9,239 @@
 @source '../../vendor/livewire/flux-pro/stubs/**/*.blade.php';
 @source '../../vendor/livewire/flux/stubs/**/*.blade.php';
 
-/* Frontend-specific overrides */
+/* ==========================================================================
+   CloudHerder - Daylight Atelier Design System
+   Tailwind CSS v4 Configuration
+   ========================================================================== */
+
+/* --------------------------------------------------------------------------
+   Theme Configuration - Colors & Typography
+   -------------------------------------------------------------------------- */
+@theme {
+  /* Daylight Atelier - Light Mode Colors */
+  --color-surface: #faf8f5;
+  --color-surface-dim: #f5f0e8;
+  --color-surface-bright: #ffffff;
+  
+  --color-surface-container-lowest: #ffffff;
+  --color-surface-container-low: #f5f0e8;
+  --color-surface-container: #f0ebe0;
+  --color-surface-container-high: #ebe5db;
+  --color-surface-container-highest: #e8e0d4;
+  
+  --color-on-surface: #1a1a1a;
+  --color-on-surface-variant: #5c5c5c;
+  
+  --color-primary: #1a5f7a;
+  --color-primary-container: #2d7a9a;
+  --color-primary-fixed: #e0f4f8;
+  --color-primary-fixed-dim: #c5e8ef;
+  --color-on-primary: #ffffff;
+  
+  --color-tertiary: #c45c26;
+  --color-tertiary-container: #d4733d;
+  --color-tertiary-fixed: #fce8dd;
+  --color-tertiary-fixed-dim: #f5d4c0;
+  --color-on-tertiary: #ffffff;
+  
+  --color-outline: #a8a090;
+  --color-outline-variant: #d4cfc4;
+  
+  --color-background: #faf8f5;
+  --color-on-background: #1a1a1a;
+  
+  /* Typography */
+  --font-family-headline: 'Newsreader', serif;
+  --font-family-body: 'Newsreader', serif;
+  --font-family-label: 'Newsreader', serif;
+  
+  /* Spacing Scale */
+  --spacing-editorial: 1.5rem;
+}
+
+/* --------------------------------------------------------------------------
+   Dark Mode - Nocturnal Editorial
+   Using @layer to ensure proper specificity
+   -------------------------------------------------------------------------- */
+@layer base {
+  .dark {
+    --color-surface: #0b1326;
+    --color-surface-dim: #060e20;
+    --color-surface-bright: #131b2e;
+    
+    --color-surface-container-lowest: #060e20;
+    --color-surface-container-low: #131b2e;
+    --color-surface-container: #171f33;
+    --color-surface-container-high: #222a3d;
+    --color-surface-container-highest: #2d3449;
+    
+    --color-on-surface: #dae2fd;
+    --color-on-surface-variant: #bdc8d1;
+    
+    --color-primary: #83cfff;
+    --color-primary-container: #19a8e6;
+    --color-primary-fixed: #c6e7ff;
+    --color-primary-fixed-dim: #83cfff;
+    --color-on-primary: #00344b;
+    
+    --color-tertiary: #ffb867;
+    --color-tertiary-container: #dc8b17;
+    --color-tertiary-fixed: #ffddbb;
+    --color-tertiary-fixed-dim: #ffb867;
+    --color-on-tertiary: #482900;
+    
+    --color-outline: #88929b;
+    --color-outline-variant: #3e4850;
+    
+    --color-background: #0b1326;
+    --color-on-background: #dae2fd;
+  }
+}
+
+/* --------------------------------------------------------------------------
+   Font Face - Newsreader (Self-hosted or Google Fonts)
+   -------------------------------------------------------------------------- */
+@font-face {
+  font-family: 'Newsreader';
+  src: url('/fonts/Newsreader-Variable.ttf') format('truetype-variations');
+  font-weight: 200 800;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Newsreader';
+  src: url('/fonts/Newsreader-Italic-Variable.ttf') format('truetype-variations');
+  font-weight: 200 800;
+  font-style: italic;
+  font-display: swap;
+}
+
+/* --------------------------------------------------------------------------
+   Base Styles
+   -------------------------------------------------------------------------- */
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+  
+  body {
+    font-family: 'Newsreader', serif;
+    background-color: var(--color-surface);
+    color: var(--color-on-surface);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+  
+  /* Selection colors */
+  ::selection {
+    background-color: var(--color-primary-fixed);
+    color: var(--color-on-surface);
+  }
+  
+  .dark ::selection {
+    background-color: #c6e7ff;
+    color: #00344b;
+  }
+}
+
+/* --------------------------------------------------------------------------
+   Component Styles - Design System Utilities
+   -------------------------------------------------------------------------- */
+@layer components {
+  /* Letterpress effect for headlines */
+  .letterpress {
+    text-shadow: 0 1px 0 rgba(0, 0, 0, 0.05);
+  }
+  
+  .dark .letterpress {
+    text-shadow: 0 1px 0 rgba(255, 255, 255, 0.05);
+  }
+  
+  /* Drop cap for article openings */
+  .dropcap::first-letter {
+    float: left;
+    font-size: 5rem;
+    line-height: 4rem;
+    padding-right: 0.75rem;
+    padding-top: 0.5rem;
+    font-family: 'Newsreader', serif;
+    font-weight: 800;
+    color: var(--color-primary);
+  }
+  
+  .dark .dropcap::first-letter {
+    color: #83cfff;
+  }
+  
+  /* Surface transition utility */
+  .transition-surface {
+    transition: background-color 0.3s ease;
+  }
+  
+  /* Editorial prose styles */
+  .prose-editorial p {
+    font-size: 1.25rem;
+    line-height: 1.8;
+    margin-bottom: 2rem;
+  }
+  
+  .prose-editorial h2 {
+    font-family: 'Newsreader', serif;
+    font-size: 1.875rem;
+    font-weight: 700;
+    margin-top: 3rem;
+    margin-bottom: 1.5rem;
+    color: var(--color-on-surface);
+  }
+  
+  /* Prose dark mode overrides */
+  .dark .prose {
+    --tw-prose-body: var(--color-on-surface);
+    --tw-prose-headings: var(--color-on-surface);
+    --tw-prose-lead: var(--color-on-surface-variant);
+    --tw-prose-links: var(--color-primary);
+    --tw-prose-bold: var(--color-on-surface);
+    --tw-prose-counters: var(--color-on-surface-variant);
+    --tw-prose-bullets: var(--color-outline);
+    --tw-prose-hr: var(--color-outline-variant);
+    --tw-prose-quotes: var(--color-on-surface-variant);
+    --tw-prose-quote-borders: var(--color-outline-variant);
+    --tw-prose-captions: var(--color-on-surface-variant);
+    --tw-prose-code: var(--color-on-surface);
+    --tw-prose-pre-code: var(--color-on-surface);
+    --tw-prose-pre-bg: var(--color-surface-container-low);
+    --tw-prose-th-borders: var(--color-outline-variant);
+    --tw-prose-td-borders: var(--color-outline-variant);
+  }
+  
+  .dark .prose-invert {
+    --tw-prose-body: var(--color-on-surface);
+    --tw-prose-headings: var(--color-on-surface);
+    --tw-prose-lead: var(--color-on-surface-variant);
+    --tw-prose-links: var(--color-primary);
+    --tw-prose-bold: var(--color-on-surface);
+    --tw-prose-counters: var(--color-on-surface-variant);
+    --tw-prose-bullets: var(--color-outline);
+    --tw-prose-hr: var(--color-outline-variant);
+    --tw-prose-quotes: var(--color-on-surface-variant);
+    --tw-prose-quote-borders: var(--color-outline-variant);
+    --tw-prose-captions: var(--color-on-surface-variant);
+    --tw-prose-code: var(--color-on-surface);
+    --tw-prose-pre-code: var(--color-on-surface);
+    --tw-prose-pre-bg: var(--color-surface-container-lowest);
+    --tw-prose-th-borders: var(--color-outline-variant);
+    --tw-prose-td-borders: var(--color-outline-variant);
+  }
+}
+
+/* --------------------------------------------------------------------------
+   Flux UI Overrides - Match Design System
+   -------------------------------------------------------------------------- */
+@layer utilities {
+  /* Ensure Flux components use our surface colors */
+  .flux-button {
+    --tw-bg-opacity: 1;
+    background-color: var(--color-primary);
+  }
+}

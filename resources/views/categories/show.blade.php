@@ -1,111 +1,116 @@
-<x-layouts::public>
-    <div class="container mx-auto px-4 py-12">
-        {{-- Breadcrumb --}}
-        <nav class="flex items-center space-x-2 text-sm text-gray-500 mb-8">
-            <a href="{{ route('home') }}" class="hover:text-blue-600">Home</a>
-            <span>/</span>
-            <a href="{{ route('categories.index') }}" class="hover:text-blue-600">Categories</a>
-            <span>/</span>
-            <span class="text-gray-900 dark:text-white">{{ $category->name }}</span>
-        </nav>
-
-        {{-- Category Header --}}
-        <div class="text-center mb-12">
-            <div class="inline-flex items-center justify-center p-4 bg-indigo-100 dark:bg-indigo-900 rounded-full mb-4">
-                <flux:icon name="folder" class="w-8 h-8 text-indigo-600 dark:text-indigo-400" />
+<x-public-layout>
+    {{-- Category Header Section --}}
+    <section class="max-w-screen-2xl mx-auto px-6 md:px-8 pt-20 pb-12">
+        <div class="grid grid-cols-12 gap-8">
+            <div class="col-span-12 lg:col-span-8 lg:col-start-3 text-center">
+                {{-- Category Badge --}}
+                <div class="inline-flex items-center justify-center w-16 h-16 bg-primary-fixed rounded-full mb-6">
+                    <svg class="w-8 h-8 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z"/>
+                    </svg>
+                </div>
+                
+                <h1 class="text-4xl md:text-5xl lg:text-6xl font-headline font-bold text-on-surface leading-[1.05] tracking-tight mb-6 letterpress">
+                    {{ $category->name }}
+                </h1>
+                
+                @if ($category->description)
+                <p class="text-xl md:text-2xl font-headline italic text-on-surface-variant leading-relaxed max-w-3xl mx-auto mb-6">
+                    {{ $category->description }}
+                </p>
+                @endif
+                
+                <p class="text-sm text-outline font-label uppercase tracking-widest">
+                    {{ $category->posts()->count() }} {{ Str::plural('post', $category->posts()->count()) }}
+                </p>
             </div>
-            <h1 class="text-4xl font-bold text-gray-900 dark:text-white mb-4">{{ $category->name }}</h1>
-            @if ($category->description)
-                <p class="text-xl text-gray-600 dark:text-gray-400 max-w-2xl mx-auto">{{ $category->description }}</p>
-            @endif
-            <p class="text-sm text-gray-500 mt-4">
-                {{ $category->posts()->count() }} post{{ $category->posts()->count() !== 1 ? 's' : '' }}
-            </p>
+        </div>
+    </section>
+
+    {{-- Parent Category Link --}}
+    @if ($category->parent)
+    <section class="max-w-screen-2xl mx-auto px-6 md:px-8 pb-8 text-center">
+        <a href="{{ route('categories.show', $category->parent) }}" class="inline-flex items-center text-primary hover:text-primary-container font-label text-sm uppercase tracking-widest transition-colors">
+            <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M15 19l-7-7 7-7"/>
+            </svg>
+            Back to {{ $category->parent->name }}
+        </a>
+    </section>
+    @endif
+
+    {{-- Subcategories --}}
+    @if ($category->children->count() > 0)
+    <section class="max-w-screen-2xl mx-auto px-6 md:px-8 py-8 border-b border-outline-variant/20">
+        <h2 class="text-xl font-headline font-bold tracking-tighter mb-6 text-center letterpress">Subcategories</h2>
+        <div class="flex flex-wrap justify-center gap-3">
+            @foreach ($category->children as $child)
+            <a href="{{ route('categories.show', $child) }}" class="inline-flex items-center px-5 py-2.5 rounded-lg font-label text-sm bg-surface-container-low text-on-surface-variant hover:bg-surface-container-high hover:text-primary border border-outline-variant/20 transition-all">
+                <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z"/>
+                </svg>
+                {{ $child->name }}
+                <span class="ml-2 text-xs text-outline">({{ $child->posts()->count() }})</span>
+            </a>
+            @endforeach
+        </div>
+    </section>
+    @endif
+
+    {{-- Posts Grid --}}
+    @php($posts = $category->posts()->published()->latest('published_at')->paginate(12))
+
+    <section class="max-w-screen-2xl mx-auto px-6 md:px-8 py-12">
+        @if ($posts->count() > 0)
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            @foreach ($posts as $post)
+            <article class="bg-surface-container-low rounded-lg overflow-hidden transition-surface hover:bg-surface-container-high group cursor-pointer">
+                <a href="{{ route('posts.show', $post) }}" class="block">
+                    @if ($post->getFirstMediaUrl('featured'))
+                    <div class="aspect-video overflow-hidden">
+                        <img src="{{ $post->getFirstMediaUrl('featured') }}" 
+                             alt="{{ $post->title }}" 
+                             class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105">
+                    </div>
+                    @else
+                    <div class="aspect-video bg-gradient-to-br from-primary to-primary-container flex items-center justify-center">
+                        <svg class="w-12 h-12 text-on-primary/50" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+                        </svg>
+                    </div>
+                    @endif
+                    <div class="p-6">
+                        <h2 class="text-xl font-headline font-bold text-on-surface group-hover:text-primary transition-colors mb-3 leading-tight">
+                            {{ $post->title }}
+                        </h2>
+                        <p class="text-on-surface-variant font-body text-sm line-clamp-3 mb-4">
+                            {{ $post->excerpt ?: Str::limit(strip_tags($post->content), 150) }}
+                        </p>
+                        <div class="flex items-center justify-between pt-4 border-t border-outline-variant/20">
+                            <span class="text-xs text-outline font-label uppercase tracking-wider">
+                                {{ $post->published_at?->format('M d, Y') }}
+                            </span>
+                            <span class="text-primary text-sm font-medium group-hover:underline">Read More →</span>
+                        </div>
+                    </div>
+                </a>
+            </article>
+            @endforeach
         </div>
 
-        {{-- Parent Category Link --}}
-        @if ($category->parent)
-            <div class="text-center mb-8">
-                <a href="{{ route('categories.show', $category->parent) }}" class="inline-flex items-center text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300">
-                    <flux:icon name="arrow-left" class="w-4 h-4 mr-2" />
-                    Back to {{ $category->parent->name }}
-                </a>
-            </div>
-        @endif
-
-        {{-- Subcategories --}}
-        @if ($category->children->count() > 0)
-            <div class="mb-12">
-                <h2 class="text-2xl font-bold text-gray-900 dark:text-white mb-6 text-center">Subcategories</h2>
-                <div class="flex flex-wrap justify-center gap-3">
-                    @foreach ($category->children as $child)
-                        <a
-                            href="{{ route('categories.show', $child) }}"
-                            class="inline-flex items-center px-4 py-2 rounded-full text-sm font-medium bg-gray-100 text-gray-700 hover:bg-indigo-100 hover:text-indigo-700 dark:bg-gray-800 dark:text-gray-300 dark:hover:bg-indigo-900 dark:hover:text-indigo-300 transition"
-                        >
-                            <flux:icon name="folder" class="w-4 h-4 mr-2" />
-                            {{ $child->name }}
-                            <span class="ml-2 text-xs text-gray-500">({{ $child->posts()->count() }})</span>
-                        </a>
-                    @endforeach
-                </div>
-            </div>
-        @endif
-
-        {{-- Posts Grid --}}
-        @php
-            $posts = $category->posts()->published()->latest('published_at')->paginate(12);
-        @endphp
-
-        @if ($posts->count() > 0)
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                @foreach ($posts as $post)
-                    <article class="bg-white dark:bg-gray-800 rounded-xl shadow-sm overflow-hidden hover:shadow-md transition">
-                        @if ($post->getFeaturedImageUrl('thumbnail'))
-                            <a href="{{ route('posts.show', $post) }}" class="block aspect-video overflow-hidden">
-                                <img
-                                    src="{{ $post->getFeaturedImageUrl('thumbnail') }}"
-                                    alt="{{ $post->title }}"
-                                    class="w-full h-full object-cover hover:scale-105 transition-transform duration-300"
-                                >
-                            </a>
-                        @else
-                            <div class="aspect-video bg-gray-200 dark:bg-gray-700 flex items-center justify-center">
-                                <flux:icon name="document-text" class="w-12 h-12 text-gray-400" />
-                            </div>
-                        @endif
-                        <div class="p-6">
-                            <h2 class="text-xl font-semibold mb-2">
-                                <a href="{{ route('posts.show', $post) }}" class="text-gray-900 dark:text-white hover:text-blue-600 dark:hover:text-blue-400">
-                                    {{ $post->title }}
-                                </a>
-                            </h2>
-                            <p class="text-gray-600 dark:text-gray-400 text-sm line-clamp-3">
-                                {{ $post->excerpt ?: Str::limit(strip_tags($post->content), 150) }}
-                            </p>
-                            <div class="flex items-center justify-between mt-4 pt-4 border-t border-gray-100 dark:border-gray-700">
-                                <span class="text-sm text-gray-500">
-                                    {{ $post->published_at?->format('M d, Y') }}
-                                </span>
-                                <a href="{{ route('posts.show', $post) }}" class="text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300 text-sm font-medium">
-                                    Read More →
-                                </a>
-                            </div>
-                        </div>
-                    </article>
-                @endforeach
-            </div>
-
-            {{-- Pagination --}}
-            <div class="mt-12">
-                {{ $posts->links() }}
-            </div>
+        {{-- Pagination --}}
+        <div class="mt-12">
+            {{ $posts->links() }}
+        </div>
         @else
-            <div class="text-center py-16 bg-gray-50 dark:bg-gray-800 rounded-xl">
-                <flux:icon name="document-text" class="w-16 h-16 mx-auto mb-4 text-gray-300" />
-                <h3 class="text-xl font-semibold text-gray-900 dark:text-white mb-2">No posts yet</h3>
-                <p class="text-gray-500 dark:text-gray-400">No posts in "{{ $category->name }}" yet.</p>
-            </div>
+        {{-- Empty State --}}
+        <div class="text-center py-20 bg-surface-container-low rounded-xl">
+            <svg class="w-16 h-16 mx-auto mb-6 text-outline" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+            </svg>
+            <h3 class="text-2xl font-headline font-bold text-on-surface mb-3">No posts yet</h3>
+            <p class="text-on-surface-variant font-body">No posts in "{{ $category->name }}" yet. Check back soon!</p>
+        </div>
         @endif
-    </div>
-</x-layouts::public>
+    </section>
+</x-public-layout>

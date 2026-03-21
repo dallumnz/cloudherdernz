@@ -1,138 +1,155 @@
-<x-layouts::public>
+<x-public-layout>
     <x-slot:head>
         <meta name="robots" content="noindex, follow">
     </x-slot:head>
 
-    <div class="container mx-auto px-4 py-12">
-        {{-- Search Header --}}
-        <div class="text-center mb-12">
-            <h1 class="text-4xl font-bold text-gray-900 dark:text-white mb-4">Search Results</h1>
-            <p class="text-xl text-gray-600 dark:text-gray-400 mb-8">
-                @isset($query)
-                    Found {{ $posts->total() }} {{ Str::plural('result', $posts->total()) }} for "<span class="font-semibold">{{ $query }}</span>"
-                @else
-                    Find posts by title or content
-                @endisset
+    {{-- Search Header --}}
+    <section class="max-w-screen-2xl mx-auto px-6 md:px-8 pt-20 pb-12">
+        <div class="max-w-3xl mx-auto text-center">
+            <h1 class="text-4xl md:text-5xl font-headline font-bold text-on-surface tracking-tight mb-6 letterpress">
+                Search Results
+            </h1>
+            
+            @isset($query)
+            <p class="text-xl font-headline italic text-on-surface-variant mb-8">
+                Found {{ $posts->total() }} {{ Str::plural('result', $posts->total()) }} for "<span class="text-primary font-bold">{{ $query }}</span>"
             </p>
+            @else
+            <p class="text-xl font-headline italic text-on-surface-variant mb-8">
+                Find posts by title or content
+            </p>
+            @endisset
 
             {{-- Search Form --}}
             <form action="{{ route('search.results') }}" method="GET" class="max-w-2xl mx-auto">
-                <div class="flex gap-2">
+                <div class="flex gap-3">
                     <input
                         type="text"
                         name="q"
                         value="{{ $query ?? '' }}"
                         placeholder="Search posts..."
-                        class="flex-1 px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                        class="flex-1 px-6 py-4 bg-surface-container-low border-none rounded-lg text-on-surface font-body placeholder:text-outline/60 focus:ring-2 focus:ring-primary/30 transition-all"
                         required
                         minlength="2"
                         maxlength="255"
                     >
                     <button
                         type="submit"
-                        class="px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg transition"
+                        class="px-8 py-4 bg-gradient-to-br from-primary to-primary-container text-on-primary font-bold rounded-lg hover:opacity-90 transition-all flex items-center gap-2"
                     >
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+                        </svg>
                         Search
                     </button>
                 </div>
             </form>
         </div>
+    </section>
 
-        {{-- Search Results --}}
+    {{-- Search Results --}}
+    <section class="max-w-screen-2xl mx-auto px-6 md:px-8 py-12 border-t border-outline-variant/20">
         @isset($query)
             @if ($posts->count() > 0)
-                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                    @foreach ($posts as $post)
-                        <article class="bg-white dark:bg-gray-800 rounded-xl shadow-sm overflow-hidden hover:shadow-lg transition">
-                            @if ($post->getFeaturedImageUrl('thumbnail'))
-                                <a href="{{ route('posts.show', $post) }}" class="block aspect-video overflow-hidden">
-                                    <img
-                                        src="{{ $post->getFeaturedImageUrl('thumbnail') }}"
-                                        alt="{{ $post->title }}"
-                                        class="w-full h-full object-cover hover:scale-105 transition-transform duration-300"
-                                    >
-                                </a>
-                            @else
-                                <div class="aspect-video bg-gray-200 dark:bg-gray-700 flex items-center justify-center">
-                                    <flux:icon name="document-text" class="w-12 h-12 text-gray-400" />
-                                </div>
-                            @endif
-                            <div class="p-6">
-                                <div class="flex items-center space-x-2 mb-3">
-                                    <span class="text-xs font-medium text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-900/50 px-2 py-1 rounded">
-                                        {{ $post->postable?->getKey() ? class_basename($post->postable_type) . ' Post' : 'Post' }}
-                                    </span>
-                                    <span class="text-xs text-gray-500">
-                                        {{ $post->published_at?->format('M d, Y') }}
-                                    </span>
-                                </div>
-                                <h2 class="text-xl font-semibold mb-3">
-                                    <a href="{{ route('posts.show', $post) }}" class="text-gray-900 dark:text-white hover:text-blue-600 dark:hover:text-blue-400">
-                                        {{ $post->title }}
-                                    </a>
-                                </h2>
-                                <p class="text-gray-600 dark:text-gray-400 text-sm line-clamp-3 mb-4">
-                                    {{ $post->excerpt ?: Str::limit(strip_tags($post->content), 150) }}
-                                </p>
-
-                                {{-- Tags --}}
-                                @if ($post->taxonomyTerms->count() > 0)
-                                    <div class="flex flex-wrap gap-1 mb-4">
-                                        @foreach ($post->taxonomyTerms->take(3) as $term)
-                                            <a
-                                                href="{{ route($term->taxonomy?->type === 'tag' ? 'tags.show' : 'categories.show', $term) }}"
-                                                class="text-xs px-2 py-1 rounded-full bg-gray-100 text-gray-600 hover:bg-blue-100 hover:text-blue-700 dark:bg-gray-700 dark:text-gray-400 dark:hover:bg-blue-900 dark:hover:text-blue-300 transition"
-                                            >
-                                                {{ $term->name }}
-                                            </a>
-                                        @endforeach
-                                    </div>
-                                @endif
-
-                                <div class="flex items-center justify-between pt-4 border-t border-gray-100 dark:border-gray-700">
-                                    <div class="flex items-center space-x-2">
-                                        <flux:avatar :name="$post->author?->name" :initials="$post->author?->initials()" size="sm" />
-                                        <span class="text-sm text-gray-600 dark:text-gray-400">{{ $post->author?->name ?? 'Unknown' }}</span>
-                                    </div>
-                                    <a href="{{ route('posts.show', $post) }}" class="text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300 text-sm font-medium">
-                                        Read More →
-                                    </a>
-                                </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                @foreach ($posts as $post)
+                <article class="bg-surface-container-low rounded-lg overflow-hidden transition-surface hover:bg-surface-container-high group cursor-pointer">
+                    <a href="{{ route('posts.show', $post) }}" class="block">
+                        @if ($post->getFirstMediaUrl('featured'))
+                        <div class="aspect-video overflow-hidden">
+                            <img src="{{ $post->getFirstMediaUrl('featured') }}" 
+                                 alt="{{ $post->title }}" 
+                                 class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105">
+                        </div>
+                        @else
+                        <div class="aspect-video bg-gradient-to-br from-primary to-primary-container flex items-center justify-center">
+                            <svg class="w-12 h-12 text-on-primary/50" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+                            </svg>
+                        </div>
+                        @endif
+                        <div class="p-6">
+                            {{-- Post Type Badge --}}
+                            <div class="flex items-center gap-2 mb-3">
+                                <span class="bg-primary-fixed/50 text-primary text-xs font-label uppercase tracking-wider px-2 py-1 rounded">
+                                    {{ $post->taxonomyTerms->first()?->name ?? 'Post' }}
+                                </span>
+                                <span class="text-xs text-outline">
+                                    {{ $post->published_at?->format('M d, Y') }}
+                                </span>
                             </div>
-                        </article>
-                    @endforeach
-                </div>
+                            
+                            <h2 class="text-xl font-headline font-bold text-on-surface group-hover:text-primary transition-colors mb-3 leading-tight">
+                                {{ $post->title }}
+                            </h2>
+                            <p class="text-on-surface-variant font-body text-sm line-clamp-3 mb-4">
+                                {{ $post->excerpt ?: Str::limit(strip_tags($post->content), 150) }}
+                            </p>
 
-                {{-- Pagination --}}
-                <div class="mt-12">
-                    {{ $posts->links() }}
-                </div>
+                            {{-- Tags --}}
+                            @if ($post->taxonomyTerms->count() > 1)
+                            <div class="flex flex-wrap gap-1 mb-4">
+                                @foreach ($post->taxonomyTerms->skip(1)->take(3) as $term)
+                                <span class="text-xs px-2 py-1 rounded bg-surface-container-high text-on-surface-variant">
+                                    {{ $term->name }}
+                                </span>
+                                @endforeach
+                            </div>
+                            @endif
+
+                            <div class="flex items-center justify-between pt-4 border-t border-outline-variant/20">
+                                <span class="text-sm text-on-surface-variant">By {{ $post->author?->name ?? 'Unknown' }}</span>
+                                <span class="text-primary text-sm font-medium group-hover:underline">Read More →</span>
+                            </div>
+                        </div>
+                    </a>
+                </article>
+                @endforeach
+            </div>
+
+            {{-- Pagination --}}
+            <div class="mt-12">
+                {{ $posts->links() }}
+            </div>
             @else
-                {{-- No Results --}}
-                <div class="text-center py-16 bg-gray-50 dark:bg-gray-800 rounded-xl">
-                    <flux:icon name="magnifying-glass" class="w-16 h-16 mx-auto mb-4 text-gray-300" />
-                    <h3 class="text-xl font-semibold text-gray-900 dark:text-white mb-2">No results found</h3>
-                    <p class="text-gray-500 dark:text-gray-400 mb-6">We couldn't find any posts matching "{{ $query }}"</p>
-                    <div class="flex flex-col sm:flex-row gap-4 justify-center">
-                        <a href="{{ route('search.index') }}" class="text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300 font-medium">
-                            Try a new search →
-                        </a>
-                        <a href="{{ route('posts.index') }}" class="text-gray-600 hover:text-gray-800 dark:text-gray-400 dark:hover:text-gray-300 font-medium">
-                            Browse all posts →
-                        </a>
-                    </div>
+            {{-- No Results --}}
+            <div class="text-center py-20 bg-surface-container-low rounded-xl max-w-2xl mx-auto">
+                <svg class="w-16 h-16 mx-auto mb-6 text-outline" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+                </svg>
+                <h3 class="text-2xl font-headline font-bold text-on-surface mb-3">No results found</h3>
+                <p class="text-on-surface-variant font-body mb-8">We couldn't find any posts matching "{{ $query }}"</p>
+                <div class="flex flex-col sm:flex-row gap-4 justify-center">
+                    <a href="{{ route('search.index') }}" class="inline-flex items-center justify-center gap-2 text-primary font-label text-sm uppercase tracking-widest hover:underline">
+                        Try a new search
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"/>
+                        </svg>
+                    </a>
+                    <a href="{{ route('posts.index') }}" class="inline-flex items-center justify-center gap-2 text-on-surface-variant font-label text-sm uppercase tracking-widest hover:text-primary transition-colors">
+                        Browse all posts
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"/>
+                        </svg>
+                    </a>
                 </div>
+            </div>
             @endif
         @else
             {{-- No Query State --}}
-            <div class="text-center py-16 bg-gray-50 dark:bg-gray-800 rounded-xl">
-                <flux:icon name="magnifying-glass" class="w-16 h-16 mx-auto mb-4 text-gray-300" />
-                <h3 class="text-xl font-semibold text-gray-900 dark:text-white mb-2">Enter a search term</h3>
-                <p class="text-gray-500 dark:text-gray-400 mb-6">Type in the search box above to find posts</p>
-                <a href="{{ route('posts.index') }}" class="text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300 font-medium">
-                    Browse all posts →
+            <div class="text-center py-20 bg-surface-container-low rounded-xl max-w-2xl mx-auto">
+                <svg class="w-16 h-16 mx-auto mb-6 text-outline" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+                </svg>
+                <h3 class="text-2xl font-headline font-bold text-on-surface mb-3">Enter a search term</h3>
+                <p class="text-on-surface-variant font-body mb-8">Type in the search box above to find posts</p>
+                <a href="{{ route('posts.index') }}" class="inline-flex items-center justify-center gap-2 text-primary font-label text-sm uppercase tracking-widest hover:underline">
+                    Browse all posts
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"/>
+                    </svg>
                 </a>
             </div>
         @endisset
-    </div>
-</x-layouts::public>
+    </section>
+</x-public-layout>

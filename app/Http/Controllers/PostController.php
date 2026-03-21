@@ -68,7 +68,20 @@ class PostController extends Controller
             ->take(5)
             ->get();
 
-        return view('posts.show', compact('post', 'popularPosts'));
+        // Get related posts in same categories
+        $categoryIds = $post->taxonomyTerms()
+            ->whereHas('taxonomy', fn ($q) => $q->where('type', 'category'))
+            ->pluck('taxonomy_terms.id');
+
+        $relatedPosts = Post::published()
+            ->where('id', '!=', $post->id)
+            ->whereHas('taxonomyTerms', fn ($q) => $q->whereIn('taxonomy_terms.id', $categoryIds))
+            ->with(['author', 'media', 'taxonomyTerms'])
+            ->latest('published_at')
+            ->take(5)
+            ->get();
+
+        return view('posts.show', compact('post', 'popularPosts', 'relatedPosts'));
     }
 
     /**

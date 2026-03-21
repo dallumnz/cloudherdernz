@@ -20,8 +20,9 @@ $seoModel = request()->route('post') ?? request()->route('page') ?? null;
 <link rel="icon" href="/favicon.svg" type="image/svg+xml">
 <link rel="apple-touch-icon" href="/apple-touch-icon.png">
 
-<link rel="preconnect" href="https://fonts.bunny.net">
-<link href="https://fonts.bunny.net/css?family=instrument-sans:400,500,600" rel="stylesheet" />
+{{-- Preload Newsreader fonts --}}
+<link rel="preload" href="/fonts/Newsreader-Variable.ttf" as="font" type="font/ttf" crossorigin>
+<link rel="preload" href="/fonts/Newsreader-Italic-Variable.ttf" as="font" type="font/ttf" crossorigin>
 
 @vite(['resources/css/frontend.css', 'resources/js/frontend.js'])
 
@@ -31,16 +32,5 @@ $seoModel = request()->route('post') ?? request()->route('page') ?? null;
         document.documentElement.classList.add('dark');
     } else {
         document.documentElement.classList.remove('dark');
-    }
-
-    // Toggle theme function
-    function toggleTheme() {
-        if (document.documentElement.classList.contains('dark')) {
-            document.documentElement.classList.remove('dark');
-            localStorage.theme = 'light';
-        } else {
-            document.documentElement.classList.add('dark');
-            localStorage.theme = 'dark';
-        }
     }
 </script>
