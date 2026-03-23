@@ -108,9 +108,9 @@
                     </div>
 
                     {{-- hCaptcha --}}
-                    @if (config('HCaptcha.enabled'))
+                    @if (config('hcaptcha.enabled', true))
                     <div>
-                        <div class="h-captcha" data-sitekey="{{ config('HCaptcha.sitekey') }}"></div>
+                        <div class="h-captcha" data-sitekey="{{ config('hcaptcha.sitekey') }}"></div>
                         @error('h-captcha-response')
                             <p class="mt-2 text-sm text-tertiary font-label">{{ $message }}</p>
                         @enderror
@@ -132,7 +132,7 @@
     </section>
 
     {{-- hCaptcha Script --}}
-    @if (config('HCaptcha.enabled'))
+    @if (config('hcaptcha.enabled', true))
         <script src="https://js.hcaptcha.com/1/api.js" async defer></script>
     @endif
 </x-public-layout>
