@@ -12,6 +12,7 @@ class HomeController extends Controller
     {
         $featuredPosts = Post::query()
             ->published()
+            ->excludeNewsletters()
             ->with(['postable', 'author', 'taxonomyTerms', 'media'])
             ->latest('published_at')
             ->take(6)
@@ -19,6 +20,7 @@ class HomeController extends Controller
 
         $recentPosts = Post::query()
             ->published()
+            ->excludeNewsletters()
             ->with(['postable', 'author', 'media'])
             ->latest('published_at')
             ->take(10)

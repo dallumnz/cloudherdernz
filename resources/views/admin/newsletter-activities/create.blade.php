@@ -1,4 +1,4 @@
-<x-layouts::app>
+<x-layouts::app :title="__('Create Newsletter Activity')">
     <div class="container mx-auto px-4 py-8">
         <div class="max-w-2xl mx-auto">
             <h1 class="text-3xl font-bold text-gray-900 dark:text-white mb-8">Send Newsletter</h1>
@@ -23,7 +23,12 @@
                         <select name="newsletter_post_id" id="newsletter_post_id" required
                                 class="w-full rounded-lg border-gray-300 dark:border-gray-600 dark:bg-zinc-700 dark:text-white focus:border-blue-500 focus:ring-blue-500">
                             @foreach ($availablePosts as $newsletterPost)
-                                @php $post = $newsletterPost->posts->first(); @endphp
+                                @php 
+                                    $post = \App\Models\Post::where('postable_type', \App\Models\NewsletterPost::class)
+                                        ->where('postable_id', $newsletterPost->id)
+                                        ->where('status', 'published')
+                                        ->first();
+                                @endphp
                                 @if($post)
                                     <option value="{{ $newsletterPost->id }}">{{ $post->title }}</option>
                                 @endif

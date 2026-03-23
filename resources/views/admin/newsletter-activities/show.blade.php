@@ -1,6 +1,9 @@
-<x-layouts::app>
+<x-layouts::app :title="__('Newsletter Activity')">
     <div class="container mx-auto px-4 py-8">
-        @php $post = $activity->newsletterPost->posts->first(); @endphp
+        @php 
+            $newsletterPost = $activity->newsletterPost;
+            $post = $newsletterPost ? \App\Models\Post::where('postable_type', \App\Models\NewsletterPost::class)->where('postable_id', $newsletterPost->id)->first() : null;
+        @endphp
         
         <div class="max-w-3xl mx-auto">
             <div class="mb-6">

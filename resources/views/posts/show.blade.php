@@ -134,8 +134,8 @@
                     @endif
                     <div class="flex-1 text-center md:text-left">
                         <h4 class="font-headline font-bold text-2xl text-on-surface mb-2">{{ $post->author?->name ?? 'Admin' }}</h4>
-                        <p class="text-on-surface-variant leading-relaxed mb-4">{{ $post->author?->bio ?? 'Writer and curator exploring the intersection of technology, culture, and thoughtful living.' }}</p>
-                        <a href="#" class="text-primary font-label text-xs uppercase tracking-widest font-bold hover:underline underline-offset-4">View All Articles</a>
+                        <p class="text-on-surface-variant leading-relaxed mb-4">{{ $post->author?->bio ?? 'Writer and curator exploring the impact of technology on everyday life.' }}</p>
+                        <a href="{{ route('posts.index') }}" class="text-primary font-label text-xs uppercase tracking-widest font-bold hover:underline underline-offset-4">View All Articles</a>
                     </div>
                 </div>
             </div>
@@ -169,10 +169,10 @@
             
             <div class="relative z-10 max-w-3xl mx-auto text-center">
                 <h2 class="text-4xl lg:text-5xl font-headline font-bold text-on-surface tracking-tighter leading-tight mb-6 letterpress">
-                    Subscribe to <br><span class="italic text-primary">The Weekly Brief</span>
+                    Subscribe to <br><span class="italic text-primary">The Brief</span>
                 </h2>
                 <p class="text-on-surface-variant text-lg font-body italic mb-8 max-w-xl mx-auto">
-                    Our curated selection of long-form essays and discoveries, delivered every Sunday.
+                    Our curated selection of tech news and other discoveries, delivered every month.
                 </p>
                 
                 <div class="max-w-md mx-auto">

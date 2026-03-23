@@ -1,6 +1,12 @@
-<x-layouts::app>
+<x-layouts::app :title="__('Newsletter Activities')">
     <div class="container mx-auto px-4 py-8">
-        <h1 class="text-3xl font-bold text-gray-900 dark:text-white mb-8">Newsletter Activities</h1>
+        <div class="flex items-center justify-between mb-8">
+            <h1 class="text-3xl font-bold text-gray-900 dark:text-white">Newsletter Activities</h1>
+            <a href="{{ route('admin.newsletter-activities.create') }}" 
+               class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700">
+                Create Newsletter
+            </a>
+        </div>
         
         @if (session('success'))
             <div class="bg-green-50 dark:bg-green-900/50 border border-green-200 dark:border-green-800 rounded-lg p-4 mb-6">
@@ -22,7 +28,10 @@
                     </thead>
                     <tbody class="divide-y divide-gray-200 dark:divide-gray-700">
                         @foreach ($activities as $activity)
-                            @php $post = $activity->newsletterPost->posts->first(); @endphp
+                            @php 
+                                $newsletterPost = $activity->newsletterPost;
+                                $post = $newsletterPost ? \App\Models\Post::where('postable_type', \App\Models\NewsletterPost::class)->where('postable_id', $newsletterPost->id)->first() : null;
+                            @endphp
                             <tr class="hover:bg-gray-50 dark:hover:bg-zinc-700/50">
                                 <td class="px-6 py-4 text-sm font-medium text-gray-900 dark:text-white">
                                     {{ $post?->title ?? 'Unknown' }}

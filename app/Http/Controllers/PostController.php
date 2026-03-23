@@ -34,6 +34,7 @@ class PostController extends Controller
     {
         $posts = Post::query()
             ->published()
+            ->excludeNewsletters()
             ->with(['postable', 'author', 'taxonomyTerms', 'media'])
             ->latest('published_at')
             ->paginate(12);
@@ -63,6 +64,7 @@ class PostController extends Controller
     public function show(Post $post): View
     {
         $popularPosts = Post::published()
+            ->excludeNewsletters()
             ->with(['author', 'media'])
             ->latest('published_at')
             ->take(5)
@@ -74,6 +76,7 @@ class PostController extends Controller
             ->pluck('taxonomy_terms.id');
 
         $relatedPosts = Post::published()
+            ->excludeNewsletters()
             ->where('id', '!=', $post->id)
             ->whereHas('taxonomyTerms', fn ($q) => $q->whereIn('taxonomy_terms.id', $categoryIds))
             ->with(['author', 'media', 'taxonomyTerms'])

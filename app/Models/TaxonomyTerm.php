@@ -48,4 +48,12 @@ class TaxonomyTerm extends Model
     {
         return $this->morphedByMany(Post::class, 'taggable', 'taggables');
     }
+
+    /**
+     * Get the route key for the model.
+     */
+    public function getRouteKeyName(): string
+    {
+        return 'slug';
+    }
 }

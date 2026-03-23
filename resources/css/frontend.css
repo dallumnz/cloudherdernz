@@ -1,6 +1,6 @@
 @import 'tailwindcss';
 @plugin '@tailwindcss/typography';
-@import '../../vendor/livewire/flux/dist/flux.css';
+/* @import '../../vendor/livewire/flux/dist/flux.css'; */
 
 @custom-variant dark (&:where(.dark, .dark *));
 
@@ -103,7 +103,7 @@
    -------------------------------------------------------------------------- */
 @font-face {
   font-family: 'Newsreader';
-  src: url('/fonts/Newsreader-Variable.ttf') format('truetype-variations');
+  src: url('/public/fonts/Newsreader-Variable.ttf') format('truetype-variations');
   font-weight: 200 800;
   font-style: normal;
   font-display: swap;
@@ -111,7 +111,7 @@
 
 @font-face {
   font-family: 'Newsreader';
-  src: url('/fonts/Newsreader-Italic-Variable.ttf') format('truetype-variations');
+  src: url('/public/fonts/Newsreader-Italic-Variable.ttf') format('truetype-variations');
   font-weight: 200 800;
   font-style: italic;
   font-display: swap;

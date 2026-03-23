@@ -210,6 +210,14 @@ class Post extends Model implements HasMedia
     }
 
     /**
+     * Scope a query to exclude newsletter posts.
+     */
+    public function scopeExcludeNewsletters($query)
+    {
+        return $query->where('postable_type', '!=', NewsletterPost::class);
+    }
+
+    /**
      * Register media conversions for the post.
      *
      * Defines image conversions for different use cases:

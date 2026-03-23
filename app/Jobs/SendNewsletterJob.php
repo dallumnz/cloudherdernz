@@ -112,11 +112,13 @@ class SendNewsletterJob implements ShouldQueue
             $errors = [];
 
             foreach ($results as $result) {
+                $recipientCount = count($recipients);
+                $batchSize = $recipientCount >= 1000 ? 1000 : ($recipientCount % 1000 ?: $recipientCount);
                 if ($result['success']) {
-                    $totalSent += count($recipients) >= 1000 ? 1000 : count($recipients) % 1000 ?: count($recipients);
+                    $totalSent += $batchSize;
                     $batchIds[] = $result['batch_id'];
                 } else {
-                    $totalFailed += count($recipients) >= 1000 ? 1000 : count($recipients) % 1000 ?: count($recipients);
+                    $totalFailed += $batchSize;
                     $errors[] = $result['error'];
                 }
             }

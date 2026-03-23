@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Date;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\RateLimiter;
+use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Validation\Rules\Password;
 use App\Events\CommentCreated;
@@ -31,6 +32,12 @@ class AppServiceProvider extends ServiceProvider
         $this->configureDefaults();
 
         Event::listen(CommentCreated::class, SendNewCommentNotification::class);
+
+        // Register hCaptcha validator
+        Validator::extend('hcaptcha', function ($attribute, $value) {
+            $hcaptcha = app('HCaptcha');
+            return $hcaptcha->verifyResponse($value, request()->ip());
+        });
     }
 
     /**

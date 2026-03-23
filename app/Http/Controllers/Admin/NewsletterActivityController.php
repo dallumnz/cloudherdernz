@@ -19,7 +19,7 @@ class NewsletterActivityController extends Controller
 
         $status = $request->get('status', 'all');
 
-        $activities = NewsletterActivity::with(['newsletterPost.posts', 'creator'])
+        $activities = NewsletterActivity::with(['newsletterPost', 'creator'])
             ->when($status !== 'all', function ($query) use ($status) {
                 return $query->where('status', $status);
             })
@@ -43,14 +43,23 @@ class NewsletterActivityController extends Controller
         $this->authorize('create', NewsletterActivity::class);
 
         // Get published newsletter posts that haven't been sent yet
-        $availablePosts = NewsletterPost::with(['posts' => function ($query) {
-            $query->where('status', 'published');
-        }])
-            ->whereHas('posts', function ($query) {
-                $query->where('status', 'published');
-            })
+        // Note: We query separately to avoid UUID/varchar comparison issues in PostgreSQL
+        $publishedPostIds = \App\Models\Post::where('postable_type', NewsletterPost::class)
+            ->where('status', 'published')
+            ->pluck('postable_id')
+            ->toArray();
+
+        $availablePosts = NewsletterPost::whereIn('id', $publishedPostIds)
             ->where('is_sent', false)
             ->get();
+
+        // Eager load posts manually to avoid join issues
+        $availablePosts->each(function ($newsletterPost) {
+            $newsletterPost->setRelation('posts', \App\Models\Post::where('postable_type', NewsletterPost::class)
+                ->where('postable_id', $newsletterPost->id)
+                ->where('status', 'published')
+                ->get());
+        });
 
         $confirmedSubscriberCount = NewsletterSubscriber::confirmed()->active()->count();
 
@@ -75,22 +84,25 @@ class NewsletterActivityController extends Controller
             return redirect()->back()->with('error', 'Newsletter post not found.');
         }
 
+        $scheduledAt = $validated['scheduled_at'] ?? null;
+        $isTest = $validated['is_test'] ?? false;
+
         $activityData = [
             'newsletter_post_id' => $newsletterPost->id,
             'created_by' => auth()->id(),
-            'status' => $validated['scheduled_at'] ? 'draft' : 'queued',
-            'scheduled_at' => $validated['scheduled_at'] ?? null,
-            'is_test' => $validated['is_test'] ?? false,
+            'status' => $scheduledAt ? 'draft' : 'queued',
+            'scheduled_at' => $scheduledAt,
+            'is_test' => $isTest,
         ];
 
-        if ($activityData['is_test'] && $validated['test_email']) {
+        if ($isTest && ($validated['test_email'] ?? null)) {
             $activityData['test_recipients'] = [$validated['test_email']];
         }
 
         $activity = NewsletterActivity::create($activityData);
 
         // If scheduled for later, don't dispatch yet
-        if ($validated['scheduled_at']) {
+        if ($scheduledAt) {
             return redirect()
                 ->route('admin.newsletter-activities.index')
                 ->with('success', "Newsletter scheduled for {$validated['scheduled_at']}.");
@@ -99,8 +111,8 @@ class NewsletterActivityController extends Controller
         // Dispatch the job
         SendNewsletterJob::dispatch($activity->id);
 
-        $message = $activityData['is_test']
-            ? 'Test newsletter sent to '.$validated['test_email'].'.'
+        $message = $isTest
+            ? 'Test newsletter sent to '.($validated['test_email'] ?? 'test address').'.'
             : 'Newsletter queued for sending.';
 
         return redirect()

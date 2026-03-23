@@ -1,7 +1,7 @@
 <x-public-layout>
     {{-- Category Filter Buttons --}}
     <section class="max-w-screen-2xl mx-auto px-6 md:px-8 py-12">
-        <h1 class="text-4xl lg:text-5xl font-headline font-bold tracking-tighter mb-8 letterpress">All Chronicles</h1>
+        <h1 class="text-4xl lg:text-5xl font-headline font-bold tracking-tighter mb-8 letterpress">All Articles</h1>
         
         <div class="flex flex-wrap gap-3">
             <a href="{{ route('posts.index') }}" 
@@ -143,47 +143,6 @@
                     {{ $posts->links() }}
                 </div>
             </div>
-
-            {{-- Sidebar --}}
-            <aside class="space-y-8">
-                {{-- Search --}}
-                <div class="bg-surface-container-low rounded-xl p-6 transition-surface hover:bg-surface-container">
-                    <h3 class="font-headline text-lg font-bold text-on-surface mb-4">Search</h3>
-                    <form action="{{ route('search.results') }}" method="GET" class="space-y-4">
-                        <input 
-                            type="text" 
-                            name="q"
-                            placeholder="Search articles..." 
-                            class="w-full px-4 py-3 bg-surface border-none focus:ring-1 focus:ring-primary/40 rounded-lg text-on-surface font-body placeholder:text-outline/60"
-                        >
-                        <button type="submit" class="w-full px-4 py-2 bg-primary hover:bg-primary-container text-on-primary font-bold rounded-lg transition-colors">
-                            Search
-                        </button>
-                    </form>
-                </div>
-
-                {{-- Popular Tags --}}
-                <div class="bg-surface-container-low rounded-xl p-6 transition-surface hover:bg-surface-container">
-                    <h3 class="font-headline text-lg font-bold text-on-surface mb-6 border-b border-outline-variant/20 pb-3">Popular Topics</h3>
-                    <div class="space-y-4">
-                        @foreach($popularTags->take(6) as $tag)
-                        <div class="flex items-center justify-between group cursor-pointer">
-                            <a href="{{ route('tags.show', $tag->slug) }}" class="font-label text-sm text-on-surface group-hover:text-primary transition-colors">
-                                {{ $tag->name }}
-                            </a>
-                            <span class="text-xs text-outline">{{ $tag->posts_count }} posts</span>
-                        </div>
-                        @endforeach
-                    </div>
-                </div>
-
-                {{-- Newsletter --}}
-                <div class="bg-primary-fixed rounded-xl p-6">
-                    <h3 class="font-headline text-lg font-bold text-primary mb-2">Stay Updated</h3>
-                    <p class="text-on-surface-variant font-body text-sm mb-4">Subscribe for the latest chronicles.</p>
-                    @livewire('newsletter-subscribe')
-                </div>
-            </aside>
         </div>
     </section>
 </x-public-layout>

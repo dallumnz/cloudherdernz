@@ -94,7 +94,7 @@
     {{-- Bento Grid: Recent Stories --}}
     <section class="max-w-screen-2xl mx-auto px-6 md:px-8 py-8">
         <div class="flex items-baseline justify-between mb-10">
-            <h2 class="text-3xl lg:text-4xl font-headline font-bold tracking-tighter letterpress">Recent Chronicles</h2>
+            <h2 class="text-3xl lg:text-4xl font-headline font-bold tracking-tighter letterpress">Recent Articles</h2>
             <a href="{{ route('posts.index') }}" class="text-primary italic font-headline text-lg hover:underline flex items-center gap-2">
                 Browse all
                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -180,10 +180,10 @@
             
             <div class="relative z-10 max-w-3xl mx-auto text-center">
                 <h2 class="text-4xl lg:text-5xl font-headline font-bold text-on-surface tracking-tighter leading-tight mb-6 letterpress">
-                    Subscribe to <br><span class="italic text-primary">The Weekly Brief</span>
+                    Subscribe to <br><span class="italic text-primary">The Brief</span>
                 </h2>
                 <p class="text-on-surface-variant text-lg font-body italic mb-8 max-w-xl mx-auto">
-                    Our curated selection of long-form essays and discoveries, delivered every Sunday.
+                    Our curated selection of tech news and other discoveries, delivered every month.
                 </p>
                 
                 <div class="max-w-md mx-auto">
@@ -236,42 +236,6 @@
                 </article>
                 @endforeach
             </div>
-
-            {{-- Sidebar --}}
-            <aside class="space-y-8">
-                {{-- Search --}}
-                <div class="bg-surface-container-low rounded-xl p-6">
-                    <h3 class="text-lg font-headline font-bold text-on-surface mb-4">Search</h3>
-                    <form action="{{ route('search.results') }}" method="GET" class="space-y-4">
-                        <input 
-                            type="text" 
-                            name="q"
-                            placeholder="Search articles..." 
-                            class="w-full px-4 py-3 bg-surface border-none focus:ring-1 focus:ring-primary/40 rounded-lg text-on-surface font-body placeholder:text-outline/60"
-                        >
-                        <button type="submit" class="w-full px-4 py-2 bg-primary hover:bg-primary-container text-on-primary font-bold rounded-lg transition-colors">
-                            Search
-                        </button>
-                    </form>
-                    <div class="mt-4 pt-4 border-t border-outline-variant/20">
-                        <div class="flex flex-wrap gap-2">
-                            <span class="text-sm text-on-surface-variant">Popular:</span>
-                            @foreach($popularTags->take(5) as $tag)
-                            <a href="{{ route('tags.show', $tag->slug) }}" class="text-sm text-primary hover:underline">
-                                {{ $tag->name }}
-                            </a>
-                            @endforeach
-                        </div>
-                    </div>
-                </div>
-
-                {{-- Newsletter --}}
-                <div class="bg-primary-fixed rounded-xl p-6">
-                    <h3 class="text-lg font-headline font-bold text-primary mb-2">Stay Updated</h3>
-                    <p class="text-on-surface-variant font-body text-sm mb-4">Subscribe for the latest updates.</p>
-                    @livewire('newsletter-subscribe')
-                </div>
-            </aside>
         </div>
     </section>
 </x-public-layout>

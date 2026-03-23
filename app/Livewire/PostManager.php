@@ -156,6 +156,10 @@ class PostManager extends Component
             PostType::AUDIO->model() => \App\Models\AudioPost::create([
                 'audio_url' => 'https://example.com/audio',
             ]),
+            PostType::NEWSLETTER->model() => \App\Models\NewsletterPost::create([
+                'template' => 'default',
+            ]),
+            PostType::STANDARD->model() => \App\Models\StandardPost::create([]),
             default => \App\Models\ImagePost::create([]),
         };
 
