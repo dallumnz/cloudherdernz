@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Date;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\RateLimiter;
+use Illuminate\Support\Facades\URL;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Validation\Rules\Password;
