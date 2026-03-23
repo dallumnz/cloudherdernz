@@ -11,7 +11,11 @@ $seoModel = request()->route('post') ?? request()->route('page') ?? null;
 @if($seoModel)
     {!! seo()->for($seoModel) !!}
 @elseif(request()->is('/'))
-    {!! seo(new SEOData(title: config('app.name'))) !!}
+    {!! seo(new SEOData(
+        title: config('app.name') . ' - Curated perspectives on technology, culture, and the spaces between',
+        description: 'Cloud Herder is a blog exploring technology, AI, web development, and the intersection of digital tools with human creativity.',
+        image: asset('images/og-default.png')
+    )) !!}
 @else
     {!! seo() !!}
 @endif
