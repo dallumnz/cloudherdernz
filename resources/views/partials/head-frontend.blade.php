@@ -13,18 +13,16 @@ $routePost = request()->route('post');
 @endphp
 
 @if($isHome)
-    {!! seo(new SEOData(
-        title: config('app.name') . ' - Curated perspectives on technology, culture, and the spaces between',
-        description: 'Cloud Herder is a blog exploring technology, AI, web development, and the intersection of digital tools with human creativity.',
-        image: asset('images/og-default.png')
-    )) !!}
+    <title>{{ config('app.name') }} - Curated perspectives on technology, culture, and the spaces between</title>
+    <meta name="description" content="Cloud Herder is a blog exploring technology, AI, web development, and the intersection of digital tools with human creativity.">
+    <meta property="og:title" content="{{ config('app.name') }} - Curated perspectives on technology, culture, and the spaces between">
+    <meta property="og:description" content="Cloud Herder is a blog exploring technology, AI, web development, and the intersection of digital tools with human creativity.">
+    <meta name="twitter:title" content="{{ config('app.name') }} - Curated perspectives on technology, culture, and the spaces between">
 @elseif($seoModel && is_object($seoModel))
     {!! seo()->for($seoModel) !!}
 @else
     {!! seo() !!}
 @endif
-
-<!-- Debug: isHome={!! $isHome ? 'true' : 'false' !!}, routePost={!! json_encode($routePost) !!} -->
 
 <link rel="icon" href="/favicon.ico" sizes="any">
 <link rel="icon" href="/favicon.svg" type="image/svg+xml">
