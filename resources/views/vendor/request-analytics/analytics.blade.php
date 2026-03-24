@@ -1,6 +1,6 @@
 <div>
-    <!-- Chart.js for analytics charts -->
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Chart.js for analytics charts (self-hosted) -->
+    <script src="{{ asset('vendor/chartjs/chart.min.js') }}"></script>
 
     <main class="space-y-6">
         <div class="flex items-center justify-between mb-8">
