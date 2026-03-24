@@ -32,8 +32,8 @@ class SecurityHeaders
         // Permissions Policy
         $response->headers->set('Permissions-Policy', 'geolocation=(), microphone=(), camera=()');
 
-        // Content Security Policy (basic)
-        $response->headers->set('Content-Security-Policy', "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline'; img-src 'self' data: https: http://localhost:8001 http://127.0.0.1:8001; font-src 'self' data:; connect-src 'self'; media-src 'self'; object-src 'none'; frame-ancestors 'none';");
+        // Content Security Policy (basic + hCaptcha)
+        $response->headers->set('Content-Security-Policy', "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://js.hcaptcha.com; style-src 'self' 'unsafe-inline'; img-src 'self' data: https: http://localhost:8001 http://127.0.0.1:8001; font-src 'self' data:; connect-src 'self' https://hcaptcha.com https://*.hcaptcha.com; frame-src 'self' https://hcaptcha.com https://*.hcaptcha.com; media-src 'self'; object-src 'none'; frame-ancestors 'none';");
 
         return $response;
     }

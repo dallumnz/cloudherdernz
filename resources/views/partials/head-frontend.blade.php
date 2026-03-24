@@ -6,9 +6,13 @@ use RalphJSmit\Laravel\SEO\Support\SEOData;
 
 // Check for explicit SEO model from route first (avoids variable pollution from loops)
 $seoModel = request()->route('post') ?? request()->route('page') ?? null;
+
+// Debug: Check if we're on homepage and what route returns
+$isHome = request()->is('/');
+$routePost = request()->route('post');
 @endphp
 
-@if(request()->is('/'))
+@if($isHome)
     {!! seo(new SEOData(
         title: config('app.name') . ' - Curated perspectives on technology, culture, and the spaces between',
         description: 'Cloud Herder is a blog exploring technology, AI, web development, and the intersection of digital tools with human creativity.',
@@ -19,6 +23,8 @@ $seoModel = request()->route('post') ?? request()->route('page') ?? null;
 @else
     {!! seo() !!}
 @endif
+
+<!-- Debug: isHome={!! $isHome ? 'true' : 'false' !!}, routePost={!! json_encode($routePost) !!} -->
 
 <link rel="icon" href="/favicon.ico" sizes="any">
 <link rel="icon" href="/favicon.svg" type="image/svg+xml">
