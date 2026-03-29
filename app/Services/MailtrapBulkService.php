@@ -17,7 +17,7 @@ class MailtrapBulkService
 
     public function __construct()
     {
-        $this->token = config('services.mailtrap.bulk_token');
+        $this->token = config('services.mailtrap.api_token');
         $this->fromEmail = config('services.mailtrap.from_email', 'newsletter@cloudherder.nz');
         $this->fromName = config('services.mailtrap.from_name', 'CloudHerder');
     }

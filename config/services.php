@@ -36,7 +36,7 @@ return [
     ],
 
     'mailtrap' => [
-        'bulk_token' => env('MAILTRAP_BULK_TOKEN'),
+        'api_token' => env('MAILTRAP_API_TOKEN'),
         'from_email' => env('MAILTRAP_FROM_EMAIL', 'newsletter@cloudherder.nz'),
         'from_name' => env('MAILTRAP_FROM_NAME', 'CloudHerder'),
     ],
