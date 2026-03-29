@@ -39,6 +39,8 @@ return [
         env('REQUEST_ANALYTICS_PATHNAME', 'analytics'),
         'broadcasting/auth',
         'livewire/*',
+        'admin/*',
+        'dashboard',
     ],
 
     'skip_ips' => [
