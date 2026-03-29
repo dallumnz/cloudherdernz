@@ -169,7 +169,7 @@
 
     {{-- Credit Edit Modal --}}
     @if($editingMediaId)
-        <div class="fixed inset-0 z-50 bg-gray-900 flex items-center justify-center p-4" wire:click.self="closeCreditModal">
+        <div class="fixed inset-0 z-50 bg-gray-900/60 flex items-center justify-center p-4" wire:click.self="closeCreditModal">
             <flux:card class="w-full max-w-lg max-h-[90vh] overflow-y-auto">
                 <div class="space-y-4">
                     <flux:heading size="lg">Edit Media Credit</flux:heading>
