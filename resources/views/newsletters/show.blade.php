@@ -43,8 +43,8 @@
         <p>CloudHerder Newsletter</p>
     </div>
     
-    <div class="content">
-        {!! clean($post->content) !!}
+    <div class="content prose prose-lg max-w-none">
+        {!! Str::markdown($post->content) !!}
     </div>
     
     <div class="footer">
