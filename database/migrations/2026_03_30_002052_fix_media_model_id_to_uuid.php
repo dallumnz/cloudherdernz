@@ -2,6 +2,7 @@
 
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
@@ -11,16 +12,36 @@ return new class extends Migration
      */
     public function up(): void
     {
-        // Drop the existing morph columns and recreate as uuidMorphs
-        Schema::table('media', function (Blueprint $table) {
-            $table->dropIndex(['model_id', 'model_type']);
-            $table->dropColumn(['model_id', 'model_type']);
-        });
+        // Check if model_id is still bigint and convert to uuid
+        $connection = DB::connection();
+        $driver = $connection->getDriverName();
+        
+        if ($driver === 'pgsql') {
+            // For PostgreSQL, check column type first
+            $result = DB::selectOne("SELECT data_type FROM information_schema.columns WHERE table_name = 'media' AND column_name = 'model_id'");
+            
+            if ($result && in_array($result->data_type, ['bigint', 'integer'])) {
+                // Drop existing columns and recreate as uuid
+                Schema::table('media', function (Blueprint $table) {
+                    $table->dropColumn(['model_id', 'model_type']);
+                });
 
-        Schema::table('media', function (Blueprint $table) {
-            $table->uuid('model_id')->index();
-            $table->string('model_type')->index();
-        });
+                Schema::table('media', function (Blueprint $table) {
+                    $table->uuid('model_id')->index();
+                    $table->string('model_type')->index();
+                });
+            }
+        } else {
+            // MySQL/SQLite - just try to drop and recreate
+            Schema::table('media', function (Blueprint $table) {
+                $table->dropColumn(['model_id', 'model_type']);
+            });
+
+            Schema::table('media', function (Blueprint $table) {
+                $table->uuid('model_id')->index();
+                $table->string('model_type')->index();
+            });
+        }
     }
 
     /**
