@@ -54,7 +54,7 @@ class SendNewsletterJob implements ShouldQueue
 
             // Build email content
             $subject = $post->title;
-            $trackingPixelUrl = route('newsletter.track-open', ['uuid' => $newsletterPost->id]);
+            $trackingPixelUrl = route('newsletter.track-open', ['id' => $newsletterPost->id]);
 
             // Render HTML email
             $htmlContent = $this->renderHtmlEmail($post, $newsletterPost, $trackingPixelUrl);
@@ -191,7 +191,7 @@ class SendNewsletterJob implements ShouldQueue
             'post' => $post,
             'newsletterPost' => $newsletterPost,
             'content' => $content,
-            'viewInBrowserUrl' => route('newsletter.show', ['uuid' => $newsletterPost->id]),
+            'viewInBrowserUrl' => route('newsletter.show', ['id' => $newsletterPost->id]),
             'unsubscribeUrl' => route('newsletter.unsubscribe-web'),
         ])->render();
     }
