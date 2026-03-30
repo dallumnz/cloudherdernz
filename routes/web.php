@@ -167,13 +167,14 @@ Route::get('/subscribe/confirm/{token}', [\App\Http\Controllers\SubscribeControl
     ->name('subscribe.confirm');
 
 // Newsletter web view (public)
-Route::get('/newsletter/{uuid}', [\App\Http\Controllers\NewsletterViewController::class, 'show'])
+Route::get('/newsletter/{id}', [\App\Http\Controllers\NewsletterViewController::class, 'show'])
     ->name('newsletter.show')
-    ->where('uuid', '[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}');
+    ->where('id', '[0-9]+');
 
 // Newsletter tracking pixel
-Route::get('/newsletter/{uuid}/open', [\App\Http\Controllers\NewsletterViewController::class, 'trackOpen'])
-    ->name('newsletter.track-open');
+Route::get('/newsletter/{id}/open', [\App\Http\Controllers\NewsletterViewController::class, 'trackOpen'])
+    ->name('newsletter.track-open')
+    ->where('id', '[0-9]+');
 
 // Newsletter unsubscribe web
 Route::get('/newsletter/unsubscribe', [\App\Http\Controllers\SubscribeController::class, 'showUnsubscribe'])

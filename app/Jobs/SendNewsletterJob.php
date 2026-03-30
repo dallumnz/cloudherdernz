@@ -172,15 +172,13 @@ class SendNewsletterJob implements ShouldQueue
 
     private function renderHtmlEmail($post, $newsletterPost, string $trackingPixelUrl): string
     {
-        $unsubscribeUrl = route('newsletter.unsubscribe-web', ['email' => '{{email}}']); // Will be replaced per recipient if needed
-
         return view('emails.newsletter-html', [
             'post' => $post,
             'newsletterPost' => $newsletterPost,
             'contentHtml' => $post->content_html,
             'trackingPixelUrl' => $trackingPixelUrl,
-            'unsubscribeUrl' => $unsubscribeUrl,
-            'viewInBrowserUrl' => route('newsletter.show', ['uuid' => $newsletterPost->id]),
+            'unsubscribeUrl' => route('newsletter.unsubscribe-web'),
+            'viewInBrowserUrl' => route('newsletter.show', ['id' => $newsletterPost->id]),
             'headerImageUrl' => $newsletterPost->getFirstMediaUrl('header_image'),
         ])->render();
     }

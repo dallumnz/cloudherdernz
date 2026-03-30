@@ -7,9 +7,9 @@ use Illuminate\Http\Response;
 
 class NewsletterViewController extends Controller
 {
-    public function show(string $uuid)
+    public function show(string $id)
     {
-        $newsletterPost = NewsletterPost::find($uuid);
+        $newsletterPost = NewsletterPost::find($id);
 
         if (! $newsletterPost) {
             abort(404, 'Newsletter not found');
@@ -28,9 +28,9 @@ class NewsletterViewController extends Controller
         return view('newsletters.show', compact('post', 'newsletterPost'));
     }
 
-    public function trackOpen(string $uuid): Response
+    public function trackOpen(string $id): Response
     {
-        $newsletterPost = NewsletterPost::find($uuid);
+        $newsletterPost = NewsletterPost::find($id);
 
         if ($newsletterPost) {
             $newsletterPost->recordOpen();
