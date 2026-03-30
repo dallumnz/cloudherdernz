@@ -23,4 +23,10 @@ class SubscribeController extends Controller
 
         return view('emails.confirmation-success');
     }
+
+    public function showUnsubscribe(Request $request)
+    {
+        $email = $request->get('email');
+        return view('newsletters.unsubscribe', compact('email'));
+    }
 }
