@@ -9,18 +9,13 @@ return new class extends Migration
 {
     public function up(): void
     {
-        // Delete existing newsletter posts (test data)
+        // Delete existing newsletter posts and activities (test data)
+        DB::table('newsletter_activities')->delete();
         DB::table('newsletter_posts')->delete();
         
-        // Drop foreign key constraints on posts table first
-        Schema::table('posts', function (Blueprint $table) {
-            // Get the constraint name
-            $constraints = DB::select("SELECT conname FROM pg_constraint WHERE conrelid = 'posts'::regclass AND contype = 'f'");
-            foreach ($constraints as $constraint) {
-                if (str_contains($constraint->conname, 'postable')) {
-                    $table->dropForeign($constraint->conname);
-                }
-            }
+        // Drop foreign key constraints
+        Schema::table('newsletter_activities', function (Blueprint $table) {
+            $table->dropForeign(['newsletter_post_id']);
         });
         
         // Drop and recreate newsletter_posts with bigint
@@ -38,6 +33,12 @@ return new class extends Migration
             $table->timestamps();
 
             $table->index(['is_sent', 'sent_at']);
+        });
+        
+        // Update newsletter_activities to use bigint
+        Schema::table('newsletter_activities', function (Blueprint $table) {
+            $table->unsignedBigInteger('newsletter_post_id')->change();
+            $table->foreign('newsletter_post_id')->references('id')->on('newsletter_posts')->onDelete('cascade');
         });
     }
 

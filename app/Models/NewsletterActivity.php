@@ -12,7 +12,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * Tracks newsletter sending activities - queueing, sending, completion.
  *
  * @property int $id
- * @property string $newsletter_post_id
+ * @property int $newsletter_post_id
  * @property int $created_by
  * @property string $status
  * @property \Carbon\Carbon|null $scheduled_at
