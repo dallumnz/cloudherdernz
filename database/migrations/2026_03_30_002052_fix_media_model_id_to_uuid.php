@@ -21,24 +21,29 @@ return new class extends Migration
             $result = DB::selectOne("SELECT data_type FROM information_schema.columns WHERE table_name = 'media' AND column_name = 'model_id'");
             
             if ($result && in_array($result->data_type, ['bigint', 'integer'])) {
+                // Clear media table since existing data has wrong type
+                DB::table('media')->delete();
+                
                 // Drop existing columns and recreate as uuid
                 Schema::table('media', function (Blueprint $table) {
                     $table->dropColumn(['model_id', 'model_type']);
                 });
 
                 Schema::table('media', function (Blueprint $table) {
-                    $table->uuid('model_id')->index();
+                    $table->uuid('model_id')->nullable()->index();
                     $table->string('model_type')->index();
                 });
             }
         } else {
             // MySQL/SQLite - just try to drop and recreate
+            DB::table('media')->delete();
+            
             Schema::table('media', function (Blueprint $table) {
                 $table->dropColumn(['model_id', 'model_type']);
             });
 
             Schema::table('media', function (Blueprint $table) {
-                $table->uuid('model_id')->index();
+                $table->uuid('model_id')->nullable()->index();
                 $table->string('model_type')->index();
             });
         }
