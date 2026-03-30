@@ -5,7 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
-use Illuminate\Support\Str;
+
 use Spatie\MediaLibrary\HasMedia;
 use Spatie\MediaLibrary\InteractsWithMedia;
 
@@ -16,7 +16,7 @@ use Spatie\MediaLibrary\InteractsWithMedia;
  * like subscriber settings, template options, and delivery tracking.
  * Uses polymorphic relationship to connect with the main Post model.
  *
- * @property string $id
+ * @property int $id
  * @property string|null $template
  * @property array|null $subscriber_settings
  * @property bool $is_sent
@@ -34,10 +34,6 @@ class NewsletterPost extends Model implements HasMedia
     use HasFactory;
 
     use InteractsWithMedia;
-
-    public $incrementing = false;
-
-    protected $keyType = 'string';
 
     /**
      * The attributes that are mass assignable.
@@ -67,15 +63,6 @@ class NewsletterPost extends Model implements HasMedia
         'opens_count' => 'integer',
         'clicks_count' => 'integer',
     ];
-
-    protected static function booted(): void
-    {
-        static::creating(function (self $model): void {
-            if (empty($model->id)) {
-                $model->id = Str::uuid()->toString();
-            }
-        });
-    }
 
     /**
      * Get all posts that belong to this newsletter post.
