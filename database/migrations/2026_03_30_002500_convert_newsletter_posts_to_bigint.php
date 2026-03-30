@@ -35,9 +35,10 @@ return new class extends Migration
             $table->index(['is_sent', 'sent_at']);
         });
         
-        // Update newsletter_activities to use bigint
+        // Update newsletter_activities to use bigint (raw SQL for PostgreSQL cast)
+        DB::statement('ALTER TABLE newsletter_activities ALTER COLUMN newsletter_post_id TYPE bigint USING NULL');
+        
         Schema::table('newsletter_activities', function (Blueprint $table) {
-            $table->unsignedBigInteger('newsletter_post_id')->change();
             $table->foreign('newsletter_post_id')->references('id')->on('newsletter_posts')->onDelete('cascade');
         });
     }
