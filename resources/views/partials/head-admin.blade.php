@@ -13,4 +13,6 @@
 @vite(['resources/css/admin.css', 'resources/js/admin.js'])
 @fluxAppearance
 
+<script src="{{ asset('vendor/chartjs/chart.min.js') }}"></script>
+
 @stack('styles')

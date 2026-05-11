@@ -29,6 +29,6 @@ class AnalyticsWrapper extends Component
         $service = app(\MeShaon\RequestAnalytics\Services\DashboardAnalyticsService::class);
         $data = $service->getDashboardData($params);
 
-        return view('request-analytics::analytics', $data);
+        return view('livewire.analytics', $data);
     }
 }

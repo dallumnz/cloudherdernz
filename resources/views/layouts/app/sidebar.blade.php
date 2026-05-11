@@ -17,27 +17,40 @@
                     </flux:sidebar.item>
                 </flux:sidebar.group>
 
-                @auth
+            @auth
+                @php
+                    $sidebarCounts = [
+                        'pages' => \App\Models\Page::count(),
+                        'posts' => \App\Models\Post::count(),
+                        'tags' => \App\Models\TaxonomyTerm::whereHas('taxonomy', fn ($q) => $q->where('type', 'tag'))->count(),
+                        'categories' => \App\Models\TaxonomyTerm::whereHas('taxonomy', fn ($q) => $q->where('type', 'category'))->count(),
+                        'subscribers' => \App\Models\NewsletterSubscriber::count(),
+                        'contacts' => \App\Models\Contact::unread()->count(),
+                        'comments' => \App\Models\Comment::where('is_approved', false)->count(),
+                        'users' => \App\Models\User::count(),
+                    ];
+                @endphp
+
                     {{-- Content Management --}}
                     @canany(['view posts', 'create posts'])
                         <flux:sidebar.group :heading="__('Content')" class="grid">
                             @can('view pages')
-                                <flux:sidebar.item icon="document" :href="route('admin.pages')" :current="request()->routeIs('admin.pages')" wire:navigate>
+                                <flux:sidebar.item icon="document" :href="route('admin.pages')" :current="request()->routeIs('admin.pages')" wire:navigate :badge="$sidebarCounts['pages'] > 0 ? $sidebarCounts['pages'] : null">
                                     {{ __('Pages') }}
                                 </flux:sidebar.item>
                             @endcan
                             @can('view posts')
-                                <flux:sidebar.item icon="document-text" :href="route('admin.posts')" :current="request()->routeIs('admin.posts')" wire:navigate>
+                                <flux:sidebar.item icon="document-text" :href="route('admin.posts')" :current="request()->routeIs('admin.posts')" wire:navigate :badge="$sidebarCounts['posts'] > 0 ? $sidebarCounts['posts'] : null">
                                     {{ __('Posts') }}
                                 </flux:sidebar.item>
                             @endcan
                             @can('view tags')
-                                <flux:sidebar.item icon="tag" :href="route('admin.tags')" :current="request()->routeIs('admin.tags')" wire:navigate>
+                                <flux:sidebar.item icon="tag" :href="route('admin.tags')" :current="request()->routeIs('admin.tags')" wire:navigate :badge="$sidebarCounts['tags'] > 0 ? $sidebarCounts['tags'] : null">
                                     {{ __('Tags') }}
                                 </flux:sidebar.item>
                             @endcan
                             @can('view categories')
-                                <flux:sidebar.item icon="folder" :href="route('admin.categories')" :current="request()->routeIs('admin.categories')" wire:navigate>
+                                <flux:sidebar.item icon="folder" :href="route('admin.categories')" :current="request()->routeIs('admin.categories')" wire:navigate :badge="$sidebarCounts['categories'] > 0 ? $sidebarCounts['categories'] : null">
                                     {{ __('Categories') }}
                                 </flux:sidebar.item>
                             @endcan
@@ -62,7 +75,7 @@
                                 </flux:sidebar.item>
                             @endcan
                             @can('view newsletter subscribers')
-                                <flux:sidebar.item icon="newspaper" :href="route('admin.newsletter-subscribers.index')" :current="request()->routeIs('admin.newsletter-subscribers.*')" wire:navigate>
+                                <flux:sidebar.item icon="newspaper" :href="route('admin.newsletter-subscribers.index')" :current="request()->routeIs('admin.newsletter-subscribers.*')" wire:navigate :badge="$sidebarCounts['subscribers'] > 0 ? $sidebarCounts['subscribers'] : null">
                                     {{ __('Newsletter Subscribers') }}
                                 </flux:sidebar.item>
                             @endcan
@@ -72,12 +85,12 @@
                                 </flux:sidebar.item>
                             @endcan
                             @can('view contacts')
-                                <flux:sidebar.item icon="envelope" :href="route('admin.inbox.index')" :current="request()->routeIs('admin.inbox.index')" wire:navigate>
+                                <flux:sidebar.item icon="envelope" :href="route('admin.inbox.index')" :current="request()->routeIs('admin.inbox.index')" wire:navigate :badge="$sidebarCounts['contacts'] > 0 ? $sidebarCounts['contacts'] : null">
                                     {{ __('Contact Inbox') }}
                                 </flux:sidebar.item>
                             @endcan
                             @can('moderate comments')
-                                <flux:sidebar.item icon="chat-bubble-left-right" :href="route('admin.comments')" :current="request()->routeIs('admin.comments')" wire:navigate>
+                                <flux:sidebar.item icon="chat-bubble-left-right" :href="route('admin.comments')" :current="request()->routeIs('admin.comments')" wire:navigate :badge="$sidebarCounts['comments'] > 0 ? $sidebarCounts['comments'] : null">
                                     {{ __('Comments') }}
                                 </flux:sidebar.item>
                             @endcan
@@ -88,7 +101,7 @@
                     @canany(['view users', 'edit roles'])
                         <flux:sidebar.group :heading="__('Administration')" class="grid">
                             @can('view users')
-                                <flux:sidebar.item icon="users" :href="route('admin.users')" :current="request()->routeIs('admin.users')" wire:navigate>
+                                <flux:sidebar.item icon="users" :href="route('admin.users')" :current="request()->routeIs('admin.users')" wire:navigate :badge="$sidebarCounts['users'] > 0 ? $sidebarCounts['users'] : null">
                                     {{ __('Users') }}
                                 </flux:sidebar.item>
                             @endcan
