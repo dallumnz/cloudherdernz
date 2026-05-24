@@ -24,6 +24,7 @@
         "mews/purifier": "^3.4",
         "ralphjsmit/laravel-seo": "^1.7",
         "scyllaly/hcaptcha": "^4.4",
+        "spatie/laravel-activitylog": "^5.0",
         "spatie/laravel-medialibrary": "^11",
         "spatie/laravel-permission": "^6.24"
     },

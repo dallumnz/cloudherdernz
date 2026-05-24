@@ -8,6 +8,8 @@ use Illuminate\Database\Eloquent\Relations\MorphMany;
 
 use Spatie\MediaLibrary\HasMedia;
 use Spatie\MediaLibrary\InteractsWithMedia;
+use Spatie\Activitylog\Models\Concerns\LogsActivity;
+use Spatie\Activitylog\Support\LogOptions;
 
 /**
  * Newsletter Post Model
@@ -34,6 +36,7 @@ class NewsletterPost extends Model implements HasMedia
     use HasFactory;
 
     use InteractsWithMedia;
+    use LogsActivity;
 
     /**
      * The attributes that are mass assignable.
@@ -63,6 +66,17 @@ class NewsletterPost extends Model implements HasMedia
         'opens_count' => 'integer',
         'clicks_count' => 'integer',
     ];
+
+    /**
+     * Get the activity log options for the model.
+     */
+    public function getActivitylogOptions(): LogOptions
+    {
+        return LogOptions::defaults()
+            ->logOnly(['template', 'is_sent', 'sent_at', 'recipients_count'])
+            ->logOnlyDirty()
+            ->dontLogEmptyChanges();
+    }
 
     /**
      * Get all posts that belong to this newsletter post.

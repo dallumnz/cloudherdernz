@@ -105,6 +105,11 @@
                                     {{ __('Users') }}
                                 </flux:sidebar.item>
                             @endcan
+                            @can('view analytics')
+                                <flux:sidebar.item icon="clipboard-document-list" :href="route('admin.activity')" :current="request()->routeIs('admin.activity')" wire:navigate>
+                                    {{ __('Activity Log') }}
+                                </flux:sidebar.item>
+                            @endcan
                             @can('edit roles')
                                 <flux:sidebar.item icon="shield-check" :href="route('roles.manage')" :current="request()->routeIs('roles.manage')" wire:navigate>
                                     {{ __('Roles & Permissions') }}

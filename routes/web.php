@@ -120,6 +120,11 @@ Route::middleware(['auth'])->group(function () {
         ->middleware('permission:view analytics')
         ->name('admin.analytics');
 
+    // Activity Log (Livewire)
+    Route::get('admin/activity', \App\Livewire\ActivityLogManager::class)
+        ->middleware('permission:view analytics')
+        ->name('admin.activity');
+
     // Media Library Routes
     Route::prefix('admin/media')->name('admin.media.')->middleware(['permission:view media'])->group(function () {
         Route::get('/', \App\Livewire\MediaUploader::class)->name('index');

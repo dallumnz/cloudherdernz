@@ -103,7 +103,8 @@ class UserManager extends Component
             $this->setMessage("User '{$user->name}' updated successfully.", 'success');
         } else {
             $user = User::create($data);
-            $user->syncRoles($this->selectedRoles);
+            $roles = empty($this->selectedRoles) ? ['Viewer'] : $this->selectedRoles;
+            $user->syncRoles($roles);
             $this->setMessage("User '{$user->name}' created successfully.", 'success');
         }
 

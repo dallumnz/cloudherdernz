@@ -6,6 +6,8 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Spatie\Activitylog\Models\Concerns\LogsActivity;
+use Spatie\Activitylog\Support\LogOptions;
 
 /**
  * Page Model
@@ -32,6 +34,7 @@ class Page extends Model
     /** @use HasFactory<\Database\Factories\PageFactory> */
     use HasFactory;
 
+    use LogsActivity;
     use SoftDeletes;
     use \RalphJSmit\Laravel\SEO\Support\HasSEO;
 
@@ -61,6 +64,17 @@ class Page extends Model
         return [
             'published_at' => 'datetime',
         ];
+    }
+
+    /**
+     * Get the activity log options for the model.
+     */
+    public function getActivitylogOptions(): LogOptions
+    {
+        return LogOptions::defaults()
+            ->logOnly(['title', 'slug', 'status', 'published_at', 'author_id'])
+            ->logOnlyDirty()
+            ->dontLogEmptyChanges();
     }
 
     /**

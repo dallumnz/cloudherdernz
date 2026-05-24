@@ -6,6 +6,8 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Str;
+use Spatie\Activitylog\Models\Concerns\LogsActivity;
+use Spatie\Activitylog\Support\LogOptions;
 
 /**
  * Newsletter Subscriber Model
@@ -31,6 +33,7 @@ class NewsletterSubscriber extends Model
     /** @use HasFactory<\Database\Factories\NewsletterSubscriberFactory> */
     use HasFactory;
 
+    use LogsActivity;
     use SoftDeletes;
 
     /**
@@ -63,6 +66,17 @@ class NewsletterSubscriber extends Model
             'confirmed_at' => 'datetime',
             'preferences' => 'array',
         ];
+    }
+
+    /**
+     * Get the activity log options for the model.
+     */
+    public function getActivitylogOptions(): LogOptions
+    {
+        return LogOptions::defaults()
+            ->logOnly(['email', 'name', 'status', 'confirmed_at'])
+            ->logOnlyDirty()
+            ->dontLogEmptyChanges();
     }
 
     /**

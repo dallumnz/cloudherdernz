@@ -17,6 +17,8 @@ use Spatie\Image\Enums\Fit;
 use Spatie\MediaLibrary\HasMedia;
 use Spatie\MediaLibrary\InteractsWithMedia;
 use Spatie\MediaLibrary\MediaCollections\Models\Media;
+use Spatie\Activitylog\Models\Concerns\LogsActivity;
+use Spatie\Activitylog\Support\LogOptions;
 
 /**
  * Post Model
@@ -49,6 +51,7 @@ class Post extends Model implements HasMedia
     use HasFactory;
     use HasSEO;
     use InteractsWithMedia;
+    use LogsActivity;
     use Searchable;
 
     /**
@@ -80,6 +83,17 @@ class Post extends Model implements HasMedia
             'metadata' => 'array',
             'published_at' => 'datetime',
         ];
+    }
+
+    /**
+     * Get the activity log options for the model.
+     */
+    public function getActivitylogOptions(): LogOptions
+    {
+        return LogOptions::defaults()
+            ->logOnly(['title', 'slug', 'status', 'published_at', 'author_id'])
+            ->logOnlyDirty()
+            ->dontLogEmptyChanges();
     }
 
     /**
