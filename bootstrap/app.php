@@ -25,6 +25,10 @@ return Application::configure(basePath: dirname(__DIR__))
         $middleware->web([
             \App\Http\Middleware\SecurityHeaders::class,
         ]);
+
+        $middleware->api([
+            \App\Http\Middleware\LogApiAccess::class,
+        ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {
         //

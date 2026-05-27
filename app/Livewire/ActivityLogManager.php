@@ -57,7 +57,7 @@ class ActivityLogManager extends Component
 
     public function getEventsProperty(): array
     {
-        return ['created', 'updated', 'deleted'];
+        return ['created', 'updated', 'deleted', 'login', 'logout', 'failed_login', 'api_access', 'api_auth_failed'];
     }
 
     public function getSubjectTypesProperty(): array

@@ -14,6 +14,12 @@ use Illuminate\Support\ServiceProvider;
 use Illuminate\Validation\Rules\Password;
 use App\Events\CommentCreated;
 use App\Listeners\SendNewCommentNotification;
+use App\Listeners\LogSuccessfulLogin;
+use App\Listeners\LogFailedLogin;
+use App\Listeners\LogLogout;
+use Illuminate\Auth\Events\Login;
+use Illuminate\Auth\Events\Failed;
+use Illuminate\Auth\Events\Logout as LogoutEvent;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -33,6 +39,9 @@ class AppServiceProvider extends ServiceProvider
         $this->configureDefaults();
 
         Event::listen(CommentCreated::class, SendNewCommentNotification::class);
+        Event::listen(Login::class, LogSuccessfulLogin::class);
+        Event::listen(Failed::class, LogFailedLogin::class);
+        Event::listen(LogoutEvent::class, LogLogout::class);
 
         // Register hCaptcha validator
         Validator::extend('hcaptcha', function ($attribute, $value) {
