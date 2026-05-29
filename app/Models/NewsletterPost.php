@@ -151,7 +151,7 @@ class NewsletterPost extends Model implements HasMedia
      */
     public function getOpenRateAttribute(): ?float
     {
-        if (! $this->recipients_count || $this->recipients_count === 0) {
+        if (! $this->recipients_count) {
             return null;
         }
 
@@ -163,7 +163,7 @@ class NewsletterPost extends Model implements HasMedia
      */
     public function getClickRateAttribute(): ?float
     {
-        if (! $this->recipients_count || $this->recipients_count === 0) {
+        if (! $this->recipients_count) {
             return null;
         }
 

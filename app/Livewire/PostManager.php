@@ -66,7 +66,7 @@ class PostManager extends Component
         if ($this->editId) {
             $this->edit($this->editId);
         } elseif ($this->showCreateForm) {
-            $this->showCreateForm();
+            $this->create();
         }
     }
 

@@ -1,0 +1,715 @@
+parameters:
+	ignoreErrors:
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$id\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Http/Controllers/Api/CommentController.php
+
+		-
+			message: '#^Call to an undefined method Illuminate\\Database\\Eloquent\\Model\:\:comments\(\)\.$#'
+			identifier: method.notFound
+			count: 2
+			path: app/Http/Controllers/Api/CommentController.php
+
+		-
+			message: '#^Using nullsafe method call on non\-nullable type Illuminate\\Database\\Eloquent\\Model\. Use \-\> instead\.$#'
+			identifier: nullsafe.neverNull
+			count: 1
+			path: app/Http/Controllers/Api/PostApiController.php
+
+		-
+			message: '#^Call to an undefined method Illuminate\\Database\\Eloquent\\Relations\\MorphToMany\:\:published\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: app/Http/Controllers/Api/TaxonomyTermApiController.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$audio_url\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Http/Controllers/PostController.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$caption\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Http/Controllers/PostController.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$duration_seconds\.$#'
+			identifier: property.notFound
+			count: 2
+			path: app/Http/Controllers/PostController.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$episode_number\.$#'
+			identifier: property.notFound
+			count: 2
+			path: app/Http/Controllers/PostController.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$gallery_settings\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Http/Controllers/PostController.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$id\.$#'
+			identifier: property.notFound
+			count: 2
+			path: app/Http/Controllers/PostController.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$provider\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Http/Controllers/PostController.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$subscriber_settings\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Http/Controllers/PostController.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$template\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Http/Controllers/PostController.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$thumbnail_url\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Http/Controllers/PostController.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$video_url\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Http/Controllers/PostController.php
+
+		-
+			message: '#^Parameter \#1 \$view of function view expects view\-string\|null, string given\.$#'
+			identifier: argument.type
+			count: 2
+			path: app/Http/Controllers/PostController.php
+
+		-
+			message: '#^Using nullsafe property access "\?\-\>id" on left side of \?\? is unnecessary\. Use \-\> instead\.$#'
+			identifier: nullsafe.neverNull
+			count: 1
+			path: app/Http/Requests/Post/UpdatePostRequest.php
+
+		-
+			message: '#^Access to an undefined property App\\Http\\Resources\\CommentResource\:\:\$body\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Http/Resources/CommentResource.php
+
+		-
+			message: '#^Access to an undefined property App\\Http\\Resources\\CommentResource\:\:\$children\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Http/Resources/CommentResource.php
+
+		-
+			message: '#^Access to an undefined property App\\Http\\Resources\\CommentResource\:\:\$commentable_id\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Http/Resources/CommentResource.php
+
+		-
+			message: '#^Access to an undefined property App\\Http\\Resources\\CommentResource\:\:\$commentable_type\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Http/Resources/CommentResource.php
+
+		-
+			message: '#^Access to an undefined property App\\Http\\Resources\\CommentResource\:\:\$created_at\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Http/Resources/CommentResource.php
+
+		-
+			message: '#^Access to an undefined property App\\Http\\Resources\\CommentResource\:\:\$id\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Http/Resources/CommentResource.php
+
+		-
+			message: '#^Access to an undefined property App\\Http\\Resources\\CommentResource\:\:\$is_approved\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Http/Resources/CommentResource.php
+
+		-
+			message: '#^Access to an undefined property App\\Http\\Resources\\CommentResource\:\:\$parent_id\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Http/Resources/CommentResource.php
+
+		-
+			message: '#^Access to an undefined property App\\Http\\Resources\\CommentResource\:\:\$updated_at\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Http/Resources/CommentResource.php
+
+		-
+			message: '#^Access to an undefined property App\\Http\\Resources\\CommentResource\:\:\$user\.$#'
+			identifier: property.notFound
+			count: 3
+			path: app/Http/Resources/CommentResource.php
+
+		-
+			message: '#^Access to an undefined property App\\Http\\Resources\\PostResource\:\:\$content\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Http/Resources/PostResource.php
+
+		-
+			message: '#^Access to an undefined property App\\Http\\Resources\\PostResource\:\:\$created_at\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Http/Resources/PostResource.php
+
+		-
+			message: '#^Access to an undefined property App\\Http\\Resources\\PostResource\:\:\$excerpt\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Http/Resources/PostResource.php
+
+		-
+			message: '#^Access to an undefined property App\\Http\\Resources\\PostResource\:\:\$id\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Http/Resources/PostResource.php
+
+		-
+			message: '#^Access to an undefined property App\\Http\\Resources\\PostResource\:\:\$metadata\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Http/Resources/PostResource.php
+
+		-
+			message: '#^Access to an undefined property App\\Http\\Resources\\PostResource\:\:\$post_type\.$#'
+			identifier: property.notFound
+			count: 3
+			path: app/Http/Resources/PostResource.php
+
+		-
+			message: '#^Access to an undefined property App\\Http\\Resources\\PostResource\:\:\$postable_type\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Http/Resources/PostResource.php
+
+		-
+			message: '#^Access to an undefined property App\\Http\\Resources\\PostResource\:\:\$published_at\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Http/Resources/PostResource.php
+
+		-
+			message: '#^Access to an undefined property App\\Http\\Resources\\PostResource\:\:\$slug\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Http/Resources/PostResource.php
+
+		-
+			message: '#^Access to an undefined property App\\Http\\Resources\\PostResource\:\:\$status\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Http/Resources/PostResource.php
+
+		-
+			message: '#^Access to an undefined property App\\Http\\Resources\\PostResource\:\:\$title\.$#'
+			identifier: property.notFound
+			count: 2
+			path: app/Http/Resources/PostResource.php
+
+		-
+			message: '#^Access to an undefined property App\\Http\\Resources\\PostResource\:\:\$updated_at\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Http/Resources/PostResource.php
+
+		-
+			message: '#^Call to an undefined method App\\Http\\Resources\\PostResource\:\:getFirstMedia\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: app/Http/Resources/PostResource.php
+
+		-
+			message: '#^Access to an undefined property App\\Http\\Resources\\RoleResource\:\:\$created_at\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Http/Resources/RoleResource.php
+
+		-
+			message: '#^Access to an undefined property App\\Http\\Resources\\RoleResource\:\:\$guard_name\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Http/Resources/RoleResource.php
+
+		-
+			message: '#^Access to an undefined property App\\Http\\Resources\\RoleResource\:\:\$id\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Http/Resources/RoleResource.php
+
+		-
+			message: '#^Access to an undefined property App\\Http\\Resources\\RoleResource\:\:\$name\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Http/Resources/RoleResource.php
+
+		-
+			message: '#^Access to an undefined property App\\Http\\Resources\\RoleResource\:\:\$permissions\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Http/Resources/RoleResource.php
+
+		-
+			message: '#^Access to an undefined property App\\Http\\Resources\\RoleResource\:\:\$updated_at\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Http/Resources/RoleResource.php
+
+		-
+			message: '#^Access to an undefined property App\\Http\\Resources\\TaxonomyResource\:\:\$created_at\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Http/Resources/TaxonomyResource.php
+
+		-
+			message: '#^Access to an undefined property App\\Http\\Resources\\TaxonomyResource\:\:\$description\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Http/Resources/TaxonomyResource.php
+
+		-
+			message: '#^Access to an undefined property App\\Http\\Resources\\TaxonomyResource\:\:\$id\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Http/Resources/TaxonomyResource.php
+
+		-
+			message: '#^Access to an undefined property App\\Http\\Resources\\TaxonomyResource\:\:\$is_hierarchical\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Http/Resources/TaxonomyResource.php
+
+		-
+			message: '#^Access to an undefined property App\\Http\\Resources\\TaxonomyResource\:\:\$name\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Http/Resources/TaxonomyResource.php
+
+		-
+			message: '#^Access to an undefined property App\\Http\\Resources\\TaxonomyResource\:\:\$slug\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Http/Resources/TaxonomyResource.php
+
+		-
+			message: '#^Access to an undefined property App\\Http\\Resources\\TaxonomyResource\:\:\$type\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Http/Resources/TaxonomyResource.php
+
+		-
+			message: '#^Access to an undefined property App\\Http\\Resources\\TaxonomyResource\:\:\$updated_at\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Http/Resources/TaxonomyResource.php
+
+		-
+			message: '#^Access to an undefined property App\\Http\\Resources\\TaxonomyTermResource\:\:\$children\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Http/Resources/TaxonomyTermResource.php
+
+		-
+			message: '#^Access to an undefined property App\\Http\\Resources\\TaxonomyTermResource\:\:\$children_count\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Http/Resources/TaxonomyTermResource.php
+
+		-
+			message: '#^Access to an undefined property App\\Http\\Resources\\TaxonomyTermResource\:\:\$created_at\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Http/Resources/TaxonomyTermResource.php
+
+		-
+			message: '#^Access to an undefined property App\\Http\\Resources\\TaxonomyTermResource\:\:\$description\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Http/Resources/TaxonomyTermResource.php
+
+		-
+			message: '#^Access to an undefined property App\\Http\\Resources\\TaxonomyTermResource\:\:\$id\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Http/Resources/TaxonomyTermResource.php
+
+		-
+			message: '#^Access to an undefined property App\\Http\\Resources\\TaxonomyTermResource\:\:\$metadata\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Http/Resources/TaxonomyTermResource.php
+
+		-
+			message: '#^Access to an undefined property App\\Http\\Resources\\TaxonomyTermResource\:\:\$name\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Http/Resources/TaxonomyTermResource.php
+
+		-
+			message: '#^Access to an undefined property App\\Http\\Resources\\TaxonomyTermResource\:\:\$parent\.$#'
+			identifier: property.notFound
+			count: 3
+			path: app/Http/Resources/TaxonomyTermResource.php
+
+		-
+			message: '#^Access to an undefined property App\\Http\\Resources\\TaxonomyTermResource\:\:\$slug\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Http/Resources/TaxonomyTermResource.php
+
+		-
+			message: '#^Access to an undefined property App\\Http\\Resources\\TaxonomyTermResource\:\:\$taxonomy\.$#'
+			identifier: property.notFound
+			count: 4
+			path: app/Http/Resources/TaxonomyTermResource.php
+
+		-
+			message: '#^Access to an undefined property App\\Http\\Resources\\TaxonomyTermResource\:\:\$updated_at\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Http/Resources/TaxonomyTermResource.php
+
+		-
+			message: '#^Access to an undefined property App\\Http\\Resources\\UserResource\:\:\$created_at\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Http/Resources/UserResource.php
+
+		-
+			message: '#^Access to an undefined property App\\Http\\Resources\\UserResource\:\:\$email\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Http/Resources/UserResource.php
+
+		-
+			message: '#^Access to an undefined property App\\Http\\Resources\\UserResource\:\:\$email_verified_at\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Http/Resources/UserResource.php
+
+		-
+			message: '#^Access to an undefined property App\\Http\\Resources\\UserResource\:\:\$id\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Http/Resources/UserResource.php
+
+		-
+			message: '#^Access to an undefined property App\\Http\\Resources\\UserResource\:\:\$name\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Http/Resources/UserResource.php
+
+		-
+			message: '#^Access to an undefined property App\\Http\\Resources\\UserResource\:\:\$permissions\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Http/Resources/UserResource.php
+
+		-
+			message: '#^Access to an undefined property App\\Http\\Resources\\UserResource\:\:\$roles\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Http/Resources/UserResource.php
+
+		-
+			message: '#^Access to an undefined property App\\Http\\Resources\\UserResource\:\:\$updated_at\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Http/Resources/UserResource.php
+
+		-
+			message: '#^Call to an undefined method App\\Http\\Resources\\UserResource\:\:initials\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: app/Http/Resources/UserResource.php
+
+		-
+			message: '#^Method App\\Http\\Resources\\UserResource\:\:getAvatarUrl\(\) never returns string so it can be removed from the return type\.$#'
+			identifier: return.unusedType
+			count: 1
+			path: app/Http/Resources/UserResource.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$title\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Jobs/SendNewsletterJob.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Contracts\\Auth\\Authenticatable\:\:\$name\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Listeners/LogLogout.php
+
+		-
+			message: '#^Parameter \#1 \$modelOrId of method Spatie\\Activitylog\\Support\\ActivityLogger\:\:causedBy\(\) expects Illuminate\\Database\\Eloquent\\Model\|int\|string\|null, Illuminate\\Contracts\\Auth\\Authenticatable given\.$#'
+			identifier: argument.type
+			count: 1
+			path: app/Listeners/LogLogout.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Contracts\\Auth\\Authenticatable\:\:\$name\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Listeners/LogSuccessfulLogin.php
+
+		-
+			message: '#^Parameter \#1 \$modelOrId of method Spatie\\Activitylog\\Support\\ActivityLogger\:\:causedBy\(\) expects Illuminate\\Database\\Eloquent\\Model\|int\|string\|null, Illuminate\\Contracts\\Auth\\Authenticatable given\.$#'
+			identifier: argument.type
+			count: 1
+			path: app/Listeners/LogSuccessfulLogin.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$type\.$#'
+			identifier: property.notFound
+			count: 2
+			path: app/Livewire/CategoryManager.php
+
+		-
+			message: '#^Access to an undefined property App\\Livewire\\CommentThread\:\:\$comments\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Livewire/CommentThread.php
+
+		-
+			message: '#^Access to an undefined property App\\Livewire\\CommentThread\:\:\$isAdmin\.$#'
+			identifier: property.notFound
+			count: 3
+			path: app/Livewire/CommentThread.php
+
+		-
+			message: '#^Parameter \#1 \$view of function view expects view\-string\|null, string given\.$#'
+			identifier: argument.type
+			count: 1
+			path: app/Livewire/MarkdownEditor.php
+
+		-
+			message: '#^Property App\\Livewire\\MarkdownEditor\:\:\$markdownConverter \(League\\CommonMark\\CommonMarkConverter\) does not accept League\\CommonMark\\GithubFlavoredMarkdownConverter\.$#'
+			identifier: assign.propertyType
+			count: 1
+			path: app/Livewire/MarkdownEditor.php
+
+		-
+			message: '#^Using nullsafe method call on non\-nullable type Carbon\\Carbon\. Use \-\> instead\.$#'
+			identifier: nullsafe.neverNull
+			count: 1
+			path: app/Livewire/MarkdownEditor.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$type\.$#'
+			identifier: property.notFound
+			count: 2
+			path: app/Livewire/TagManager.php
+
+		-
+			message: '#^PHPDoc type array\<int, string\> of property App\\Models\\AudioPost\:\:\$fillable is not covariant with PHPDoc type list\<string\> of overridden property Illuminate\\Database\\Eloquent\\Model\:\:\$fillable\.$#'
+			identifier: property.phpDocType
+			count: 1
+			path: app/Models/AudioPost.php
+
+		-
+			message: '#^PHPDoc type array\<int, string\> of property App\\Models\\Comment\:\:\$fillable is not covariant with PHPDoc type list\<string\> of overridden property Illuminate\\Database\\Eloquent\\Model\:\:\$fillable\.$#'
+			identifier: property.phpDocType
+			count: 1
+			path: app/Models/Comment.php
+
+		-
+			message: '#^PHPDoc tag @use has invalid type Database\\Factories\\ContactFactory\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Models/Contact.php
+
+		-
+			message: '#^PHPDoc type array\<int, string\> of property App\\Models\\Contact\:\:\$fillable is not covariant with PHPDoc type list\<string\> of overridden property Illuminate\\Database\\Eloquent\\Model\:\:\$fillable\.$#'
+			identifier: property.phpDocType
+			count: 1
+			path: app/Models/Contact.php
+
+		-
+			message: '#^Type Database\\Factories\\ContactFactory in generic type Illuminate\\Database\\Eloquent\\Factories\\HasFactory\<Database\\Factories\\ContactFactory\> in PHPDoc tag @use is not subtype of template type TFactory of Illuminate\\Database\\Eloquent\\Factories\\Factory of trait Illuminate\\Database\\Eloquent\\Factories\\HasFactory\.$#'
+			identifier: generics.notSubtype
+			count: 1
+			path: app/Models/Contact.php
+
+		-
+			message: '#^PHPDoc tag @use has invalid type Database\\Factories\\ContactBlocklistFactory\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Models/ContactBlocklist.php
+
+		-
+			message: '#^PHPDoc type array\<int, string\> of property App\\Models\\ContactBlocklist\:\:\$fillable is not covariant with PHPDoc type list\<string\> of overridden property Illuminate\\Database\\Eloquent\\Model\:\:\$fillable\.$#'
+			identifier: property.phpDocType
+			count: 1
+			path: app/Models/ContactBlocklist.php
+
+		-
+			message: '#^Type Database\\Factories\\ContactBlocklistFactory in generic type Illuminate\\Database\\Eloquent\\Factories\\HasFactory\<Database\\Factories\\ContactBlocklistFactory\> in PHPDoc tag @use is not subtype of template type TFactory of Illuminate\\Database\\Eloquent\\Factories\\Factory of trait Illuminate\\Database\\Eloquent\\Factories\\HasFactory\.$#'
+			identifier: generics.notSubtype
+			count: 1
+			path: app/Models/ContactBlocklist.php
+
+		-
+			message: '#^PHPDoc type array\<int, string\> of property App\\Models\\ImagePost\:\:\$fillable is not covariant with PHPDoc type list\<string\> of overridden property Illuminate\\Database\\Eloquent\\Model\:\:\$fillable\.$#'
+			identifier: property.phpDocType
+			count: 1
+			path: app/Models/ImagePost.php
+
+		-
+			message: '#^PHPDoc tag @use has invalid type Database\\Factories\\NewsletterActivityFactory\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Models/NewsletterActivity.php
+
+		-
+			message: '#^Type Database\\Factories\\NewsletterActivityFactory in generic type Illuminate\\Database\\Eloquent\\Factories\\HasFactory\<Database\\Factories\\NewsletterActivityFactory\> in PHPDoc tag @use is not subtype of template type TFactory of Illuminate\\Database\\Eloquent\\Factories\\Factory of trait Illuminate\\Database\\Eloquent\\Factories\\HasFactory\.$#'
+			identifier: generics.notSubtype
+			count: 1
+			path: app/Models/NewsletterActivity.php
+
+		-
+			message: '#^PHPDoc type array\<int, string\> of property App\\Models\\NewsletterPost\:\:\$fillable is not covariant with PHPDoc type list\<string\> of overridden property Illuminate\\Database\\Eloquent\\Model\:\:\$fillable\.$#'
+			identifier: property.phpDocType
+			count: 1
+			path: app/Models/NewsletterPost.php
+
+		-
+			message: '#^PHPDoc tag @use has invalid type Database\\Factories\\NewsletterSubscriberFactory\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Models/NewsletterSubscriber.php
+
+		-
+			message: '#^PHPDoc type array\<int, string\> of property App\\Models\\NewsletterSubscriber\:\:\$fillable is not covariant with PHPDoc type list\<string\> of overridden property Illuminate\\Database\\Eloquent\\Model\:\:\$fillable\.$#'
+			identifier: property.phpDocType
+			count: 1
+			path: app/Models/NewsletterSubscriber.php
+
+		-
+			message: '#^Property App\\Models\\NewsletterSubscriber\:\:\$subscribed_at \(Carbon\\Carbon\|null\) does not accept Carbon\\CarbonImmutable\.$#'
+			identifier: assign.propertyType
+			count: 1
+			path: app/Models/NewsletterSubscriber.php
+
+		-
+			message: '#^Type Database\\Factories\\NewsletterSubscriberFactory in generic type Illuminate\\Database\\Eloquent\\Factories\\HasFactory\<Database\\Factories\\NewsletterSubscriberFactory\> in PHPDoc tag @use is not subtype of template type TFactory of Illuminate\\Database\\Eloquent\\Factories\\Factory of trait Illuminate\\Database\\Eloquent\\Factories\\HasFactory\.$#'
+			identifier: generics.notSubtype
+			count: 1
+			path: app/Models/NewsletterSubscriber.php
+
+		-
+			message: '#^Call to an undefined method DateTimeInterface\:\:setTimezone\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: app/Models/Page.php
+
+		-
+			message: '#^PHPDoc type array\<int, string\> of property App\\Models\\Page\:\:\$fillable is not covariant with PHPDoc type list\<string\> of overridden property Illuminate\\Database\\Eloquent\\Model\:\:\$fillable\.$#'
+			identifier: property.phpDocType
+			count: 1
+			path: app/Models/Page.php
+
+		-
+			message: '#^Using nullsafe property access "\?\-\>name" on left side of \?\? is unnecessary\. Use \-\> instead\.$#'
+			identifier: nullsafe.neverNull
+			count: 1
+			path: app/Models/Page.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$description\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Models/Post.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$image\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Models/Post.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$title\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Models/Post.php
+
+		-
+			message: '#^Call to an undefined method DateTimeInterface\:\:setTimezone\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: app/Models/Post.php
+
+		-
+			message: '#^Call to an undefined method Spatie\\Image\\Drivers\\ImageDriver\:\:nonQueued\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: app/Models/Post.php
+
+		-
+			message: '#^Call to an undefined method Spatie\\Image\\Drivers\\ImageDriver\:\:performOnCollections\(\)\.$#'
+			identifier: method.notFound
+			count: 3
+			path: app/Models/Post.php
+
+		-
+			message: '#^PHPDoc type array\<int, string\> of property App\\Models\\Post\:\:\$fillable is not covariant with PHPDoc type list\<string\> of overridden property Illuminate\\Database\\Eloquent\\Model\:\:\$fillable\.$#'
+			identifier: property.phpDocType
+			count: 1
+			path: app/Models/Post.php
+
+		-
+			message: '#^Using nullsafe property access "\?\-\>description" on left side of \?\? is unnecessary\. Use \-\> instead\.$#'
+			identifier: nullsafe.neverNull
+			count: 1
+			path: app/Models/Post.php
+
+		-
+			message: '#^Using nullsafe property access "\?\-\>image" on left side of \?\? is unnecessary\. Use \-\> instead\.$#'
+			identifier: nullsafe.neverNull
+			count: 1
+			path: app/Models/Post.php
+
+		-
+			message: '#^Using nullsafe property access "\?\-\>name" on left side of \?\? is unnecessary\. Use \-\> instead\.$#'
+			identifier: nullsafe.neverNull
+			count: 1
+			path: app/Models/Post.php
+
+		-
+			message: '#^Using nullsafe property access "\?\-\>title" on left side of \?\? is unnecessary\. Use \-\> instead\.$#'
+			identifier: nullsafe.neverNull
+			count: 1
+			path: app/Models/Post.php
+
+		-
+			message: '#^PHPDoc type array\<int, string\> of property App\\Models\\VideoPost\:\:\$fillable is not covariant with PHPDoc type list\<string\> of overridden property Illuminate\\Database\\Eloquent\\Model\:\:\$fillable\.$#'
+			identifier: property.phpDocType
+			count: 1
+			path: app/Models/VideoPost.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$type\.$#'
+			identifier: property.notFound
+			count: 5
+			path: app/Policies/TaxonomyTermPolicy.php

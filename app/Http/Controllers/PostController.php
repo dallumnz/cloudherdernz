@@ -7,7 +7,9 @@ use App\Http\Requests\Post\StorePostRequest;
 use App\Http\Requests\Post\UpdatePostRequest;
 use App\Models\AudioPost;
 use App\Models\ImagePost;
+use App\Models\NewsletterPost;
 use App\Models\Post;
+use App\Models\StandardPost;
 use App\Models\TaxonomyTerm;
 use App\Models\VideoPost;
 use Illuminate\Database\Eloquent\Model;
@@ -238,6 +240,7 @@ class PostController extends Controller
     private function createPostable(PostType $type, array $data): Model
     {
         return match ($type) {
+            PostType::STANDARD => StandardPost::create([]),
             PostType::IMAGE => ImagePost::create([
                 'caption' => $data['caption'] ?? null,
                 'gallery_settings' => isset($data['gallery_settings']) ? json_decode($data['gallery_settings'], true) : null,
@@ -267,6 +270,7 @@ class PostController extends Controller
     private function updatePostable(Model $postable, PostType $type, array $data): void
     {
         match ($type) {
+            PostType::STANDARD => $postable->update([]),
             PostType::IMAGE => $postable->update([
                 'caption' => $data['caption'] ?? $postable->caption,
                 'gallery_settings' => isset($data['gallery_settings']) ? json_decode($data['gallery_settings'], true) : $postable->gallery_settings,
