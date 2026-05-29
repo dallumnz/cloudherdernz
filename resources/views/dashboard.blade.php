@@ -9,59 +9,6 @@
             <flux:text variant="secondary">{{ now()->format('F j, Y') }}</flux:text>
         </div>
 
-        {{-- Personal Stats --}}
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-            <flux:card>
-                <div class="flex items-center justify-between">
-                    <div>
-                        <flux:text variant="secondary" size="sm">Your Posts</flux:text>
-                        <flux:heading size="2xl">{{ auth()->user()->posts()->count() }}</flux:heading>
-                    </div>
-                    <div class="p-3 bg-blue-100 dark:bg-blue-900 rounded-lg">
-                        <flux:icon name="document-text" class="w-6 h-6 text-blue-600 dark:text-blue-400" />
-                    </div>
-                </div>
-            </flux:card>
-
-            <flux:card>
-                <div class="flex items-center justify-between">
-                    <div>
-                        <flux:text variant="secondary" size="sm">Published</flux:text>
-                        <flux:heading size="2xl">{{ auth()->user()->posts()->published()->count() }}</flux:heading>
-                    </div>
-                    <div class="p-3 bg-green-100 dark:bg-green-900 rounded-lg">
-                        <flux:icon name="check-circle" class="w-6 h-6 text-green-600 dark:text-green-400" />
-                    </div>
-                </div>
-            </flux:card>
-
-            <flux:card>
-                <div class="flex items-center justify-between">
-                    <div>
-                        <flux:text variant="secondary" size="sm">Drafts</flux:text>
-                        <flux:heading size="2xl">{{ auth()->user()->posts()->draft()->count() }}</flux:heading>
-                    </div>
-                    <div class="p-3 bg-yellow-100 dark:bg-yellow-900 rounded-lg">
-                        <flux:icon name="pencil" class="w-6 h-6 text-yellow-600 dark:text-yellow-400" />
-                    </div>
-                </div>
-            </flux:card>
-
-            <flux:card>
-                <div class="flex items-center justify-between">
-                    <div>
-                        <flux:text variant="secondary" size="sm">Your Role</flux:text>
-                        <flux:heading size="2xl" class="text-lg">
-                            {{ auth()->user()->roles->pluck('name')->first() ?? 'User' }}
-                        </flux:heading>
-                    </div>
-                    <div class="p-3 bg-purple-100 dark:bg-purple-900 rounded-lg">
-                        <flux:icon name="shield-check" class="w-6 h-6 text-purple-600 dark:text-purple-400" />
-                    </div>
-                </div>
-            </flux:card>
-        </div>
-
         @can('view posts')
             @php
                 $adminStats = [
