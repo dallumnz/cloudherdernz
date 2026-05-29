@@ -61,9 +61,38 @@ class Page extends Model
      */
     protected function casts(): array
     {
-        return [
-            'published_at' => 'datetime',
-        ];
+        return [];
+    }
+
+    /**
+     * Intercept published_at to store UTC in the database while
+     * presenting/applying the application's configured timezone.
+     */
+    protected function publishedAt(): \Illuminate\Database\Eloquent\Casts\Attribute
+    {
+        return \Illuminate\Database\Eloquent\Casts\Attribute::make(
+            get: function (?string $value): ?\Illuminate\Support\Carbon {
+                if (blank($value)) {
+                    return null;
+                }
+
+                return \Illuminate\Support\Carbon::parse($value, 'UTC')
+                    ->setTimezone(config('app.timezone'));
+            },
+            set: function ($value): ?string {
+                if (blank($value)) {
+                    return null;
+                }
+
+                if ($value instanceof \DateTimeInterface) {
+                    return $value->setTimezone('UTC')->format('Y-m-d H:i:s');
+                }
+
+                return \Illuminate\Support\Carbon::parse($value, config('app.timezone'))
+                    ->setTimezone('UTC')
+                    ->format('Y-m-d H:i:s');
+            }
+        );
     }
 
     /**
