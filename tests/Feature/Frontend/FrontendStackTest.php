@@ -174,14 +174,21 @@ describe('Category Pages', function () {
 });
 
 describe('Admin Dashboard', function () {
-    it('displays admin dashboard with stats for authorized users', function () {
+    it('redirects /admin to dashboard for authorized users', function () {
         $response = $this->actingAs($this->admin)
             ->get(route('admin.dashboard'));
 
+        $response->assertRedirect(route('dashboard'));
+    });
+
+    it('shows admin stats on unified dashboard for authorized users', function () {
+        $response = $this->actingAs($this->admin)
+            ->get(route('dashboard'));
+
         $response->assertStatus(200);
-        $response->assertSee('Admin Dashboard');
         $response->assertSee('Total Posts');
         $response->assertSee('Total Users');
+        $response->assertSee('Recent Users');
     });
 
     it('redirects guests from admin dashboard', function () {

@@ -2,7 +2,7 @@
     <div class="container mx-auto px-4 py-8">
         {{-- Breadcrumb --}}
         <nav class="flex items-center space-x-2 text-sm text-gray-500 mb-6">
-            <a href="{{ route('admin.dashboard') }}" class="hover:text-blue-600">Dashboard</a>
+            <a href="{{ route('dashboard') }}" class="hover:text-blue-600">Dashboard</a>
             <span>/</span>
             <a href="{{ route('admin.inbox.index') }}" class="hover:text-blue-600">Inbox</a>
             <span>/</span>

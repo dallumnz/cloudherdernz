@@ -66,8 +66,8 @@ Route::middleware(['auth'])->group(function () {
         ->middleware(['verified'])
         ->name('dashboard');
 
-    // Admin Dashboard
-    Route::get('admin', \App\Livewire\AdminDashboard::class)
+    // Admin Dashboard (redirects to unified dashboard)
+    Route::redirect('admin', 'dashboard')
         ->middleware('permission:view posts')
         ->name('admin.dashboard');
 
