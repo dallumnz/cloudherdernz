@@ -187,7 +187,7 @@ describe('Admin Dashboard', function () {
 
         $response->assertStatus(200);
         $response->assertSee('Total Posts');
-        $response->assertSee('Total Users');
+        $response->assertSee('Your Role');
         $response->assertSee('Recent Users');
     });
 

@@ -15,7 +15,6 @@
                     'total_posts' => \App\Models\Post::count(),
                     'published_posts' => \App\Models\Post::published()->count(),
                     'draft_posts' => \App\Models\Post::draft()->count(),
-                    'total_users' => \App\Models\User::count(),
                     'total_tags' => \App\Models\TaxonomyTerm::whereHas('taxonomy', fn ($q) => $q->where('type', 'tag'))->count(),
                     'total_categories' => \App\Models\TaxonomyTerm::whereHas('taxonomy', fn ($q) => $q->where('type', 'category'))->count(),
                     'total_subscribers' => \App\Models\NewsletterSubscriber::count(),
@@ -38,18 +37,6 @@
                         <span class="text-green-600 dark:text-green-400">{{ $adminStats['published_posts'] }} published</span>
                         <span class="text-gray-400">|</span>
                         <span class="text-yellow-600 dark:text-yellow-400">{{ $adminStats['draft_posts'] }} drafts</span>
-                    </div>
-                </flux:card>
-
-                <flux:card>
-                    <div class="flex items-center justify-between">
-                        <div>
-                            <flux:text variant="secondary" size="sm">Total Users</flux:text>
-                            <flux:heading size="2xl">{{ $adminStats['total_users'] }}</flux:heading>
-                        </div>
-                        <div class="p-3 bg-green-100 dark:bg-green-900 rounded-lg">
-                            <flux:icon name="users" class="w-6 h-6 text-green-600 dark:text-green-400" />
-                        </div>
                     </div>
                 </flux:card>
 
@@ -84,6 +71,20 @@
                         <span class="text-orange-600 dark:text-orange-400">{{ $adminStats['active_subscribers'] }} active</span>
                         <span class="text-gray-400">|</span>
                         <span class="text-gray-500">{{ $adminStats['total_subscribers'] }} total</span>
+                    </div>
+                </flux:card>
+
+                <flux:card>
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <flux:text variant="secondary" size="sm">Your Role</flux:text>
+                            <flux:heading size="2xl" class="text-lg">
+                                {{ auth()->user()->roles->pluck('name')->first() ?? 'User' }}
+                            </flux:heading>
+                        </div>
+                        <div class="p-3 bg-purple-100 dark:bg-purple-900 rounded-lg">
+                            <flux:icon name="shield-check" class="w-6 h-6 text-purple-600 dark:text-purple-400" />
+                        </div>
                     </div>
                 </flux:card>
             </div>
