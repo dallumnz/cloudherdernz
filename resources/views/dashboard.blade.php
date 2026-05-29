@@ -231,43 +231,67 @@
 
             @can('view posts')
                 @php
-                    $recentUsers = \App\Models\User::query()
-                        ->latest()
-                        ->take(5)
-                        ->get();
+                    $analyticsTable = config('request-analytics.database.table', 'request_analytics');
+
+                    $popularPaths = \Illuminate\Support\Facades\DB::table($analyticsTable)
+                        ->select('path', \Illuminate\Support\Facades\DB::raw('COUNT(*) as views'))
+                        ->where('path', 'like', '/posts/%')
+                        ->groupBy('path')
+                        ->orderByDesc('views')
+                        ->limit(10)
+                        ->get()
+                        ->filter(fn ($row) => preg_match('#^/posts/[a-zA-Z0-9_-]+$#', $row->path));
+
+                    $slugs = $popularPaths->map(fn ($row) => \Illuminate\Support\Str::after($row->path, '/posts/'))->filter();
+                    $postMap = \App\Models\Post::whereIn('slug', $slugs)->get()->keyBy('slug');
+
+                    $popularPosts = $popularPaths
+                        ->map(fn ($row) => [
+                            'post' => $postMap[\Illuminate\Support\Str::after($row->path, '/posts/')] ?? null,
+                            'views' => $row->views,
+                        ])
+                        ->filter(fn ($item) => $item['post'] !== null)
+                        ->take(5);
                 @endphp
 
                 <flux:card>
                     <div class="flex items-center justify-between mb-4">
-                        <flux:heading size="lg">Recent Users</flux:heading>
-                        @can('view users')
-                            <flux:button href="{{ route('admin.users') }}" size="sm" variant="ghost">
+                        <flux:heading size="lg">Popular Posts</flux:heading>
+                        @can('view analytics')
+                            <flux:button href="{{ route('admin.analytics') }}" size="sm" variant="ghost">
                                 View All
                             </flux:button>
                         @endcan
                     </div>
 
-                    @if ($recentUsers->count() > 0)
+                    @if ($popularPosts->count() > 0)
                         <div class="space-y-3">
-                            @foreach ($recentUsers as $user)
+                            @foreach ($popularPosts as $item)
+                                @php $post = $item['post']; @endphp
                                 <div class="flex items-center justify-between p-3 bg-gray-50 dark:bg-gray-800 rounded-lg">
-                                    <div class="flex items-center space-x-3">
-                                        <flux:avatar :name="$user->name" :initials="$user->initials()" />
-                                        <div>
-                                            <p class="font-medium">{{ $user->name }}</p>
-                                            <p class="text-sm text-gray-500">{{ $user->email }}</p>
+                                    <div class="flex-1 min-w-0">
+                                        <a href="{{ route('admin.posts', ['editId' => $post->id]) }}" class="font-medium truncate hover:text-blue-600 dark:hover:text-blue-400">
+                                            {{ \Illuminate\Support\Str::limit($post->title, 70) }}
+                                        </a>
+                                        <div class="flex items-center space-x-2 text-sm text-gray-500 mt-1">
+                                            <span>{{ $post->postable?->getKey() ? class_basename($post->postable_type) . ' Post' : 'Post' }}</span>
+                                            <span>•</span>
+                                            <span>{{ $item['views'] }} views</span>
                                         </div>
                                     </div>
-                                    <div class="text-sm text-gray-500">
-                                        {{ $user->roles->pluck('name')->join(', ') ?: 'No roles' }}
+                                    <div class="ml-4">
+                                        <span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
+                                            {{ $item['views'] }}
+                                        </span>
                                     </div>
                                 </div>
                             @endforeach
                         </div>
                     @else
                         <div class="text-center py-8 text-gray-500">
-                            <flux:icon name="users" class="w-12 h-12 mx-auto mb-3" />
-                            <p>No users yet.</p>
+                            <flux:icon name="chart-bar" class="w-12 h-12 mx-auto mb-3" />
+                            <p>No view data yet.</p>
+                            <p class="text-sm mt-1">Popular posts will appear here once traffic starts flowing.</p>
                         </div>
                     @endif
                 </flux:card>

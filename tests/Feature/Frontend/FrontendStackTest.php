@@ -188,7 +188,7 @@ describe('Admin Dashboard', function () {
         $response->assertStatus(200);
         $response->assertSee('Total Posts');
         $response->assertSee('Your Role');
-        $response->assertSee('Recent Users');
+        $response->assertSee('Popular Posts');
     });
 
     it('redirects guests from admin dashboard', function () {
