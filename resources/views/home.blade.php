@@ -21,7 +21,7 @@
                             <span class="text-tertiary font-label italic text-lg mb-4 block">
                                 {{ $featuredPosts->first()->taxonomyTerms->first()?->name ?? 'Featured' }}
                             </span>
-                            <h1 class="text-4xl md:text-5xl lg:text-6xl font-headline font-bold text-on-surface leading-[0.95] tracking-tighter mb-6 letterpress">
+                            <h1 class="text-4xl md:text-5xl lg:text-6xl font-headline font-bold text-on-surface leading-snug md:leading-[0.95] tracking-tighter mb-6 letterpress">
                                 {{ $featuredPosts->first()->title }}
                             </h1>
                             <p class="text-on-surface-variant text-lg lg:text-xl font-body italic max-w-lg mb-8">

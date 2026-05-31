@@ -41,9 +41,12 @@
             </button>
 
             {{-- Mobile Menu --}}
-            <button class="md:hidden text-primary hover:text-primary-container transition-colors duration-300 p-2" aria-label="Menu">
-                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <button id="mobile-menu-btn" type="button" class="md:hidden text-primary hover:text-primary-container transition-colors duration-300 p-2" aria-label="Menu" aria-expanded="false" aria-controls="mobile-menu">
+                <svg id="menu-open-icon" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 6h16M4 12h16M4 18h16"/>
+                </svg>
+                <svg id="menu-close-icon" class="w-5 h-5 hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M6 18L18 6M6 6l12 12"/>
                 </svg>
             </button>
 
@@ -63,6 +66,33 @@
             @endauth
         </div>
     </div>
+
+    {{-- Mobile Menu Overlay --}}
+    <div id="mobile-menu" class="hidden md:hidden bg-surface border-t border-surface-container-low">
+        <div class="px-6 py-6 space-y-4">
+            <a href="{{ route('home') }}" 
+               class="block {{ request()->routeIs('home') ? 'text-primary' : 'text-on-surface-variant' }} font-headline italic text-xl tracking-tight transition-colors duration-300">
+                Home
+            </a>
+            <a href="{{ route('posts.index') }}" 
+               class="block {{ request()->routeIs('posts.*') ? 'text-primary' : 'text-on-surface-variant' }} font-headline italic text-xl tracking-tight transition-colors duration-300">
+                Blog
+            </a>
+            <a href="{{ route('contact.show') }}" 
+               class="block {{ request()->routeIs('contact.*') ? 'text-primary' : 'text-on-surface-variant' }} font-headline italic text-xl tracking-tight transition-colors duration-300">
+                Contact
+            </a>
+            @auth
+                <a href="{{ route('dashboard') }}" class="block text-on-surface-variant font-headline italic text-xl tracking-tight transition-colors duration-300">
+                    Dashboard
+                </a>
+            @else
+                <a href="{{ route('login') }}" class="block text-on-surface-variant font-headline italic text-xl tracking-tight transition-colors duration-300">
+                    Login
+                </a>
+            @endauth
+        </div>
+    </div>
 </nav>
 
 <script>
@@ -71,6 +101,34 @@ function toggleTheme() {
     const isDark = html.classList.toggle('dark');
     localStorage.setItem('theme', isDark ? 'dark' : 'light');
 }
+
+function toggleMobileMenu() {
+    const menu = document.getElementById('mobile-menu');
+    const btn = document.getElementById('mobile-menu-btn');
+    const openIcon = document.getElementById('menu-open-icon');
+    const closeIcon = document.getElementById('menu-close-icon');
+    const isOpen = !menu.classList.contains('hidden');
+    
+    if (isOpen) {
+        menu.classList.add('hidden');
+        openIcon.classList.remove('hidden');
+        closeIcon.classList.add('hidden');
+        btn.setAttribute('aria-expanded', 'false');
+    } else {
+        menu.classList.remove('hidden');
+        openIcon.classList.add('hidden');
+        closeIcon.classList.remove('hidden');
+        btn.setAttribute('aria-expanded', 'true');
+    }
+}
+
+// Wire up mobile menu button
+document.addEventListener('DOMContentLoaded', () => {
+    const menuBtn = document.getElementById('mobile-menu-btn');
+    if (menuBtn) {
+        menuBtn.addEventListener('click', toggleMobileMenu);
+    }
+});
 
 // Initialize theme from localStorage
 document.addEventListener('DOMContentLoaded', () => {
