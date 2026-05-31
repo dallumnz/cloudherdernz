@@ -6,7 +6,7 @@
             @if($featuredPosts->first())
             <div class="lg:col-span-8">
                 <a href="{{ route('posts.show', $featuredPosts->first()) }}" class="block group">
-                    <div class="relative overflow-hidden rounded-lg">
+                    <div class="relative rounded-lg">
                         <div class="aspect-[16/9] w-full overflow-hidden">
                             @if($featuredPosts->first()->getFirstMediaUrl('featured'))
                                 <img src="{{ $featuredPosts->first()->getFirstMediaUrl('featured') }}" 
@@ -16,18 +16,18 @@
                                 <div class="w-full h-full bg-gradient-to-br from-primary to-primary-container"></div>
                             @endif
                         </div>
-                        <div class="absolute inset-0 bg-gradient-to-t from-surface/90 via-surface/20 to-transparent"></div>
-                        <div class="absolute bottom-0 left-0 p-8 lg:p-12 w-full max-w-2xl">
-                            <span class="text-tertiary font-label italic text-lg mb-4 block">
+                        <div class="hidden md:block absolute inset-0 bg-gradient-to-t from-surface/90 via-surface/20 to-transparent rounded-lg"></div>
+                        <div class="relative md:absolute md:bottom-0 md:left-0 p-6 md:p-8 lg:p-12 w-full md:max-w-2xl bg-surface-container md:bg-transparent rounded-b-lg md:rounded-none">
+                            <span class="text-tertiary font-label italic text-base md:text-lg mb-2 md:mb-4 block">
                                 {{ $featuredPosts->first()->taxonomyTerms->first()?->name ?? 'Featured' }}
                             </span>
-                            <h1 class="text-4xl md:text-5xl lg:text-6xl font-headline font-bold text-on-surface leading-snug md:leading-[0.95] tracking-tighter mb-6 letterpress">
+                            <h1 class="text-2xl md:text-5xl lg:text-6xl font-headline font-bold text-on-surface leading-snug md:leading-[0.95] tracking-tighter mb-4 md:mb-6 letterpress">
                                 {{ $featuredPosts->first()->title }}
                             </h1>
-                            <p class="text-on-surface-variant text-lg lg:text-xl font-body italic max-w-lg mb-8">
+                            <p class="text-on-surface-variant text-base md:text-lg lg:text-xl font-body italic max-w-lg mb-6 md:mb-8">
                                 By {{ $featuredPosts->first()->author?->name ?? 'Admin' }} • {{ $featuredPosts->first()->published_at?->format('M d, Y') }}
                             </p>
-                            <span class="inline-flex items-center gap-3 bg-gradient-to-br from-primary to-primary-container px-6 py-3 rounded-lg text-on-primary font-bold transition-transform group-hover:scale-105">
+                            <span class="inline-flex items-center gap-3 bg-gradient-to-br from-primary to-primary-container px-5 py-2.5 md:px-6 md:py-3 rounded-lg text-on-primary font-bold transition-transform group-hover:scale-105">
                                 Read Article
                                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"/>
