@@ -77,6 +77,64 @@
                     </flux:select>
                 </div>
 
+                {{-- Video-specific fields --}}
+                @if ($postTypeValue === \App\Enums\PostType::VIDEO->model())
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <flux:input
+                            wire:model="videoUrl"
+                            label="Video URL"
+                            placeholder="https://youtube.com/watch?v=... or direct video URL"
+                            required
+                        />
+                        <flux:select wire:model="videoProvider" label="Provider">
+                            <option value="self">Self-hosted</option>
+                            <option value="youtube">YouTube</option>
+                            <option value="vimeo">Vimeo</option>
+                            <option value="other">Other</option>
+                        </flux:select>
+                    </div>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <flux:input
+                            wire:model="videoDuration"
+                            type="number"
+                            label="Duration (seconds)"
+                            placeholder="e.g. 300"
+                        />
+                        <flux:input
+                            wire:model="videoEpisode"
+                            type="number"
+                            label="Episode Number"
+                            placeholder="e.g. 1"
+                        />
+                    </div>
+                @endif
+
+                {{-- Audio-specific fields --}}
+                @if ($postTypeValue === \App\Enums\PostType::AUDIO->model())
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <flux:input
+                            wire:model="audioUrl"
+                            label="Audio URL"
+                            placeholder="https://spotify.com/episode/... or direct audio URL"
+                            required
+                        />
+                        <flux:input
+                            wire:model="audioDuration"
+                            type="number"
+                            label="Duration (seconds)"
+                            placeholder="e.g. 300"
+                        />
+                    </div>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <flux:input
+                            wire:model="audioEpisode"
+                            type="number"
+                            label="Episode Number"
+                            placeholder="e.g. 1"
+                        />
+                    </div>
+                @endif
+
                 <flux:input
                     wire:model="publishedAt"
                     type="datetime-local"

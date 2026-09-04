@@ -105,7 +105,7 @@ class Post extends Model implements HasMedia
                 }
 
                 if ($value instanceof \DateTimeInterface) {
-                    return $value->setTimezone('UTC')->format('Y-m-d H:i:s');
+                    return \Illuminate\Support\Carbon::instance($value)->setTimezone('UTC')->format('Y-m-d H:i:s');
                 }
 
                 return \Illuminate\Support\Carbon::parse($value, config('app.timezone'))

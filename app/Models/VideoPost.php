@@ -80,4 +80,39 @@ class VideoPost extends Model implements HasMedia
         $this->addMediaCollection('thumbnail')
             ->singleFile();
     }
+
+    /**
+     * Get the embed-ready URL for the video.
+     * Converts YouTube/Vimeo watch URLs to embed URLs.
+     */
+    public function getEmbedUrlAttribute(): ?string
+    {
+        $url = $this->video_url;
+
+        if (empty($url)) {
+            return null;
+        }
+
+        // YouTube
+        if (str_contains($url, 'youtube.com') || str_contains($url, 'youtu.be')) {
+            $id = null;
+            if (preg_match('/v=([a-zA-Z0-9_-]{11})/', $url, $m)) {
+                $id = $m[1];
+            } elseif (preg_match('/youtu\.be\/([a-zA-Z0-9_-]{11})/', $url, $m)) {
+                $id = $m[1];
+            }
+            if ($id) {
+                return "https://www.youtube.com/embed/{$id}";
+            }
+        }
+
+        // Vimeo
+        if (str_contains($url, 'vimeo.com')) {
+            if (preg_match('/vimeo\.com\/(\d+)/', $url, $m)) {
+                return "https://player.vimeo.com/video/{$m[1]}";
+            }
+        }
+
+        return $url;
+    }
 }

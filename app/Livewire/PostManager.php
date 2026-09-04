@@ -46,6 +46,20 @@ class PostManager extends Component
 
     public array $seoData = [];
 
+    public string $videoUrl = '';
+
+    public string $videoProvider = 'self';
+
+    public ?int $videoDuration = null;
+
+    public ?int $videoEpisode = null;
+
+    public string $audioUrl = '';
+
+    public ?int $audioDuration = null;
+
+    public ?int $audioEpisode = null;
+
     public string $message = '';
 
     public string $messageType = 'success';
@@ -113,6 +127,21 @@ class PostManager extends Component
             ->pluck('taxonomy_terms.id')
             ->toArray();
         $this->seoData = $post->seo?->toArray() ?? [];
+
+        // Load type-specific fields
+        if ($post->postable instanceof \App\Models\VideoPost) {
+            $this->videoUrl = $post->postable->video_url ?? '';
+            $this->videoProvider = $post->postable->provider ?? 'self';
+            $this->videoDuration = $post->postable->duration_seconds;
+            $this->videoEpisode = $post->postable->episode_number;
+        }
+
+        if ($post->postable instanceof \App\Models\AudioPost) {
+            $this->audioUrl = $post->postable->audio_url ?? '';
+            $this->audioDuration = $post->postable->duration_seconds;
+            $this->audioEpisode = $post->postable->episode_number;
+        }
+
         $this->showForm = true;
     }
 
@@ -150,11 +179,15 @@ class PostManager extends Component
         $postable = match ($postableType) {
             PostType::IMAGE->model() => \App\Models\ImagePost::create([]),
             PostType::VIDEO->model() => \App\Models\VideoPost::create([
-                'video_url' => 'https://example.com/video',
-                'provider' => 'self',
+                'video_url' => $this->videoUrl ?: null,
+                'provider' => $this->videoProvider ?: 'self',
+                'duration_seconds' => $this->videoDuration,
+                'episode_number' => $this->videoEpisode,
             ]),
             PostType::AUDIO->model() => \App\Models\AudioPost::create([
-                'audio_url' => 'https://example.com/audio',
+                'audio_url' => $this->audioUrl ?: 'https://example.com/audio',
+                'duration_seconds' => $this->audioDuration,
+                'episode_number' => $this->audioEpisode,
             ]),
             PostType::NEWSLETTER->model() => \App\Models\NewsletterPost::create([
                 'template' => 'default',
@@ -168,8 +201,6 @@ class PostManager extends Component
             'slug' => $this->slug ?: \Illuminate\Support\Str::slug($this->title),
             'excerpt' => $this->excerpt ?: null,
             'content' => $this->content ?: null,
-            'postable_type' => $postableType,
-            'postable_id' => $postable->id,
             'status' => $this->status,
             'published_at' => $this->publishedAt ?: null,
             'author_id' => auth()->id(),
@@ -177,6 +208,50 @@ class PostManager extends Component
 
         if ($this->editingId) {
             $post = Post::findOrFail($this->editingId);
+
+            // Reuse existing postable or create new if type changed
+            if ($post->postable_type === $postableType && $post->postable) {
+                $postable = $post->postable;
+                if ($postable instanceof \App\Models\VideoPost) {
+                    $postable->update([
+                        'video_url' => $this->videoUrl ?: null,
+                        'provider' => $this->videoProvider ?: 'self',
+                        'duration_seconds' => $this->videoDuration,
+                        'episode_number' => $this->videoEpisode,
+                    ]);
+                }
+
+                if ($postable instanceof \App\Models\AudioPost) {
+                    $postable->update([
+                        'audio_url' => $this->audioUrl ?: null,
+                        'duration_seconds' => $this->audioDuration,
+                        'episode_number' => $this->audioEpisode,
+                    ]);
+                }
+            } else {
+                $postable = match ($postableType) {
+                    PostType::IMAGE->model() => \App\Models\ImagePost::create([]),
+                    PostType::VIDEO->model() => \App\Models\VideoPost::create([
+                        'video_url' => $this->videoUrl ?: null,
+                        'provider' => $this->videoProvider ?: 'self',
+                        'duration_seconds' => $this->videoDuration,
+                        'episode_number' => $this->videoEpisode,
+                    ]),
+                    PostType::AUDIO->model() => \App\Models\AudioPost::create([
+                        'audio_url' => $this->audioUrl ?: 'https://example.com/audio',
+                        'duration_seconds' => $this->audioDuration,
+                        'episode_number' => $this->audioEpisode,
+                    ]),
+                    PostType::NEWSLETTER->model() => \App\Models\NewsletterPost::create([
+                        'template' => 'default',
+                    ]),
+                    PostType::STANDARD->model() => \App\Models\StandardPost::create([]),
+                    default => \App\Models\ImagePost::create([]),
+                };
+                $data['postable_type'] = $postableType;
+                $data['postable_id'] = $postable->id;
+            }
+
             $post->update($data);
             $post->taxonomyTerms()->sync(array_merge($this->selectedTags, $this->selectedCategories));
             
@@ -187,6 +262,29 @@ class PostManager extends Component
             
             $this->setMessage("Post '{$post->title}' updated successfully.", 'success');
         } else {
+            $postable = match ($postableType) {
+                PostType::IMAGE->model() => \App\Models\ImagePost::create([]),
+                PostType::VIDEO->model() => \App\Models\VideoPost::create([
+                    'video_url' => $this->videoUrl ?: null,
+                    'provider' => $this->videoProvider ?: 'self',
+                    'duration_seconds' => $this->videoDuration,
+                    'episode_number' => $this->videoEpisode,
+                ]),
+                PostType::AUDIO->model() => \App\Models\AudioPost::create([
+                    'audio_url' => $this->audioUrl ?: 'https://example.com/audio',
+                    'duration_seconds' => $this->audioDuration,
+                    'episode_number' => $this->audioEpisode,
+                ]),
+                PostType::NEWSLETTER->model() => \App\Models\NewsletterPost::create([
+                    'template' => 'default',
+                ]),
+                PostType::STANDARD->model() => \App\Models\StandardPost::create([]),
+                default => \App\Models\ImagePost::create([]),
+            };
+
+            $data['postable_type'] = $postableType;
+            $data['postable_id'] = $postable->id;
+
             $post = Post::create($data);
             $post->taxonomyTerms()->attach(array_merge($this->selectedTags, $this->selectedCategories));
             
@@ -238,6 +336,13 @@ class PostManager extends Component
         $this->selectedTags = [];
         $this->selectedCategories = [];
         $this->seoData = [];
+        $this->videoUrl = '';
+        $this->videoProvider = 'self';
+        $this->videoDuration = null;
+        $this->videoEpisode = null;
+        $this->audioUrl = '';
+        $this->audioDuration = null;
+        $this->audioEpisode = null;
         $this->resetValidation();
     }
 

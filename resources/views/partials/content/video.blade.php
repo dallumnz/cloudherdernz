@@ -1,12 +1,12 @@
 {{-- Video content --}}
 <div class="mb-6">
-    @if($post->postable->video_url)
+    @if($post->postable->embed_url)
     <div class="aspect-video bg-slate-900 rounded-xl overflow-hidden mb-4">
-        <iframe 
-            src="{{ $post->postable->video_url }}" 
+        <iframe
+            src="{{ $post->postable->embed_url }}"
             class="w-full h-full"
-            frameborder="0" 
-            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+            frameborder="0"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
             allowfullscreen>
         </iframe>
     </div>

@@ -71,4 +71,26 @@ class AudioPost extends Model implements HasMedia
         $this->addMediaCollection('audio')
             ->acceptsMimeTypes(['audio/mpeg', 'audio/wav', 'audio/ogg', 'audio/mp3']);
     }
+
+    /**
+     * Get the embed-ready URL for the audio.
+     * Converts Spotify URLs to embed URLs.
+     */
+    public function getEmbedUrlAttribute(): ?string
+    {
+        $url = $this->audio_url;
+
+        if (empty($url)) {
+            return null;
+        }
+
+        // Spotify
+        if (str_contains($url, 'open.spotify.com')) {
+            $url = str_replace('open.spotify.com', 'open.spotify.com/embed', $url);
+            $url = str_replace('?si=', '?utm_source=generator&si=', $url);
+            return $url;
+        }
+
+        return $url;
+    }
 }
