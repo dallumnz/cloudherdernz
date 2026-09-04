@@ -5,16 +5,22 @@
         </div>
 
         {{-- Filters --}}
-        <form method="GET" action="{{ route('admin.analytics') }}" class="flex items-center gap-2 justify-end ml-auto">
-            <flux:input type="date" name="start_date" :value="request('start_date', now()->subDays(30)->format('Y-m-d'))" placeholder="Start Date" />
-            <flux:input type="date" name="end_date" :value="request('end_date', now()->format('Y-m-d'))" placeholder="End Date" />
-            <flux:select name="request_category" :value="request('request_category')">
-                <flux:select.option value="">All Requests</flux:select.option>
-                <flux:select.option value="web">Web Only</flux:select.option>
-                <flux:select.option value="api">API Only</flux:select.option>
-            </flux:select>
-            <flux:button type="submit" variant="primary">Apply</flux:button>
-        </form>
+        <div class="flex items-center gap-2 justify-end ml-auto">
+            <form method="GET" action="{{ route('admin.analytics') }}" class="flex items-center gap-2">
+                <flux:input type="date" name="start_date" :value="request('start_date', now()->subDays(30)->format('Y-m-d'))" placeholder="Start Date" />
+                <flux:input type="date" name="end_date" :value="request('end_date', now()->format('Y-m-d'))" placeholder="End Date" />
+                <flux:select name="request_category" :value="request('request_category')">
+                    <flux:select.option value="">All Requests</flux:select.option>
+                    <flux:select.option value="web">Web Only</flux:select.option>
+                    <flux:select.option value="api">API Only</flux:select.option>
+                </flux:select>
+                <flux:button type="submit" variant="primary">Apply</flux:button>
+            </form>
+            <a href="{{ route('admin.analytics.export', request()->only(['start_date', 'end_date', 'request_category'])) }}"
+               class="inline-flex items-center justify-center px-4 py-2 bg-zinc-800 hover:bg-zinc-700 text-white text-sm font-medium rounded-md transition-colors">
+                Export CSV
+            </a>
+        </div>
 
         {{-- Key Metrics Cards --}}
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">

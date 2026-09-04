@@ -120,6 +120,10 @@ Route::middleware(['auth'])->group(function () {
         ->middleware('permission:view analytics')
         ->name('admin.analytics');
 
+    Route::get('admin/analytics/export', [\App\Http\Controllers\Admin\AnalyticsExportController::class, 'export'])
+        ->middleware('permission:view analytics')
+        ->name('admin.analytics.export');
+
     // Activity Log (Livewire)
     Route::get('admin/activity', \App\Livewire\ActivityLogManager::class)
         ->middleware('permission:view analytics')
