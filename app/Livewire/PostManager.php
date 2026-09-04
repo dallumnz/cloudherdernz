@@ -58,6 +58,16 @@ class PostManager extends Component
 
     public array $seoData = [];
 
+    public string $videoProvider = 'self';
+
+    public ?int $videoDuration = null;
+
+    public ?int $videoEpisode = null;
+
+    public ?int $audioDuration = null;
+
+    public ?int $audioEpisode = null;
+
     public string $message = '';
 
     public string $messageType = 'success';
@@ -147,9 +157,14 @@ class PostManager extends Component
         $postable = $post->postable;
         if ($postable instanceof VideoPost) {
             $this->externalVideoUrl = $postable->video_url;
+            $this->videoProvider = $postable->provider ?? 'self';
+            $this->videoDuration = $postable->duration_seconds;
+            $this->videoEpisode = $postable->episode_number;
         }
         if ($postable instanceof AudioPost) {
             $this->externalAudioUrl = $postable->audio_url;
+            $this->audioDuration = $postable->duration_seconds;
+            $this->audioEpisode = $postable->episode_number;
         }
 
         $this->showForm = true;
@@ -205,6 +220,21 @@ class PostManager extends Component
             }
             $post->taxonomyTerms()->sync($termIds);
 
+            // Update audio/video metadata fields
+            if ($postable instanceof VideoPost) {
+                $postable->update([
+                    'provider' => $this->videoProvider ?: 'self',
+                    'duration_seconds' => $this->videoDuration,
+                    'episode_number' => $this->videoEpisode,
+                ]);
+            }
+            if ($postable instanceof AudioPost) {
+                $postable->update([
+                    'duration_seconds' => $this->audioDuration,
+                    'episode_number' => $this->audioEpisode,
+                ]);
+            }
+
             // Update SEO data
             if (! empty($this->seoData)) {
                 $post->seo->update($this->seoData);
@@ -220,10 +250,14 @@ class PostManager extends Component
                 PostType::IMAGE->model() => ImagePost::create([]),
                 PostType::VIDEO->model() => VideoPost::create([
                     'video_url' => $this->externalVideoUrl,
-                    'provider' => $this->externalVideoUrl ? 'youtube' : 'self',
+                    'provider' => $this->videoProvider ?: 'self',
+                    'duration_seconds' => $this->videoDuration,
+                    'episode_number' => $this->videoEpisode,
                 ]),
                 PostType::AUDIO->model() => AudioPost::create([
                     'audio_url' => $this->externalAudioUrl,
+                    'duration_seconds' => $this->audioDuration,
+                    'episode_number' => $this->audioEpisode,
                 ]),
                 PostType::NEWSLETTER->model() => NewsletterPost::create([
                     'template' => 'default',
@@ -338,6 +372,11 @@ class PostManager extends Component
         $this->videoThumbnail = null;
         $this->externalVideoUrl = null;
         $this->externalAudioUrl = null;
+        $this->videoProvider = 'self';
+        $this->videoDuration = null;
+        $this->videoEpisode = null;
+        $this->audioDuration = null;
+        $this->audioEpisode = null;
         $this->resetValidation();
     }
 

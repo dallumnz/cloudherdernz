@@ -7,10 +7,10 @@
             Your browser does not support the video element.
         </video>
     </div>
-    @elseif($post->postable->video_url)
+    @elseif($post->postable->embed_url)
     <div class="aspect-video bg-slate-900 rounded-xl overflow-hidden mb-4">
         <iframe
-            src="{{ $post->postable->video_url }}"
+            src="{{ $post->postable->embed_url }}"
             class="w-full h-full"
             frameborder="0"
             allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
