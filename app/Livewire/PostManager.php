@@ -57,6 +57,7 @@ class PostManager extends Component
      */
     protected $listeners = [
         'markdown-updated' => 'handleMarkdownUpdated',
+        'seo-data-updated' => 'handleSeoDataUpdated',
     ];
 
     protected $queryString = ['editId' => ['except' => null], 'showCreateForm' => ['except' => false]];
@@ -313,5 +314,13 @@ class PostManager extends Component
     public function handleMarkdownUpdated(string $content): void
     {
         $this->content = $content;
+    }
+
+    /**
+     * Handle SEO data updates from SeoMetaBox component.
+     */
+    public function handleSeoDataUpdated(array $seoData): void
+    {
+        $this->seoData = $seoData;
     }
 }

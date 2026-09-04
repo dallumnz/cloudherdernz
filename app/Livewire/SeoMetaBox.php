@@ -26,6 +26,11 @@ class SeoMetaBox extends Component
         }
     }
 
+    public function updatedSeo(): void
+    {
+        $this->dispatch('seo-data-updated', seoData: $this->seo);
+    }
+
     public function render()
     {
         return view('livewire.seo-meta-box');
