@@ -2,6 +2,9 @@
 
 namespace App\Models;
 
+use Carbon\Carbon;
+use Database\Factories\VideoPostFactory;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
@@ -21,13 +24,13 @@ use Spatie\MediaLibrary\InteractsWithMedia;
  * @property int|null $duration_seconds
  * @property string|null $provider
  * @property int|null $episode_number
- * @property \Carbon\Carbon $created_at
- * @property \Carbon\Carbon $updated_at
- * @property-read \Illuminate\Database\Eloquent\Collection<int, Post> $posts
+ * @property Carbon $created_at
+ * @property Carbon $updated_at
+ * @property-read Collection<int, Post> $posts
  */
 class VideoPost extends Model implements HasMedia
 {
-    /** @use HasFactory<\Database\Factories\VideoPostFactory> */
+    /** @use HasFactory<VideoPostFactory> */
     use HasFactory;
 
     use InteractsWithMedia;
@@ -63,6 +66,63 @@ class VideoPost extends Model implements HasMedia
     public function posts(): MorphMany
     {
         return $this->morphMany(Post::class, 'postable');
+    }
+
+    /**
+     * Get the video file URL.
+     *
+     * Returns the MediaLibrary URL if a file has been uploaded,
+     * otherwise falls back to the stored external URL.
+     */
+    public function getVideoFileUrlAttribute(): ?string
+    {
+        $media = $this->getFirstMedia('video');
+
+        return $media?->getUrl() ?? $this->video_url;
+    }
+
+    /**
+     * Get the thumbnail image URL.
+     *
+     * Returns the MediaLibrary URL if a file has been uploaded,
+     * otherwise falls back to the stored external URL.
+     */
+    public function getThumbnailFileUrlAttribute(): ?string
+    {
+        $media = $this->getFirstMedia('thumbnail');
+
+        return $media?->getUrl() ?? $this->thumbnail_url;
+    }
+
+    /**
+     * Upload a video file to the media library.
+     *
+     * @param  string  $path  Absolute path to the uploaded file
+     * @param  string|null  $name  Optional custom file name
+     */
+    public function uploadVideo(string $path, ?string $name = null): void
+    {
+        $media = $this->addMedia($path)
+            ->usingName($name ?? basename($path))
+            ->toMediaCollection('video');
+
+        // Clear the external URL since we now have a local file
+        if ($media && $this->video_url) {
+            $this->update(['video_url' => null]);
+        }
+    }
+
+    /**
+     * Upload a thumbnail image to the media library.
+     *
+     * @param  string  $path  Absolute path to the uploaded file
+     * @param  string|null  $name  Optional custom file name
+     */
+    public function uploadThumbnail(string $path, ?string $name = null): void
+    {
+        $this->addMedia($path)
+            ->usingName($name ?? basename($path))
+            ->toMediaCollection('thumbnail');
     }
 
     /**
