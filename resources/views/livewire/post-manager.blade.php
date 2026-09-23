@@ -77,6 +77,86 @@
                     </flux:select>
                 </div>
 
+                {{-- Audio Upload Section --}}
+                @if($postTypeValue === \App\Models\AudioPost::class)
+                    <flux:card>
+                        <flux:heading size="sm" class="mb-4">Audio File</flux:heading>
+
+                        @if($editingId && $post && $post->postable?->getFirstMedia('audio'))
+                            <div class="mb-4 p-4 bg-gray-50 dark:bg-gray-800 rounded-lg">
+                                <p class="text-sm font-medium">Current file:</p>
+                                <p class="text-sm text-gray-600">{{ $post->postable->getFirstMedia('audio')->name }}</p>
+                                <audio controls class="w-full mt-2" preload="metadata">
+                                    <source src="{{ $post->postable->getFirstMedia('audio')->getUrl() }}" type="audio/mpeg">
+                                </audio>
+                            </div>
+                        @endif
+
+                        <div class="space-y-4">
+                            <div>
+                                <flux:label for="audioFile">Upload Audio File</flux:label>
+                                <flux:input type="file" id="audioFile" wire:model="audioFile" accept="audio/*" class="mt-1" />
+                                <flux:error name="audioFile" />
+                                <p class="mt-1 text-sm text-gray-500">MP3, WAV, OGG. Max 500MB.</p>
+                            </div>
+
+                            <flux:input
+                                wire:model="externalAudioUrl"
+                                label="Or External Audio URL"
+                                placeholder="https://example.com/audio.mp3"
+                                description="Leave empty if uploading a file above"
+                            />
+                        </div>
+                    </flux:card>
+                @endif
+
+                {{-- Video Upload Section --}}
+                @if($postTypeValue === \App\Models\VideoPost::class)
+                    <flux:card>
+                        <flux:heading size="sm" class="mb-4">Video File</flux:heading>
+
+                        @if($editingId && $post && $post->postable?->getFirstMedia('video'))
+                            <div class="mb-4 p-4 bg-gray-50 dark:bg-gray-800 rounded-lg">
+                                <p class="text-sm font-medium">Current file:</p>
+                                <p class="text-sm text-gray-600">{{ $post->postable->getFirstMedia('video')->name }}</p>
+                                <video controls class="w-full mt-2 h-48" preload="metadata">
+                                    <source src="{{ $post->postable->getFirstMedia('video')->getUrl() }}" type="video/mp4">
+                                </video>
+                            </div>
+                        @endif
+
+                        <div class="space-y-4">
+                            <div>
+                                <flux:label for="videoFile">Upload Video File</flux:label>
+                                <flux:input type="file" id="videoFile" wire:model="videoFile" accept="video/*" class="mt-1" />
+                                <flux:error name="videoFile" />
+                                <p class="mt-1 text-sm text-gray-500">MP4, WebM, MOV. Max 500MB.</p>
+                            </div>
+
+                            <div>
+                                <flux:label for="videoThumbnail">Upload Thumbnail</flux:label>
+                                <flux:input type="file" id="videoThumbnail" wire:model="videoThumbnail" accept="image/*" class="mt-1" />
+                                <flux:error name="videoThumbnail" />
+                                <p class="mt-1 text-sm text-gray-500">JPEG, PNG, WebP. Optional.</p>
+                            </div>
+
+                            @if($editingId && $post && $post->postable?->getFirstMedia('thumbnail'))
+                                <div class="mb-4">
+                                    <p class="text-sm font-medium">Current thumbnail:</p>
+                                    <img src="{{ $post->postable->getFirstMedia('thumbnail')->getUrl() }}" alt="Thumbnail" class="mt-2 h-24 rounded">
+                                </div>
+                            @endif
+
+                            <flux:input
+                                wire:model="externalVideoUrl"
+                                label="Or External Video URL"
+                                placeholder="https://youtube.com/embed/..."
+                                description="Leave empty if uploading a file above"
+                            />
+                        </div>
+                    </flux:card>
+                @endif
+
                 <flux:input
                     wire:model="publishedAt"
                     type="datetime-local"

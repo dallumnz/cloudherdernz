@@ -3,15 +3,25 @@
 namespace App\Livewire;
 
 use App\Enums\PostType;
+use App\Models\AudioPost;
+use App\Models\ImagePost;
+use App\Models\NewsletterPost;
 use App\Models\Post;
+use App\Models\StandardPost;
 use App\Models\TaxonomyTerm;
+use App\Models\VideoPost;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Pagination\LengthAwarePaginator;
+use Illuminate\Support\Str;
 use Illuminate\View\View;
 use Livewire\Component;
+use Livewire\Features\SupportFileUploads\TemporaryUploadedFile;
+use Livewire\WithFileUploads;
 use Livewire\WithPagination;
 
 class PostManager extends Component
 {
+    use WithFileUploads;
     use WithPagination;
 
     public string $search = '';
@@ -51,6 +61,19 @@ class PostManager extends Component
     public string $messageType = 'success';
 
     public bool $showForm = false;
+
+    /** @var TemporaryUploadedFile|null */
+    public $audioFile = null;
+
+    /** @var TemporaryUploadedFile|null */
+    public $videoFile = null;
+
+    /** @var TemporaryUploadedFile|null */
+    public $videoThumbnail = null;
+
+    public ?string $externalVideoUrl = null;
+
+    public ?string $externalAudioUrl = null;
 
     /**
      * Event listeners for child component communication.
@@ -114,6 +137,16 @@ class PostManager extends Component
             ->pluck('taxonomy_terms.id')
             ->toArray();
         $this->seoData = $post->seo?->toArray() ?? [];
+
+        // Load media-related fields for audio/video posts
+        $postable = $post->postable;
+        if ($postable instanceof VideoPost) {
+            $this->externalVideoUrl = $postable->video_url;
+        }
+        if ($postable instanceof AudioPost) {
+            $this->externalAudioUrl = $postable->audio_url;
+        }
+
         $this->showForm = true;
     }
 
@@ -147,61 +180,108 @@ class PostManager extends Component
         // Determine postable type
         $postableType = $this->postTypeValue ?? PostType::IMAGE->model();
 
-        // Create or get postable
-        $postable = match ($postableType) {
-            PostType::IMAGE->model() => \App\Models\ImagePost::create([]),
-            PostType::VIDEO->model() => \App\Models\VideoPost::create([
-                'video_url' => 'https://example.com/video',
-                'provider' => 'self',
-            ]),
-            PostType::AUDIO->model() => \App\Models\AudioPost::create([
-                'audio_url' => 'https://example.com/audio',
-            ]),
-            PostType::NEWSLETTER->model() => \App\Models\NewsletterPost::create([
-                'template' => 'default',
-            ]),
-            PostType::STANDARD->model() => \App\Models\StandardPost::create([]),
-            default => \App\Models\ImagePost::create([]),
-        };
-
-        $data = [
-            'title' => $this->title,
-            'slug' => $this->slug ?: \Illuminate\Support\Str::slug($this->title),
-            'excerpt' => $this->excerpt ?: null,
-            'content' => $this->content ?: null,
-            'postable_type' => $postableType,
-            'postable_id' => $postable->id,
-            'status' => $this->status,
-            'published_at' => $this->publishedAt ?: null,
-            'author_id' => auth()->id(),
-        ];
-
         if ($this->editingId) {
             $post = Post::findOrFail($this->editingId);
-            $post->update($data);
+            $postable = $post->postable;
+
+            // Update post data (keep existing postable)
+            $post->update([
+                'title' => $this->title,
+                'slug' => $this->slug ?: Str::slug($this->title),
+                'excerpt' => $this->excerpt ?: null,
+                'content' => $this->content ?: null,
+                'status' => $this->status,
+                'published_at' => $this->publishedAt ?: null,
+            ]);
+
             $post->taxonomyTerms()->sync(array_merge($this->selectedTags, $this->selectedCategories));
-            
+
             // Update SEO data
-            if (!empty($this->seoData)) {
+            if (! empty($this->seoData)) {
                 $post->seo->update($this->seoData);
             }
-            
+
+            // Handle media uploads for existing postable
+            $this->processMediaUploads($postable);
+
             $this->setMessage("Post '{$post->title}' updated successfully.", 'success');
         } else {
-            $post = Post::create($data);
+            // Create new postable
+            $postable = match ($postableType) {
+                PostType::IMAGE->model() => ImagePost::create([]),
+                PostType::VIDEO->model() => VideoPost::create([
+                    'video_url' => $this->externalVideoUrl,
+                    'provider' => $this->externalVideoUrl ? 'youtube' : 'self',
+                ]),
+                PostType::AUDIO->model() => AudioPost::create([
+                    'audio_url' => $this->externalAudioUrl,
+                ]),
+                PostType::NEWSLETTER->model() => NewsletterPost::create([
+                    'template' => 'default',
+                ]),
+                PostType::STANDARD->model() => StandardPost::create([]),
+                default => ImagePost::create([]),
+            };
+
+            $post = Post::create([
+                'title' => $this->title,
+                'slug' => $this->slug ?: Str::slug($this->title),
+                'excerpt' => $this->excerpt ?: null,
+                'content' => $this->content ?: null,
+                'postable_type' => $postableType,
+                'postable_id' => $postable->id,
+                'status' => $this->status,
+                'published_at' => $this->publishedAt ?: null,
+                'author_id' => auth()->id(),
+            ]);
+
             $post->taxonomyTerms()->attach(array_merge($this->selectedTags, $this->selectedCategories));
-            
+
             // Create SEO data for new post
-            if (!empty($this->seoData)) {
+            if (! empty($this->seoData)) {
                 $post->seo->update($this->seoData);
             }
-            
+
+            // Handle media uploads for new postable
+            $this->processMediaUploads($postable);
+
             $this->setMessage("Post '{$post->title}' created successfully.", 'success');
         }
 
         $this->resetForm();
         $this->showForm = false;
         $this->dispatch('post-saved');
+    }
+
+    /**
+     * Process uploaded media files for audio/video postables.
+     */
+    private function processMediaUploads(Model $postable): void
+    {
+        if ($postable instanceof AudioPost && $this->audioFile) {
+            $postable->clearMediaCollection('audio');
+            $postable->uploadAudio($this->audioFile->getRealPath(), $this->audioFile->getClientOriginalName());
+            $this->audioFile = null;
+        }
+
+        if ($postable instanceof VideoPost) {
+            if ($this->videoFile) {
+                $postable->clearMediaCollection('video');
+                $postable->uploadVideo($this->videoFile->getRealPath(), $this->videoFile->getClientOriginalName());
+                $this->videoFile = null;
+            }
+
+            if ($this->videoThumbnail) {
+                $postable->clearMediaCollection('thumbnail');
+                $postable->uploadThumbnail($this->videoThumbnail->getRealPath(), $this->videoThumbnail->getClientOriginalName());
+                $this->videoThumbnail = null;
+            }
+
+            // Update external URL if provided and no local file exists
+            if ($this->externalVideoUrl && ! $postable->getFirstMedia('video')) {
+                $postable->update(['video_url' => $this->externalVideoUrl]);
+            }
+        }
     }
 
     public function delete(int $id): void
@@ -239,6 +319,11 @@ class PostManager extends Component
         $this->selectedTags = [];
         $this->selectedCategories = [];
         $this->seoData = [];
+        $this->audioFile = null;
+        $this->videoFile = null;
+        $this->videoThumbnail = null;
+        $this->externalVideoUrl = null;
+        $this->externalAudioUrl = null;
         $this->resetValidation();
     }
 
