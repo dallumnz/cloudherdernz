@@ -61,9 +61,10 @@ class AppServiceProvider extends ServiceProvider
             app()->isProduction(),
         );
 
-        // Enforce HTTPS in production
+        // Enforce HTTPS and canonical domain in production
         if (app()->isProduction()) {
             URL::forceScheme('https');
+            URL::forceRootUrl('https://cloudherder.nz');
         }
 
         Password::defaults(fn (): ?Password => app()->isProduction()
