@@ -3,23 +3,37 @@
 namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
+use Database\Factories\UserFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
-use MeShaon\RequestAnalytics\Contracts\CanAccessAnalyticsDashboard;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Str;
 use Laravel\Fortify\TwoFactorAuthenticatable;
 use Laravel\Sanctum\HasApiTokens;
-use Spatie\Permission\Traits\HasRoles;
+use MeShaon\RequestAnalytics\Contracts\CanAccessAnalyticsDashboard;
 use Spatie\Activitylog\Models\Concerns\LogsActivity;
 use Spatie\Activitylog\Support\LogOptions;
+use Spatie\Permission\Traits\HasRoles;
 
 class User extends Authenticatable implements CanAccessAnalyticsDashboard
 {
-    /** @use HasFactory<\Database\Factories\UserFactory> */
-    use HasFactory, HasRoles, Notifiable, TwoFactorAuthenticatable, HasApiTokens;
+    /** @use HasFactory<UserFactory> */
+    use HasApiTokens, HasFactory, HasRoles, Notifiable, TwoFactorAuthenticatable;
+
     use LogsActivity;
+
+    /**
+     * Force Spatie Permission to resolve permissions against the web guard.
+     *
+     * Sanctum authenticates API requests via the sanctum guard, but all
+     * permissions are stored under the web guard. Without this override,
+     * $user->can('create posts') returns false for API tokens.
+     */
+    public function guardName(): string
+    {
+        return 'web';
+    }
 
     /**
      * The attributes that are mass assignable.

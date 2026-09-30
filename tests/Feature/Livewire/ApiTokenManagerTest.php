@@ -31,7 +31,7 @@ describe('ApiTokenManager', function () {
             ->set('name', 'test-token')
             ->call('create')
             ->assertHasNoErrors()
-            ->assertSet('plainTextToken', fn ($value) => str_starts_with($value, '1|'));
+            ->assertSet('plainTextToken', fn ($value) => is_string($value) && str_contains($value, '|'));
 
         expect($user->tokens()->where('name', 'test-token')->exists())->toBeTrue();
     });

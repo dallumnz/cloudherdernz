@@ -16,7 +16,7 @@ class EnsureUserHasPermission
      */
     public function handle(Request $request, Closure $next, string $permission): Response
     {
-        if (! $request->user() || ! $request->user()->can($permission, 'web')) {
+        if (! $request->user() || ! $request->user()->can($permission)) {
             abort(403, 'You do not have permission to access this resource.');
         }
 
