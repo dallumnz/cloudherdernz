@@ -97,6 +97,15 @@
                         </flux:sidebar.group>
                     @endcanany
 
+                    {{-- Developer Tools --}}
+                    @can('create posts')
+                        <flux:sidebar.group :heading="__('Developer')" class="grid">
+                            <flux:sidebar.item icon="key" :href="route('admin.api-tokens')" :current="request()->routeIs('admin.api-tokens')" wire:navigate>
+                                {{ __('API Tokens') }}
+                            </flux:sidebar.item>
+                        </flux:sidebar.group>
+                    @endcan
+
                     {{-- User Management --}}
                     @canany(['view users', 'edit roles'])
                         <flux:sidebar.group :heading="__('Administration')" class="grid">
@@ -113,11 +122,6 @@
                             @can('edit roles')
                                 <flux:sidebar.item icon="shield-check" :href="route('roles.manage')" :current="request()->routeIs('roles.manage')" wire:navigate>
                                     {{ __('Roles & Permissions') }}
-                                </flux:sidebar.item>
-                            @endcan
-                            @can('create posts')
-                                <flux:sidebar.item icon="key" :href="route('admin.api-tokens')" :current="request()->routeIs('admin.api-tokens')" wire:navigate>
-                                    {{ __('API Tokens') }}
                                 </flux:sidebar.item>
                             @endcan
                         </flux:sidebar.group>
