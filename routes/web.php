@@ -1,17 +1,34 @@
 <?php
 
+use App\Http\Controllers\Admin\AnalyticsExportController;
 use App\Http\Controllers\Admin\ContactController as AdminContactController;
 use App\Http\Controllers\Admin\NewsletterActivityController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\ContactController;
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\NewsletterViewController;
 use App\Http\Controllers\PostController;
 use App\Http\Controllers\RssFeedController;
 use App\Http\Controllers\SearchController;
 use App\Http\Controllers\SitemapController;
+use App\Http\Controllers\SubscribeController;
 use App\Http\Controllers\TagController;
 use App\Http\Controllers\TaxonomyController;
 use App\Http\Controllers\TaxonomyTermController;
+use App\Livewire\ActivityLogManager;
+use App\Livewire\AnalyticsWrapper;
+use App\Livewire\ApiTokenManager;
+use App\Livewire\CategoryManager;
+use App\Livewire\CommentModeration;
+use App\Livewire\FeaturedImageUploader;
+use App\Livewire\GalleryManager;
+use App\Livewire\MediaUploader;
+use App\Livewire\PageManager;
+use App\Livewire\PostManager;
+use App\Livewire\PostTypeFilter;
+use App\Livewire\RoleManager;
+use App\Livewire\TagManager;
+use App\Livewire\UserManager;
 use Illuminate\Support\Facades\Route;
 
 // Sitemap Route
@@ -25,7 +42,7 @@ Route::get('/', [HomeController::class, '__invoke'])->name('home');
 
 // Public Post Routes
 Route::get('/posts', [PostController::class, 'index'])->name('posts.index');
-Route::get('/posts/type/{type}', \App\Livewire\PostTypeFilter::class)->name('posts.by-type');
+Route::get('/posts/type/{type}', PostTypeFilter::class)->name('posts.by-type');
 Route::get('/posts/{post}', [PostController::class, 'show'])
     ->name('posts.show');
 
@@ -72,17 +89,17 @@ Route::middleware(['auth'])->group(function () {
         ->name('admin.dashboard');
 
     // Post Management (Livewire)
-    Route::get('admin/posts', \App\Livewire\PostManager::class)
+    Route::get('admin/posts', PostManager::class)
         ->middleware('permission:view posts')
         ->name('admin.posts');
 
     // User Management (Livewire)
-    Route::get('admin/users', \App\Livewire\UserManager::class)
+    Route::get('admin/users', UserManager::class)
         ->middleware('permission:view users')
         ->name('admin.users');
 
     // Comment Moderation (Livewire)
-    Route::get('admin/comments', \App\Livewire\CommentModeration::class)
+    Route::get('admin/comments', CommentModeration::class)
         ->middleware('permission:moderate comments')
         ->name('admin.comments');
 
@@ -96,43 +113,48 @@ Route::middleware(['auth'])->group(function () {
     Route::resource('categories', CategoryController::class)->except(['index', 'show']);
 
     // Role Management (admin only)
-    Route::get('roles/manage', \App\Livewire\RoleManager::class)
+    Route::get('roles/manage', RoleManager::class)
         ->middleware('permission:edit roles')
         ->name('roles.manage');
 
     // Tag Manager Livewire
-    Route::get('admin/tags', \App\Livewire\TagManager::class)
+    Route::get('admin/tags', TagManager::class)
         ->middleware('permission:view tags')
         ->name('admin.tags');
 
     // Category Manager Livewire
-    Route::get('admin/categories', \App\Livewire\CategoryManager::class)
+    Route::get('admin/categories', CategoryManager::class)
         ->middleware('permission:view categories')
         ->name('admin.categories');
 
     // Page Manager Livewire
-    Route::get('admin/pages', \App\Livewire\PageManager::class)
+    Route::get('admin/pages', PageManager::class)
         ->middleware('permission:view pages')
         ->name('admin.pages');
 
     // Analytics Dashboard (Livewire wrapper for laravel-request-analytics)
-    Route::get('admin/analytics', \App\Livewire\AnalyticsWrapper::class)
+    Route::get('admin/analytics', AnalyticsWrapper::class)
         ->middleware('permission:view analytics')
         ->name('admin.analytics');
 
-    Route::get('admin/analytics/export', [\App\Http\Controllers\Admin\AnalyticsExportController::class, 'export'])
+    Route::get('admin/analytics/export', [AnalyticsExportController::class, 'export'])
         ->middleware('permission:view analytics')
         ->name('admin.analytics.export');
 
     // Activity Log (Livewire)
-    Route::get('admin/activity', \App\Livewire\ActivityLogManager::class)
+    Route::get('admin/activity', ActivityLogManager::class)
         ->middleware('permission:view analytics')
         ->name('admin.activity');
 
+    // API Token Management
+    Route::get('admin/api-tokens', ApiTokenManager::class)
+        ->middleware('permission:create posts')
+        ->name('admin.api-tokens');
+
     // Media Library Routes
     Route::prefix('admin/media')->name('admin.media.')->middleware(['permission:view media'])->group(function () {
-        Route::get('/', \App\Livewire\MediaUploader::class)->name('index');
-        Route::get('/upload', \App\Livewire\MediaUploader::class)->name('upload');
+        Route::get('/', MediaUploader::class)->name('index');
+        Route::get('/upload', MediaUploader::class)->name('upload');
     });
 
     // Contact Inbox
@@ -158,33 +180,32 @@ Route::middleware(['auth'])->group(function () {
     });
 
     // Post Media Management (use :id to bypass slug route binding)
-    Route::get('posts/{post:id}/featured-image', \App\Livewire\FeaturedImageUploader::class)
+    Route::get('posts/{post:id}/featured-image', FeaturedImageUploader::class)
         ->name('posts.featured-image')
         ->middleware('permission:edit posts');
 
-    Route::get('posts/{post:id}/gallery', \App\Livewire\GalleryManager::class)
+    Route::get('posts/{post:id}/gallery', GalleryManager::class)
         ->name('posts.gallery')
         ->middleware('permission:edit posts');
 
-
 });
 
-Route::get('/subscribe/confirm/{token}', [\App\Http\Controllers\SubscribeController::class, 'confirm']);
+Route::get('/subscribe/confirm/{token}', [SubscribeController::class, 'confirm']);
 require __DIR__.'/settings.php';
 // Newsletter subscription routes
-Route::get('/subscribe/confirm/{token}', [\App\Http\Controllers\SubscribeController::class, 'confirm'])
+Route::get('/subscribe/confirm/{token}', [SubscribeController::class, 'confirm'])
     ->name('subscribe.confirm');
 
 // Newsletter web view (public)
-Route::get('/newsletter/{id}', [\App\Http\Controllers\NewsletterViewController::class, 'show'])
+Route::get('/newsletter/{id}', [NewsletterViewController::class, 'show'])
     ->name('newsletter.show')
     ->where('id', '[0-9]+');
 
 // Newsletter tracking pixel
-Route::get('/newsletter/{id}/open', [\App\Http\Controllers\NewsletterViewController::class, 'trackOpen'])
+Route::get('/newsletter/{id}/open', [NewsletterViewController::class, 'trackOpen'])
     ->name('newsletter.track-open')
     ->where('id', '[0-9]+');
 
 // Newsletter unsubscribe web
-Route::get('/newsletter/unsubscribe', [\App\Http\Controllers\SubscribeController::class, 'showUnsubscribe'])
+Route::get('/newsletter/unsubscribe', [SubscribeController::class, 'showUnsubscribe'])
     ->name('newsletter.unsubscribe-web');

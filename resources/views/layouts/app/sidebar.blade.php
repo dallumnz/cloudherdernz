@@ -115,6 +115,11 @@
                                     {{ __('Roles & Permissions') }}
                                 </flux:sidebar.item>
                             @endcan
+                            @can('create posts')
+                                <flux:sidebar.item icon="key" :href="route('admin.api-tokens')" :current="request()->routeIs('admin.api-tokens')" wire:navigate>
+                                    {{ __('API Tokens') }}
+                                </flux:sidebar.item>
+                            @endcan
                         </flux:sidebar.group>
                     @endcanany
                 @endauth
