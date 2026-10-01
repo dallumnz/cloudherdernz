@@ -59,6 +59,13 @@
                             <flux:select.option value="published">Published</flux:select.option>
                         </flux:select>
                     </flux:field>
+
+                    <flux:field label="Navigation">
+                        <label class="flex items-center gap-2 p-2 rounded-lg border border-zinc-200 dark:border-zinc-700 cursor-pointer">
+                            <input type="checkbox" wire:model="showInMenu" class="rounded border-zinc-300 text-primary-600 focus:ring-primary-500">
+                            <span class="text-sm text-zinc-700 dark:text-zinc-300">Show in footer menu</span>
+                        </label>
+                    </flux:field>
                 </div>
 
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">

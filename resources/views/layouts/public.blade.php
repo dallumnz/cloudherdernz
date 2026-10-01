@@ -35,6 +35,9 @@
                     <nav class="flex flex-wrap gap-x-8 gap-y-3">
                         <a href="#" class="font-label text-sm text-on-surface-variant hover:text-primary transition-colors">Follow Us</a>
                         <a href="{{ route('contact.show') }}" class="font-label text-sm text-on-surface-variant hover:text-primary transition-colors">Contact</a>
+                        @foreach($menuPages ?? [] as $menuPage)
+                            <a href="{{ route('pages.show', $menuPage->slug) }}" class="font-label text-sm text-on-surface-variant hover:text-primary transition-colors">{{ $menuPage->title }}</a>
+                        @endforeach
                         <a href="{{ route('privacy') }}" class="font-label text-sm text-on-surface-variant hover:text-primary transition-colors">Privacy</a>
                     </nav>
                     

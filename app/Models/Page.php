@@ -50,6 +50,7 @@ class Page extends Model
         'meta_title',
         'meta_description',
         'status',
+        'show_in_menu',
         'published_at',
         'author_id',
     ];
@@ -61,7 +62,9 @@ class Page extends Model
      */
     protected function casts(): array
     {
-        return [];
+        return [
+            'show_in_menu' => 'boolean',
+        ];
     }
 
     /**
@@ -149,6 +152,20 @@ class Page extends Model
     public function scopeBySlug($query, string $slug)
     {
         return $query->where('slug', $slug);
+    }
+
+    /**
+     * Scope a query to only include pages that should appear in menus.
+     *
+     * @param  \Illuminate\Database\Eloquent\Builder  $query
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public function scopeForMenu($query)
+    {
+        return $query->where('show_in_menu', true)
+            ->where('status', 'published')
+            ->whereNotNull('published_at')
+            ->where('published_at', '<=', now());
     }
 
     /**

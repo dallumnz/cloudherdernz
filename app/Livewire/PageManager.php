@@ -34,6 +34,8 @@ class PageManager extends Component
 
     public string $meta_description = '';
 
+    public bool $showInMenu = false;
+
     public array $seoData = [];
 
     public string $message = '';
@@ -47,6 +49,7 @@ class PageManager extends Component
         'slug' => 'required|string|max:255|alpha_dash',
         'content' => 'nullable|string',
         'status' => 'required|in:draft,published',
+        'showInMenu' => 'boolean',
         'meta_title' => 'nullable|string|max:255',
         'meta_description' => 'nullable|string|max:500',
     ];
@@ -72,6 +75,7 @@ class PageManager extends Component
         $this->slug = $page->slug;
         $this->content = $page->content ?? '';
         $this->status = $page->status;
+        $this->showInMenu = $page->show_in_menu ?? false;
         $this->meta_title = $page->meta_title ?? '';
         $this->meta_description = $page->meta_description ?? '';
         $this->seoData = $page->seo?->toArray() ?? [];
@@ -89,6 +93,7 @@ class PageManager extends Component
                 'slug' => $this->slug,
                 'content' => $this->content ?: null,
                 'status' => $this->status,
+                'show_in_menu' => $this->showInMenu,
                 'meta_title' => $this->meta_title ?: null,
                 'meta_description' => $this->meta_description ?: null,
                 'published_at' => $this->status === 'published' ? now() : null,
@@ -106,6 +111,7 @@ class PageManager extends Component
                 'slug' => $this->slug,
                 'content' => $this->content ?: null,
                 'status' => $this->status,
+                'show_in_menu' => $this->showInMenu,
                 'meta_title' => $this->meta_title ?: null,
                 'meta_description' => $this->meta_description ?: null,
                 'author_id' => auth()->id(),
@@ -141,6 +147,7 @@ class PageManager extends Component
         $this->slug = '';
         $this->content = '';
         $this->status = 'draft';
+        $this->showInMenu = false;
         $this->meta_title = '';
         $this->meta_description = '';
         $this->seoData = [];
