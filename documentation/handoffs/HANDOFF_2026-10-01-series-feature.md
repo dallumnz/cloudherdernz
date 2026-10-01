@@ -2,6 +2,7 @@
 
 **Date:** 2026-10-01 NZDT  
 **Commit:** `cd98850 feat: add Series as first-class content type`  
+**Follow-up commits:** `d108aa0 feat: add series dropdown to post manager`, `173cd95 chore: npm audit fix`  
 **Status:** Deployed to production  
 **Backup:** `/home/dallum/Backups/cloudherder_production_20261001_160816.dump` (3.2 MB)
 
@@ -19,9 +20,11 @@ Series are no longer just pages or tags. They have their own model, admin UI, pu
 |------|--------|
 | `app/Models/Series.php` | New model with SEO, media, markdown description, publish/draft helpers |
 | `app/Livewire/SeriesManager.php` | Admin CRUD Livewire component |
+| `app/Livewire/PostManager.php` | Added series dropdown to post create/edit form |
 | `app/Http/Controllers/PublicSeriesController.php` | Public series display controller |
 | `resources/views/livewire/series-manager.blade.php` | Admin UI |
-| `resources/views/series/show.blade.php` | Public series landing page |
+| `resources/views/livewire/post-manager.blade.php` | Added series `<flux:select>` dropdown |
+| `resources/views/series/show.blade.php` | Public series landing page; added featured image display |
 | `database/migrations/2026_10_01_151620_create_series_table.php` | Series table |
 | `database/factories/SeriesFactory.php` | Test factory |
 | `database/seeders/RolePermissionSeeder.php` | Added `view/create/edit/delete series` permissions |
@@ -29,6 +32,7 @@ Series are no longer just pages or tags. They have their own model, admin UI, pu
 | `routes/web.php` | Added `admin/series` route |
 | `routes/public/web.php` | Added `/series/{slug}` public route |
 | `tests/Feature/SeriesTest.php` | Feature tests |
+| `package-lock.json` | `npm audit fix` — resolved 13 transitive vulnerabilities |
 
 ### 3. Database migration
 
@@ -71,24 +75,23 @@ php artisan db:seed --class=RolePermissionSeeder --force
 
 ## What's left / next steps
 
-1. **Create the first series**
-   - User is preparing the "Infrastructure for Independence" series.
-   - Create the series tag, then tag the relevant posts.
-
-2. **Main navigation integration (optional)**
+1. **Main navigation integration (optional)**
    - Decide if series should appear in the public main nav.
    - Currently they are only reachable via `/series/{slug}` or links from posts/pages.
 
-3. **Media Library picker for markdown (optional)**
+2. **Media Library picker for markdown (optional)**
    - The markdown editor already handles image uploads via its toolbar.
    - A separate "insert from Media Library" button could be added later if desired.
 
-4. **SEO / sitemap**
+3. **SEO / sitemap**
    - Series public pages are not yet in `sitemap.xml`.
    - Add series URLs to the sitemap and verify SEO meta renders correctly.
 
-5. **Tests**
+4. **Tests**
    - Series tests pass. Broader test suite has pre-existing failures unrelated to this feature (RouteNotFound, DateTime, taxonomy query issues).
+
+5. **Digest cron timezone**
+   - Daylight saving change on 2026-09-27 shifted NZDT; digest did not run on the expected schedule on 2026-10-01. Review cron timing.
 
 ---
 
@@ -98,3 +101,4 @@ php artisan db:seed --class=RolePermissionSeeder --force
 - Draft series return 404 publicly.
 - Series posts are pulled from the linked taxonomy term, ordered by `published_at` ascending.
 - The `description_html` accessor caches rendered markdown for 24 hours.
+- Posts must have both `status = published` and a non-null `published_at` to appear on the series page. If a post shows as "published" in the admin but is missing from the series page, check the `published_at` timestamp.
