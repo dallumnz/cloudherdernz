@@ -41,7 +41,7 @@ class SitemapGenerator
         // Add posts
         $xml .= $this->getPostsXml();
 
-        // Add series
+        // Add series index and individual series pages
         $xml .= $this->getSeriesXml();
 
         // Add categories
@@ -80,11 +80,19 @@ class SitemapGenerator
     }
 
     /**
-     * Get XML for all published series.
+     * Get XML for series index and all published series.
      */
     private function getSeriesXml(): string
     {
         $xml = '';
+
+        // Series index page
+        $xml .= $this->buildUrlEntry(
+            route('series.index'),
+            now(),
+            'weekly',
+            '0.7'
+        );
 
         $series = Series::query()
             ->published()
