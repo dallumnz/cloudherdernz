@@ -67,6 +67,12 @@ class RolePermissionSeeder extends Seeder
             'edit pages',
             'delete pages',
 
+            // Series permissions
+            'view series',
+            'create series',
+            'edit series',
+            'delete series',
+
             // Analytics permissions
             'view analytics',
 
@@ -120,6 +126,11 @@ class RolePermissionSeeder extends Seeder
             'create pages',
             'edit pages',
             'delete pages',
+            // Series permissions
+            'view series',
+            'create series',
+            'edit series',
+            'delete series',
             // Media permissions
             'view media',
             'upload media',

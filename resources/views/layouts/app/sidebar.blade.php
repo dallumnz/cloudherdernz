@@ -21,6 +21,7 @@
                 @php
                     $sidebarCounts = [
                         'pages' => \App\Models\Page::count(),
+                        'series' => \App\Models\Series::count(),
                         'posts' => \App\Models\Post::count(),
                         'tags' => \App\Models\TaxonomyTerm::whereHas('taxonomy', fn ($q) => $q->where('type', 'tag'))->count(),
                         'categories' => \App\Models\TaxonomyTerm::whereHas('taxonomy', fn ($q) => $q->where('type', 'category'))->count(),
@@ -37,6 +38,11 @@
                             @can('view pages')
                                 <flux:sidebar.item icon="document" :href="route('admin.pages')" :current="request()->routeIs('admin.pages')" wire:navigate :badge="$sidebarCounts['pages'] > 0 ? $sidebarCounts['pages'] : null">
                                     {{ __('Pages') }}
+                                </flux:sidebar.item>
+                            @endcan
+                            @can('view series')
+                                <flux:sidebar.item icon="rectangle-stack" :href="route('admin.series')" :current="request()->routeIs('admin.series')" wire:navigate :badge="$sidebarCounts['series'] > 0 ? $sidebarCounts['series'] : null">
+                                    {{ __('Series') }}
                                 </flux:sidebar.item>
                             @endcan
                             @can('view posts')

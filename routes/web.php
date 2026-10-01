@@ -27,6 +27,7 @@ use App\Livewire\PageManager;
 use App\Livewire\PostManager;
 use App\Livewire\PostTypeFilter;
 use App\Livewire\RoleManager;
+use App\Livewire\SeriesManager;
 use App\Livewire\TagManager;
 use App\Livewire\UserManager;
 use Illuminate\Support\Facades\Route;
@@ -131,6 +132,11 @@ Route::middleware(['auth'])->group(function () {
     Route::get('admin/pages', PageManager::class)
         ->middleware('permission:view pages')
         ->name('admin.pages');
+
+    // Series Manager Livewire
+    Route::get('admin/series', SeriesManager::class)
+        ->middleware('permission:view series')
+        ->name('admin.series');
 
     // Analytics Dashboard (Livewire wrapper for laravel-request-analytics)
     Route::get('admin/analytics', AnalyticsWrapper::class)
