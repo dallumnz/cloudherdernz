@@ -73,7 +73,15 @@
                                 <option value="{{ $tag->id }}">{{ $tag->name }}</option>
                             @endforeach
                         </flux:select>
-                        <p class="mt-1 text-xs text-zinc-500">Posts tagged with this will appear on the series page.</p>
+                        <p class="mt-1 text-xs text-zinc-500">Existing series tags. Select one or create a new one below.</p>
+                    </flux:field>
+
+                    <flux:field label="Create New Series Tag">
+                        <flux:input
+                            wire:model="newTagName"
+                            placeholder="e.g. Infrastructure for Independence"
+                            description="Optional. Creates a new tag and links it to this series."
+                        />
                     </flux:field>
                 </div>
 

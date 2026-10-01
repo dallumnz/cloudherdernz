@@ -38,6 +38,8 @@ class SeriesManager extends Component
 
     public ?int $taxonomyTermId = null;
 
+    public string $newTagName = '';
+
     public array $seoData = [];
 
     /** @var \Livewire\Features\SupportFileUploads\TemporaryUploadedFile|null */
@@ -56,6 +58,7 @@ class SeriesManager extends Component
         'description' => 'nullable|string',
         'status' => 'required|in:draft,published',
         'taxonomyTermId' => 'nullable|integer|exists:taxonomy_terms,id',
+        'newTagName' => 'nullable|string|max:255',
         'featuredImage' => 'nullable|image|mimes:jpeg,png,webp,avif|max:4096',
     ];
 
@@ -92,6 +95,7 @@ class SeriesManager extends Component
         $this->description = $series->description ?? '';
         $this->status = $series->status;
         $this->taxonomyTermId = $series->taxonomy_term_id;
+        $this->newTagName = '';
         $this->seoData = $series->seo?->toArray() ?? [];
         $this->showForm = true;
     }
@@ -100,13 +104,19 @@ class SeriesManager extends Component
     {
         $this->validate();
 
+        $taxonomyTermId = $this->taxonomyTermId;
+
+        if (empty($taxonomyTermId) && filled($this->newTagName)) {
+            $taxonomyTermId = $this->createSeriesTag($this->newTagName);
+        }
+
         $data = [
             'title' => $this->title,
             'slug' => $this->slug,
             'tagline' => $this->tagline ?: null,
             'description' => $this->description ?: null,
             'status' => $this->status,
-            'taxonomy_term_id' => $this->taxonomyTermId,
+            'taxonomy_term_id' => $taxonomyTermId,
             'published_at' => $this->status === 'published' ? now() : null,
         ];
 
@@ -140,6 +150,26 @@ class SeriesManager extends Component
         $this->setMessage('Series deleted successfully.');
     }
 
+    /**
+     * Create a new series taxonomy term and return its ID.
+     */
+    private function createSeriesTag(string $name): int
+    {
+        $taxonomy = Taxonomy::firstOrCreate(
+            ['slug' => 'series', 'type' => 'series'],
+            ['name' => 'Series', 'description' => 'Tags used to group posts into series', 'is_hierarchical' => false]
+        );
+
+        $slug = \Illuminate\Support\Str::slug($name);
+
+        $term = TaxonomyTerm::firstOrCreate(
+            ['taxonomy_id' => $taxonomy->id, 'slug' => $slug],
+            ['name' => $name]
+        );
+
+        return $term->id;
+    }
+
     public function cancel(): void
     {
         $this->resetForm();
@@ -153,6 +183,7 @@ class SeriesManager extends Component
         $this->description = '';
         $this->status = 'draft';
         $this->taxonomyTermId = null;
+        $this->newTagName = '';
         $this->seoData = [];
         $this->featuredImage = null;
         $this->editingId = null;

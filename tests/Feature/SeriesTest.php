@@ -38,6 +38,30 @@ it('can create a series', function () {
     ]);
 });
 
+it('can create a series with a new tag', function () {
+    Livewire::test(\App\Livewire\SeriesManager::class)
+        ->set('title', 'Infrastructure for Independence')
+        ->set('slug', 'infrastructure-for-independence')
+        ->set('newTagName', 'Infrastructure for Independence')
+        ->set('status', 'published')
+        ->call('save')
+        ->assertHasNoErrors();
+
+    $this->assertDatabaseHas('taxonomies', [
+        'slug' => 'series',
+        'type' => 'series',
+    ]);
+
+    $this->assertDatabaseHas('taxonomy_terms', [
+        'name' => 'Infrastructure for Independence',
+        'slug' => 'infrastructure-for-independence',
+    ]);
+
+    $this->assertDatabaseHas('series', [
+        'slug' => 'infrastructure-for-independence',
+    ]);
+});
+
 it('displays a published series with linked posts', function () {
     $taxonomy = Taxonomy::factory()->create([
         'slug' => 'series',
