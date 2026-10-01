@@ -220,6 +220,16 @@
                     </div>
                 </div>
 
+                {{-- Series --}}
+                <div>
+                    <flux:select wire:model="selectedSeries" label="Series" placeholder="No series">
+                        <option value="">No series</option>
+                        @foreach ($this->series as $seriesTerm)
+                            <option value="{{ $seriesTerm->id }}">{{ $seriesTerm->name }}</option>
+                        @endforeach
+                    </flux:select>
+                </div>
+
                 <div class="flex items-center space-x-3 pt-4">
                     <flux:button type="submit" variant="primary">
                         {{ $editingId ? 'Update' : 'Create' }}

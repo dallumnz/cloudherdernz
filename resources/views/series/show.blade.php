@@ -13,6 +13,20 @@
         </div>
     </section>
 
+    {{-- Series Featured Image --}}
+    @if($series->getFirstMediaUrl('featured', 'featured'))
+        <section class="max-w-screen-2xl mx-auto px-6 md:px-8 pb-12">
+            <div class="max-w-4xl mx-auto">
+                <img
+                    src="{{ $series->getFirstMediaUrl('featured', 'featured') }}"
+                    alt="{{ $series->title }}"
+                    class="w-full h-auto rounded-lg shadow-lg"
+                    loading="eager"
+                >
+            </div>
+        </section>
+    @endif
+
     {{-- Series Description --}}
     @if($series->description_html)
         <section class="max-w-screen-2xl mx-auto px-6 md:px-8 pb-12">

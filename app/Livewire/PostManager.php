@@ -54,6 +54,8 @@ class PostManager extends Component
 
     public array $selectedCategories = [];
 
+    public ?int $selectedSeries = null;
+
     public array $seoData = [];
 
     public string $message = '';
@@ -136,6 +138,9 @@ class PostManager extends Component
             ->whereHas('taxonomy', fn ($q) => $q->where('type', 'category'))
             ->pluck('taxonomy_terms.id')
             ->toArray();
+        $this->selectedSeries = $post->taxonomyTerms()
+            ->whereHas('taxonomy', fn ($q) => $q->where('type', 'series'))
+            ->value('taxonomy_terms.id');
         $this->seoData = $post->seo?->toArray() ?? [];
 
         // Load media-related fields for audio/video posts
@@ -194,7 +199,11 @@ class PostManager extends Component
                 'published_at' => $this->publishedAt ?: null,
             ]);
 
-            $post->taxonomyTerms()->sync(array_merge($this->selectedTags, $this->selectedCategories));
+            $termIds = array_merge($this->selectedTags, $this->selectedCategories);
+            if ($this->selectedSeries) {
+                $termIds[] = $this->selectedSeries;
+            }
+            $post->taxonomyTerms()->sync($termIds);
 
             // Update SEO data
             if (! empty($this->seoData)) {
@@ -235,7 +244,11 @@ class PostManager extends Component
                 'author_id' => auth()->id(),
             ]);
 
-            $post->taxonomyTerms()->attach(array_merge($this->selectedTags, $this->selectedCategories));
+            $termIds = array_merge($this->selectedTags, $this->selectedCategories);
+            if ($this->selectedSeries) {
+                $termIds[] = $this->selectedSeries;
+            }
+            $post->taxonomyTerms()->attach($termIds);
 
             // Create SEO data for new post
             if (! empty($this->seoData)) {
@@ -318,6 +331,7 @@ class PostManager extends Component
         $this->publishedAt = null;
         $this->selectedTags = [];
         $this->selectedCategories = [];
+        $this->selectedSeries = null;
         $this->seoData = [];
         $this->audioFile = null;
         $this->videoFile = null;
@@ -346,6 +360,14 @@ class PostManager extends Component
         return TaxonomyTerm::query()
             ->whereHas('taxonomy', fn ($q) => $q->where('type', 'category'))
             ->with('parent')
+            ->orderBy('name')
+            ->get();
+    }
+
+    public function getSeriesProperty()
+    {
+        return TaxonomyTerm::query()
+            ->whereHas('taxonomy', fn ($q) => $q->where('type', 'series'))
             ->orderBy('name')
             ->get();
     }
