@@ -15,6 +15,10 @@
                class="{{ request()->routeIs('posts.*') ? 'text-primary border-b-2 border-primary pb-1' : 'text-on-surface-variant hover:text-primary' }} font-headline italic text-lg tracking-tight transition-colors duration-300">
                 Blog
             </a>
+            <a href="{{ route('series.index') }}" 
+               class="{{ request()->routeIs('series.*') ? 'text-primary border-b-2 border-primary pb-1' : 'text-on-surface-variant hover:text-primary' }} font-headline italic text-lg tracking-tight transition-colors duration-300">
+                Series
+            </a>
             <a href="{{ route('contact.show') }}" 
                class="{{ request()->routeIs('contact.*') ? 'text-primary border-b-2 border-primary pb-1' : 'text-on-surface-variant hover:text-primary' }} font-headline italic text-lg tracking-tight transition-colors duration-300">
                 Contact
@@ -77,6 +81,10 @@
             <a href="{{ route('posts.index') }}" 
                class="block {{ request()->routeIs('posts.*') ? 'text-primary' : 'text-on-surface-variant' }} font-headline italic text-xl tracking-tight transition-colors duration-300">
                 Blog
+            </a>
+            <a href="{{ route('series.index') }}" 
+               class="block {{ request()->routeIs('series.*') ? 'text-primary' : 'text-on-surface-variant' }} font-headline italic text-xl tracking-tight transition-colors duration-300">
+                Series
             </a>
             <a href="{{ route('contact.show') }}" 
                class="block {{ request()->routeIs('contact.*') ? 'text-primary' : 'text-on-surface-variant' }} font-headline italic text-xl tracking-tight transition-colors duration-300">

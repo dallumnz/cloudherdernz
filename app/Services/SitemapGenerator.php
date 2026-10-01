@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Models\Post;
+use App\Models\Series;
 use App\Models\Taxonomy;
 use App\Models\TaxonomyTerm;
 use Illuminate\Support\Facades\Cache;
@@ -40,6 +41,9 @@ class SitemapGenerator
         // Add posts
         $xml .= $this->getPostsXml();
 
+        // Add series
+        $xml .= $this->getSeriesXml();
+
         // Add categories
         $xml .= $this->getCategoriesXml();
 
@@ -69,6 +73,30 @@ class SitemapGenerator
                 $post->updated_at,
                 'daily',
                 '0.8'
+            );
+        }
+
+        return $xml;
+    }
+
+    /**
+     * Get XML for all published series.
+     */
+    private function getSeriesXml(): string
+    {
+        $xml = '';
+
+        $series = Series::query()
+            ->published()
+            ->select('id', 'slug', 'updated_at')
+            ->get();
+
+        foreach ($series as $seriesItem) {
+            $xml .= $this->buildUrlEntry(
+                route('series.show', $seriesItem),
+                $seriesItem->updated_at,
+                'weekly',
+                '0.7'
             );
         }
 

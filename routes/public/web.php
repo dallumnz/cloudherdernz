@@ -10,6 +10,9 @@ Route::get('/page/{page:slug}', [PublicPageController::class, 'show'])
     ->where('slug', '[a-zA-Z0-9_-]+');
 
 // Public Series Routes
+Route::get('/series', [PublicSeriesController::class, 'index'])
+    ->name('series.index');
+
 Route::get('/series/{slug}', [PublicSeriesController::class, 'show'])
     ->name('series.show')
     ->where('slug', '[a-zA-Z0-9_-]+');

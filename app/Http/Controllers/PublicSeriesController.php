@@ -8,6 +8,18 @@ use Illuminate\Http\Response;
 class PublicSeriesController extends Controller
 {
     /**
+     * Display a list of published series.
+     */
+    public function index(): Response
+    {
+        $series = Series::published()
+            ->orderBy('published_at', 'desc')
+            ->paginate(12);
+
+        return response()->view('series.index', compact('series'));
+    }
+
+    /**
      * Display a published series.
      */
     public function show(string $slug): Response
