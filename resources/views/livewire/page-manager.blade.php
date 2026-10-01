@@ -46,12 +46,11 @@
                     />
                 </div>
 
-                <flux:textarea
-                    wire:model="content"
-                    label="Content"
-                    placeholder="Page content (optional)"
-                    rows="6"
-                />
+                {{-- Markdown Editor --}}
+                <div class="space-y-2">
+                    <flux:text variant="secondary" size="sm">Content</flux:text>
+                    <livewire-markdown-editor wire:model="content" placeholder="Write your page content in Markdown..." />
+                </div>
 
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <flux:field label="Status">

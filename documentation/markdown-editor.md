@@ -1,104 +1,55 @@
 # Markdown Editor Integration
 
 **Date:** 2026-03-01  
+**Updated:** 2026-10-01  
 **Status:** Implemented  
-**Component:** `MarkdownEditor` Livewire Component
+**Component:** `mckenziearts/livewire-markdown-editor` vendor package
 
 ## Overview
 
-The Markdown Editor provides a rich editing experience for post content using EasyMDE (Easy Markdown Editor) integrated with Livewire and Flux UI. It supports live preview, auto-save, image uploads, and fullscreen editing.
+The Markdown Editor provides a rich editing experience for content using the `mckenziearts/livewire-markdown-editor` package. It supports live preview, image uploads, and GitHub-flavoured markdown rendering. Both `Post` and `Page` models use the same editor component.
 
 ## Features
 
-- **EasyMDE Integration**: Full-featured markdown editor via CDN
-- **Live Preview**: Real-time HTML preview with debounced updates
-- **Auto-save**: Automatic draft saving every 2 seconds of inactivity
-- **Image Upload**: Direct integration with media library
-- **Fullscreen Mode**: Distraction-free editing environment
-- **Gallery Support**: Insert image galleries into markdown
+- **Markdown Toolbar**: GitHub-style toolbar with headings, bold, italic, lists, links, code, quotes, and image upload
+- **Live Preview**: Real-time HTML preview tab
+- **Image Upload**: Direct image uploads inserted as markdown
 - **Cached HTML Rendering**: Markdown to HTML conversion with 24-hour caching
+- **Model Agnostic**: Used for both `Post` and `Page` content
 
-## Components
+## Package
 
-### Livewire Component
+- **Composer:** `mckenziearts/livewire-markdown-editor`
+- **Component name:** `markdown-editor`
+- **Alias tag:** `<livewire-markdown-editor>`
 
-**File:** `app/Livewire/MarkdownEditor.php`
+## Usage
 
-```php
-// Basic usage in a Blade view
-<livewire:markdown-editor :post-id="$post->id" />
+### In a Blade form
+
+```blade
+<livewire-markdown-editor wire:model="content" placeholder="Write your content in Markdown..." />
 ```
 
-#### Public Properties
+### In Post Manager
 
-| Property | Type | Description |
-|----------|------|-------------|
-| `postId` | `?int` | The ID of the post being edited |
-| `content` | `string` | The markdown content |
-| `title` | `string` | The post title (display only) |
-| `previewHtml` | `string` | Rendered HTML preview |
-| `isFullscreen` | `bool` | Fullscreen mode state |
-| `isSaving` | `bool` | Auto-save in progress indicator |
-| `lastSavedAt` | `?string` | Human-readable last save time |
-| `status` | `string` | Post status (draft/published/archived) |
-
-#### Methods
-
-| Method | Description |
-|--------|-------------|
-| `autoSave()` | Saves content automatically (called on debounced changes) |
-| `save()` | Manual save with validation |
-| `toggleFullscreen()` | Toggle fullscreen editing mode |
-| `handleImageUpload(string $url, ?string $alt)` | Insert image markdown |
-| `insertGallery(array $urls)` | Insert gallery HTML block |
-
-#### Events
-
-| Event | Payload | Description |
-|-------|---------|-------------|
-| `markdown-saved` | `{ postId: int }` | Fired when content is saved |
-| `toggle-fullscreen` | `{ isFullscreen: bool }` | Fired when fullscreen toggles |
-| `image-inserted` | `{ markdown: string }` | Fired when image is inserted |
-| `gallery-inserted` | `{ count: int }` | Fired when gallery is inserted |
-
-### Blade View
-
-**File:** `resources/views/livewire/markdown-editor.blade.php`
-
-The view includes:
-- EasyMDE editor with custom toolbar
-- Split-pane layout (editor + preview)
-- Alpine.js integration for EasyMDE lifecycle
-- Flux UI components for buttons and callouts
-
-## API Endpoints
-
-### Update Post Content
-
-```
-PATCH /api/v1/posts/{post}/content
+```blade
+{{-- resources/views/livewire/post-manager.blade.php --}}
+<livewire-markdown-editor wire:model="content" placeholder="Write your post content in Markdown..." />
 ```
 
-**Authentication:** Required (Sanctum)  
-**Permission:** `edit posts`
+### In Page Manager
 
-**Request Body:**
-```json
-{
-  "content": "# Markdown Content\n\nWith **formatting**"
-}
+```blade
+{{-- resources/views/livewire/page-manager.blade.php --}}
+<livewire-markdown-editor wire:model="content" placeholder="Write your page content in Markdown..." />
 ```
 
-**Response:** `200 OK` with PostResource
+## Model Rendering
 
-**Validation:**
-- `content`: nullable, string, max:50000
+### Post Model
 
-## Post Model Enhancements
-
-### Accessors
-
-The `Post` model includes two new accessors for rendering markdown:
+The `Post` model includes accessors for rendering markdown:
 
 ```php
 // Render content as HTML (cached for 24 hours)
@@ -108,175 +59,75 @@ $post->content_html;
 $post->excerpt_html;
 ```
 
-### Cache Management
+### Page Model
 
-The HTML cache is automatically cleared when:
-- Post is updated
-- Post is deleted
-
-Manual cache clearing:
-```php
-use Illuminate\Support\Facades\Cache;
-
-Cache::forget("post:{$post->id}:content_html");
-Cache::forget("post:{$post->id}:excerpt_html");
-```
-
-## Usage Examples
-
-### In Post Manager
-
-Update `PostManager` to use the markdown editor for content:
-
-```blade
-{{-- In post-manager.blade.php, replace the textarea --}}
-@if ($editingId)
-    <livewire:markdown-editor :post-id="$editingId" />
-@else
-    <flux:textarea wire:model="content" label="Content" />
-@endif
-```
-
-### Standalone Editor Page
-
-Create a dedicated editor route:
+The `Page` model includes a `content_html` accessor that renders markdown to HTML with 24-hour caching:
 
 ```php
-// routes/web.php
-Route::get('admin/posts/{post}/edit-content', function (Post $post) {
-    return view('admin.posts.edit-content', compact('post'));
-})->middleware(['auth', 'permission:edit posts'])->name('admin.posts.edit-content');
+$page->content_html;
 ```
 
-```blade
-{{-- resources/views/admin/posts/edit-content.blade.php --}}
-<x-layouts.app>
-    <div class="container mx-auto py-6">
-        <livewire:markdown-editor :post-id="$post->id" />
-    </div>
-</x-layouts.app>
-```
+Cache is cleared automatically when the page is saved or deleted.
 
 ### Displaying Rendered Content
 
-In your post display views:
+In your display views:
 
 ```blade
 <article class="prose dark:prose-invert max-w-none">
-    {!! $post->content_html !!}
+    {!! clean($post->content_html) !!}
 </article>
 ```
 
-## Image Upload Integration
+For pages:
 
-The editor integrates with the existing media library:
-
-1. Click the "Upload Image" button in the toolbar
-2. Media uploader modal opens
-3. Select or upload an image
-4. Image is inserted as markdown: `![alt](url)`
-
-### Customizing Image Upload
-
-Listen for the `open-media-uploader` event in your layout:
-
-```javascript
-// In your app.js or layout
-window.addEventListener('open-media-uploader', (event) => {
-    // Open your media library modal
-    openMediaModal(event.detail.callback, event.detail.multiple);
-});
-```
-
-## Testing
-
-### Unit Tests
-
-**File:** `tests/Unit/MarkdownEditorTest.php`
-
-```bash
-php artisan test --filter=MarkdownEditor
-```
-
-### Feature Tests
-
-**File:** `tests/Feature/Api/PostApiTest.php`
-
-```bash
-php artisan test --filter="Post API Content Update"
-```
-
-### Model Tests
-
-**File:** `tests/Unit/PostMarkdownTest.php`
-
-```bash
-php artisan test --filter="Post Markdown HTML Rendering"
+```blade
+<article class="prose dark:prose-invert max-w-none">
+    {!! clean($page->content_html) !!}
+</article>
 ```
 
 ## Configuration
 
-### EasyMDE Options
+Package config is published to `config/livewire-markdown-editor.php`.
 
-Edit the editor configuration in `markdown-editor.blade.php`:
+Key defaults:
 
-```javascript
-this.easyMDE = new EasyMDE({
-    autosave: {
-        enabled: true,
-        uniqueId: 'post-{{ $postId ?? 'new' }}',
-        delay: 1000,
-    },
-    spellChecker: false,
-    // Add more options...
-});
-```
+- `disk`: filesystem disk for uploads
+- `upload.max_size`: 4096 KB
+- `upload.allowed_extensions`: `jpg`, `jpeg`, `png`, `gif`, `webp`, `avif`
+- `upload.images_only`: true
+- `theme`: `github-light`
 
-### CommonMark Options
+## Image Upload Integration
 
-Edit the converter settings in `MarkdownEditor.php`:
-
-```php
-$this->markdownConverter = new CommonMarkConverter([
-    'html_input' => 'strip',        // Strip unsafe HTML
-    'allow_unsafe_links' => false,  // Disallow javascript: links
-    // Add more options...
-]);
-```
+1. Click the image icon in the toolbar
+2. Select an image file
+3. The editor uploads it and inserts markdown: `![filename](url)`
 
 ## Security Considerations
 
-1. **HTML Stripping**: User HTML is stripped to prevent XSS attacks
+1. **HTML Stripping**: User HTML is stripped during markdown conversion
 2. **Link Safety**: JavaScript protocol links are disabled
-3. **Permission Checks**: All save operations verify `edit posts` permission
-4. **Validation**: Content is validated (max 50,000 characters)
-5. **Caching**: HTML output is cached to reduce processing overhead
+3. **Validation**: Uploads are restricted to images with allowed extensions
+4. **Caching**: HTML output is cached to reduce processing overhead
+5. **Output Sanitization**: Use `clean()` when rendering HTML in Blade
 
 ## Troubleshooting
 
 ### Editor Not Loading
 
 1. Check browser console for JavaScript errors
-2. Verify EasyMDE CDN is accessible
-3. Ensure Alpine.js is initialized
-
-### Auto-save Not Working
-
-1. Check network tab for API requests
-2. Verify user has `edit posts` permission
-3. Check Laravel logs for errors
+2. Verify `resources/js/admin.js` imports the package JS
+3. Verify `resources/css/admin.css` imports the package CSS
+4. Run `npm run build` if assets are out of date
 
 ### Preview Not Updating
 
-1. Verify `wire:model.live.debounce` is working
+1. Verify `wire:model` binding is correct
 2. Check browser console for Livewire errors
-3. Ensure CommonMark is installed: `composer require league/commonmark`
+3. Ensure `league/commonmark` is installed
 
-## Future Enhancements
+## Historical Note
 
-- [ ] Collaborative editing with WebSockets
-- [ ] Version history for content changes
-- [ ] Drag-and-drop image upload
-- [ ] Custom markdown syntax extensions
-- [ ] Export to PDF/Word
-- [ ] Import from external sources
+The project originally used a custom `App\Livewire\MarkdownEditor` component backed by EasyMDE. This was replaced by the vendor package to reduce maintenance burden and support reuse across `Post` and `Page` models. The custom component and its tests were removed on 2026-10-01.

@@ -236,4 +236,42 @@ class Page extends Model
             modified_time: $this->updated_at,
         );
     }
+
+    /**
+     * Get the content rendered as HTML from Markdown.
+     * Cached for performance.
+     */
+    public function getContentHtmlAttribute(): ?string
+    {
+        $content = $this->content;
+
+        if (empty($content)) {
+            return null;
+        }
+
+        $cacheKey = "page:{$this->id}:content_html";
+
+        return \Illuminate\Support\Facades\Cache::remember($cacheKey, now()->addHours(24), function () use ($content) {
+            $converter = new \League\CommonMark\GithubFlavoredMarkdownConverter([
+                'html_input' => 'strip',
+                'allow_unsafe_links' => false,
+            ]);
+
+            return $converter->convert($content)->getContent();
+        });
+    }
+
+    /**
+     * Clear the HTML content cache when the page is saved or deleted.
+     */
+    protected static function booted(): void
+    {
+        static::saved(function (Page $page): void {
+            \Illuminate\Support\Facades\Cache::forget("page:{$page->id}:content_html");
+        });
+
+        static::deleted(function (Page $page): void {
+            \Illuminate\Support\Facades\Cache::forget("page:{$page->id}:content_html");
+        });
+    }
 }

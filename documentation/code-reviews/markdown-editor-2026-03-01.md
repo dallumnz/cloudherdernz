@@ -16,12 +16,13 @@
 | Suggestions | 5 |
 
 **Files Reviewed:**
-- `app/Livewire/MarkdownEditor.php`
-- `resources/views/livewire/markdown-editor.blade.php`
+- `app/Models/Post.php`
+- `app/Models/Page.php`
 - `routes/api.php`
 - `app/Http/Controllers/Api/PostApiController.php`
-- `app/Models/Post.php`
-- `tests/Unit/MarkdownEditorTest.php`
+- `resources/views/livewire/post-manager.blade.php`
+- `resources/views/livewire/page-manager.blade.php`
+- `resources/views/pages/show.blade.php`
 - `tests/Unit/PostMarkdownTest.php`
 - `tests/Feature/Api/PostApiTest.php`
 
@@ -37,38 +38,26 @@
 
 | File | Line | Issue | Suggestion |
 |------|------|-------|------------|
-| `MarkdownEditor.php` | 35 | `boot()` method creates new CommonMarkConverter instance on every request | Consider using Laravel's singleton binding or dependency injection to reuse the converter |
-| `MarkdownEditor.php` | 60 | `mount()` doesn't check authorization before loading post | Add authorization check: `if ($post && !auth()->user()?->can('view posts'))` |
+| `Post.php` / `Page.php` | - | `content_html` creates a new CommonMarkConverter instance per uncached request | Consider registering a singleton converter in a service provider |
 | `PostApiController.php` | 224 | `updateContent()` uses inline validation instead of Form Request | Create a dedicated `UpdateContentRequest` for consistency with other methods |
 
 #### Detailed Warning Explanations:
 
-**1. CommonMarkConverter Instantiation (Line 35)**
-```php
-// Current - creates new instance every request
-public function boot(): void
-{
-    $this->markdownConverter = new CommonMarkConverter([
-        'html_input' => 'strip',
-        'allow_unsafe_links' => false,
-    ]);
-}
-```
-**Suggestion:** Register as singleton in a service provider:
+**1. CommonMarkConverter Instantiation**
+Both `Post::getContentHtmlAttribute()` and `Page::getContentHtmlAttribute()` create a new `GithubFlavoredMarkdownConverter` instance on each uncached access.
+
+**Suggestion:** Register a singleton converter in a service provider:
 ```php
 // In AppServiceProvider::register()
-$this->app->singleton(CommonMarkConverter::class, function () {
-    return new CommonMarkConverter([
+$this->app->singleton(\League\CommonMark\GithubFlavoredMarkdownConverter::class, function () {
+    return new \League\CommonMark\GithubFlavoredMarkdownConverter([
         'html_input' => 'strip',
         'allow_unsafe_links' => false,
     ]);
 });
 ```
 
-**2. Missing Authorization in mount() (Line 60)**
-The component loads post data without verifying the user has permission to view it. While the `save()` and `autoSave()` methods check permissions, the initial load doesn't.
-
-**3. Inconsistent Validation Approach (Line 224)**
+**2. Inconsistent Validation Approach (Line 224)**
 The `updateContent()` method uses inline `$request->validate()` while other methods use dedicated Form Request classes. This inconsistency could lead to validation rules diverging over time.
 
 ---
@@ -85,39 +74,11 @@ The `updateContent()` method uses inline `$request->validate()` while other meth
 
 #### Detailed Suggestions:
 
-**1. Rate Limiting for autoSave()**
-```php
-public function autoSave(): void
-{
-    // Add rate limiting check
-    $cacheKey = 'autosave:'.auth()->id().':'.$this->postId;
-    if (Cache::has($cacheKey)) {
-        return; // Skip if saved within last 5 seconds
-    }
-    Cache::put($cacheKey, true, now()->addSeconds(5));
-    
-    // ... rest of method
-}
-```
+**1. CommonMark Singleton**
+Register a shared `GithubFlavoredMarkdownConverter` instance to avoid recreating it on every uncached content render.
 
-**2. Debounce Optimization**
-Current: `wire:model.live.debounce.500ms`  
-Suggested: `wire:model.live.debounce.1000ms` or higher to reduce server round-trips during typing.
-
-**3. Loading State for Save Button**
-```blade
-<flux:button
-    type="button"
-    wire:click="save"
-    wire:loading.attr="disabled"
-    wire:loading.class="opacity-75"
-    variant="primary"
-    size="sm"
->
-    <span wire:loading.remove>Save Content</span>
-    <span wire:loading>Saving...</span>
-</flux:button>
-```
+**2. Loading State for Save Buttons**
+Add `wire:loading` states to form submit buttons in `post-manager.blade.php` and `page-manager.blade.php`.
 
 ---
 
@@ -144,9 +105,8 @@ Suggested: `wire:model.live.debounce.1000ms` or higher to reduce server round-tr
 - Comprehensive PHPDoc blocks
 
 **Areas for Improvement:**
-- The `insertGallery()` method in MarkdownEditor.php uses raw HTML divs in markdown which may not render consistently across markdown parsers
-- Consider adding a `max_length` constant to the Post model for single source of truth
-- The `wordCount` property uses `strip_tags()` on markdown content which may not be accurate (markdown syntax is not HTML)
+- Consider adding a `max_length` constant to the Post/Page models for single source of truth
+- Consider a shared markdown helper/service to avoid duplicate converter setup in `Post` and `Page`
 
 ---
 
@@ -154,14 +114,14 @@ Suggested: `wire:model.live.debounce.1000ms` or higher to reduce server round-tr
 
 | Test File | Coverage Areas | Status |
 |-----------|---------------|--------|
-| `MarkdownEditorTest.php` | Component rendering, state changes, authorization, validation, events | ✅ Good |
 | `PostMarkdownTest.php` | HTML rendering, caching, XSS protection, complex markdown | ✅ Good |
+| `PublicPageRouteTest.php` | Public page rendering including markdown content | ✅ Good |
 | `PostApiTest.php` | CRUD operations, search, filtering, content updates | ✅ Good |
 
 **Missing Test Cases (Optional):**
-- Test for rate limiting on auto-save
 - Test for concurrent edit conflicts
 - Test for gallery markdown rendering
+- Test for Page `content_html` caching and invalidation
 
 ---
 
@@ -175,11 +135,11 @@ The Markdown Editor integration is well-implemented with proper security, author
 
 ### Next Steps (Priority Order)
 
-1. **Optional:** Add authorization check to `mount()` method
-2. **Optional:** Create dedicated Form Request for `updateContent()`
-3. **Optional:** Implement rate limiting for auto-save functionality
-4. **Optional:** Optimize debounce timing for better UX/server balance
-5. **Optional:** Add loading states to save button
+1. **Optional:** Create dedicated Form Request for `updateContent()`
+2. **Optional:** Register a shared `GithubFlavoredMarkdownConverter` singleton
+3. **Optional:** Add loading states to save buttons
+4. **Optional:** Extract a shared markdown rendering service for `Post` and `Page`
+5. **Optional:** Add `max_length` constant to `Post` and `Page` models
 
 ---
 

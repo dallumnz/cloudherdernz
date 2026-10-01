@@ -16,8 +16,8 @@
     <section class="max-w-screen-2xl mx-auto px-6 md:px-8 pb-20">
         <div class="max-w-4xl mx-auto">
             <article class="prose prose-lg max-w-none dark:prose-invert prose-headings:font-headline font-body">
-                @if($page->content)
-                    {!! clean($page->content) !!}
+                @if($page->content_html)
+                    {!! clean($page->content_html) !!}
                 @endif
             </article>
         </div>
