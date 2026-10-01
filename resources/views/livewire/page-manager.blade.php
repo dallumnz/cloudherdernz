@@ -74,6 +74,11 @@
                     />
                 </div>
 
+                {{-- SEO Meta Box --}}
+                @if($editingId)
+                    <livewire:seo-meta-box :seo-data="$page->seo->getAttributes() ?? []" />
+                @endif
+
                 <div class="flex items-center space-x-3">
                     <flux:button type="submit" variant="primary">
                         {{ $editingId ? 'Update' : 'Create' }}

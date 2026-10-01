@@ -11,6 +11,13 @@ class PageManager extends Component
 {
     use WithPagination;
 
+    /**
+     * Event listeners for child component communication.
+     */
+    protected $listeners = [
+        'seo-data-updated' => 'handleSeoDataUpdated',
+    ];
+
     public string $search = '';
 
     public ?int $editingId = null;
@@ -26,6 +33,8 @@ class PageManager extends Component
     public string $meta_title = '';
 
     public string $meta_description = '';
+
+    public array $seoData = [];
 
     public string $message = '';
 
@@ -65,6 +74,7 @@ class PageManager extends Component
         $this->status = $page->status;
         $this->meta_title = $page->meta_title ?? '';
         $this->meta_description = $page->meta_description ?? '';
+        $this->seoData = $page->seo?->toArray() ?? [];
         $this->showForm = true;
     }
 
@@ -83,9 +93,15 @@ class PageManager extends Component
                 'meta_description' => $this->meta_description ?: null,
                 'published_at' => $this->status === 'published' ? now() : null,
             ]);
+
+            // Update SEO data
+            if (! empty($this->seoData)) {
+                $page->seo->update($this->seoData);
+            }
+
             $this->setMessage('Page updated successfully.');
         } else {
-            Page::create([
+            $page = Page::create([
                 'title' => $this->title,
                 'slug' => $this->slug,
                 'content' => $this->content ?: null,
@@ -95,6 +111,12 @@ class PageManager extends Component
                 'author_id' => auth()->id(),
                 'published_at' => $this->status === 'published' ? now() : null,
             ]);
+
+            // Update SEO data for new page
+            if (! empty($this->seoData)) {
+                $page->seo->update($this->seoData);
+            }
+
             $this->setMessage('Page created successfully.');
         }
 
@@ -121,8 +143,17 @@ class PageManager extends Component
         $this->status = 'draft';
         $this->meta_title = '';
         $this->meta_description = '';
+        $this->seoData = [];
         $this->editingId = null;
         $this->showForm = false;
+    }
+
+    /**
+     * Handle SEO data updates from SeoMetaBox component.
+     */
+    public function handleSeoDataUpdated(array $seoData): void
+    {
+        $this->seoData = $seoData;
     }
 
     protected function setMessage(string $message, string $type = 'success'): void
@@ -141,6 +172,9 @@ class PageManager extends Component
             ->latest()
             ->paginate(15);
 
-        return view('livewire.page-manager', compact('pages'));
+        // Get current editing page for SEO meta box
+        $page = $this->editingId ? Page::find($this->editingId) : null;
+
+        return view('livewire.page-manager', compact('pages', 'page'));
     }
 }

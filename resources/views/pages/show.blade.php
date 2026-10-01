@@ -1,8 +1,4 @@
 <x-public-layout>
-    <x-slot:head>
-        <title>{{ $page->getSeoTitle() }} | {{ config('app.name') }}</title>
-    </x-slot:head>
-
     {{-- Page Header --}}
     <section class="max-w-screen-2xl mx-auto px-6 md:px-8 pt-20 pb-12">
         <div class="max-w-4xl mx-auto text-center">
