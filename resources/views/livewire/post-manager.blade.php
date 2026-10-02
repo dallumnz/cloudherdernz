@@ -106,6 +106,21 @@
                                 placeholder="https://example.com/audio.mp3"
                                 description="Leave empty if uploading a file above"
                             />
+
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <flux:input
+                                    wire:model="audioDuration"
+                                    type="number"
+                                    label="Duration (seconds)"
+                                    placeholder="e.g. 300"
+                                />
+                                <flux:input
+                                    wire:model="audioEpisode"
+                                    type="number"
+                                    label="Episode Number"
+                                    placeholder="e.g. 1"
+                                />
+                            </div>
                         </div>
                     </flux:card>
                 @endif
@@ -152,6 +167,27 @@
                                 label="Or External Video URL"
                                 placeholder="https://youtube.com/embed/..."
                                 description="Leave empty if uploading a file above"
+                            />
+
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <flux:select wire:model="videoProvider" label="Provider">
+                                    <option value="self">Self-hosted</option>
+                                    <option value="youtube">YouTube</option>
+                                    <option value="vimeo">Vimeo</option>
+                                    <option value="other">Other</option>
+                                </flux:select>
+                                <flux:input
+                                    wire:model="videoDuration"
+                                    type="number"
+                                    label="Duration (seconds)"
+                                    placeholder="e.g. 300"
+                                />
+                            </div>
+                            <flux:input
+                                wire:model="videoEpisode"
+                                type="number"
+                                label="Episode Number"
+                                placeholder="e.g. 1"
                             />
                         </div>
                     </flux:card>
