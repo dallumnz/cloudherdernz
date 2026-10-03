@@ -96,7 +96,7 @@
             <div class="col-span-12 lg:col-span-6">
                 {{-- Post Content --}}
                 <div class="prose prose-xl max-w-none dark:prose-invert prose-headings:font-headline font-body">
-                    @switch($post->post_type)
+                    @switch($post->post_type?->value)
                         @case('video')
                             @includeWhen($post->postable, 'partials.content.video', ['post' => $post])
                             @break
