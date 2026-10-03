@@ -113,7 +113,7 @@
                                 >
                             @else
                                 <div class="w-full h-24 bg-gray-100 dark:bg-gray-800 rounded flex items-center justify-center">
-                                    <flux:icon name="file" class="w-8 h-8 text-gray-400" />
+                                    <flux:icon name="document" class="w-8 h-8 text-gray-400" />
                                 </div>
                             @endif
 
