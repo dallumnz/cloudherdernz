@@ -107,7 +107,7 @@
                         <div class="space-y-2">
                             @if (str_starts_with($item->mime_type, 'image/'))
                                 <img
-                                    src="{{ $item->getUrl('preview') }}"
+                                    src="{{ $item->hasGeneratedConversion('preview') ? $item->getUrl('preview') : $item->getUrl() }}"
                                     alt="{{ $item->name }}"
                                     class="w-full h-24 object-cover rounded"
                                 >
