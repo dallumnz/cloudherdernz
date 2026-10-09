@@ -5,6 +5,7 @@ use App\Models\AudioPost;
 use App\Models\ImagePost;
 use App\Models\NewsletterPost;
 use App\Models\Post;
+use App\Models\StandardPost;
 use App\Models\User;
 use App\Models\VideoPost;
 
@@ -59,6 +60,7 @@ describe('Polymorphic Post Type Feature', function () {
     });
 
     it('post type enum has correct values', function () {
+        $this->assertEquals('standard', PostType::STANDARD->value);
         $this->assertEquals('image', PostType::IMAGE->value);
         $this->assertEquals('video', PostType::VIDEO->value);
         $this->assertEquals('audio', PostType::AUDIO->value);
@@ -66,6 +68,7 @@ describe('Polymorphic Post Type Feature', function () {
     });
 
     it('post type enum returns correct model class', function () {
+        $this->assertEquals(StandardPost::class, PostType::STANDARD->model());
         $this->assertEquals(ImagePost::class, PostType::IMAGE->model());
         $this->assertEquals(VideoPost::class, PostType::VIDEO->model());
         $this->assertEquals(AudioPost::class, PostType::AUDIO->model());
@@ -73,6 +76,7 @@ describe('Polymorphic Post Type Feature', function () {
     });
 
     it('post type enum returns correct labels', function () {
+        $this->assertEquals('Standard Post', PostType::STANDARD->label());
         $this->assertEquals('Image Post', PostType::IMAGE->label());
         $this->assertEquals('Video Post', PostType::VIDEO->label());
         $this->assertEquals('Audio Post', PostType::AUDIO->label());
@@ -103,5 +107,18 @@ describe('Polymorphic Post Type Feature', function () {
         $this->assertTrue($post->isType(PostType::IMAGE));
         $this->assertFalse($post->isType(PostType::VIDEO));
         $this->assertFalse($post->isType(PostType::AUDIO));
+    });
+
+    it('can create standard posts', function () {
+        $standardPost = StandardPost::factory()->create();
+
+        $post = Post::factory()->create([
+            'postable_type' => StandardPost::class,
+            'postable_id' => $standardPost->id,
+        ]);
+
+        $this->assertInstanceOf(StandardPost::class, $post->postable);
+        $this->assertEquals(PostType::STANDARD, $post->post_type);
+        $this->assertTrue($post->isType(PostType::STANDARD));
     });
 });

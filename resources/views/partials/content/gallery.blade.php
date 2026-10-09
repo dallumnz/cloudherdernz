@@ -2,7 +2,7 @@
 <div class="mb-6">
     <div class="grid grid-cols-2 md:grid-cols-3 gap-4 mb-6">
         @php
-            $galleryImages = $post->getMedia('featured');
+            $galleryImages = $post->getMedia('gallery');
         @endphp
         @if($galleryImages && $galleryImages->count() > 0)
             @foreach($galleryImages as $mediaItem)

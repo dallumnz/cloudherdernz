@@ -198,7 +198,7 @@ class PostManager extends Component
         }
 
         // Determine postable type
-        $postableType = $this->postTypeValue ?? PostType::IMAGE->model();
+        $postableType = $this->postTypeValue ?? PostType::STANDARD->model();
 
         if ($this->editingId) {
             $post = Post::findOrFail($this->editingId);

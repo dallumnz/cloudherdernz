@@ -187,6 +187,7 @@ class Post extends Model implements HasMedia
             VideoPost::class => PostTypeEnum::VIDEO,
             AudioPost::class => PostTypeEnum::AUDIO,
             NewsletterPost::class => PostTypeEnum::NEWSLETTER,
+            StandardPost::class => PostTypeEnum::STANDARD,
             default => null,
         };
     }
