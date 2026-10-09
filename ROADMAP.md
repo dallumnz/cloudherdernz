@@ -24,19 +24,48 @@
 - [x] Single post view
 - [x] Light/dark mode
 - [x] Theme toggle
+- [x] Category archive page (`/category/{slug}`)
+- [x] Tag archive page (`/tag/{slug}`)
+- [x] Search page
+- [x] Contact page
 
 ### To Build 📋
-- [ ] Category archive page (`/category/{slug}`)
-- [ ] Tag archive page (`/tag/{slug}`)
-- [ ] Search page
-- [ ] Contact page
+- [ ] Pagination and filtering refinements on archive/search pages
+- [ ] RSS feed improvements
+
+## CMS Core Enhancements
+
+### Publishing Workflow
+- [ ] Scheduled publishing via queue job (flip `draft` → `published` at `published_at`)
+
+### Media Library
+- [ ] Media folders/collections beyond Spatie's default collections
+- [ ] Media renaming from the admin UI
+
+### Engagement
+- [ ] Polls
+- [ ] Embeddable CTAs
+
+### Operations
+- [ ] Backup/restore Artisan commands (database + storage)
+- [ ] Optional health-check/status Artisan command
+
+## SEO & Discoverability
+
+### Completed ✅
+- [x] Sitemap generation (`sitemap.xml`)
+- [x] `robots.txt`
+- [x] Per-post SEO title/meta description backfill
+
+### To Build 📋
+- [ ] Canonical host enforcement (non-www / www redirect)
+- [ ] Open Graph / Twitter card meta improvements
 
 ## Demo Priorities
 
-- [ ] Fix category/tag views (filter by taxonomy type)
 - [ ] Add sample images for posts
-- [ ] Test contact form
+- [ ] Test contact form end-to-end
 
 ---
 
-*Last updated: 2026-02-28*
+*Last updated: 2026-10-09*
