@@ -51,6 +51,7 @@
 - [ ] Error tracking integration (Sentry/Flare/Laravel Nightwatch)
 - [ ] Uptime monitoring integration (Oh Dear/UptimeMate/Pingdom)
 - [ ] Health-check status page in admin UI
+- [ ] Public health-check API endpoint (`/api/health`) for external monitors
 
 ### Operations
 - [ ] Backup/restore Artisan commands (database + storage)
