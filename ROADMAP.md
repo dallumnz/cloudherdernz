@@ -46,6 +46,12 @@
 - [ ] Polls
 - [ ] Embeddable CTAs
 
+### Monitoring & Observability
+- [ ] Error tracking integration (Sentry/Flare/Laravel Nightwatch)
+- [ ] Uptime monitoring (Oh Dear/UptimeMate/Pingdom)
+- [ ] Admin dashboard: recent errors, failed jobs, queue health
+- [ ] Health-check endpoint (`/up` or dedicated status route)
+
 ### Operations
 - [ ] Backup/restore Artisan commands (database + storage)
 - [ ] Optional health-check/status Artisan command
