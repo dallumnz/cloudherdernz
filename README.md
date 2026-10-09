@@ -16,6 +16,7 @@ CloudHerder NZ powers [cloudherder.nz](https://cloudherder.nz). It treats conten
 - **Comments** — Built-in comment threads.
 - **Analytics** — Request-level analytics via `me-shaon/laravel-request-analytics`.
 - **Activity Logging** — Model event logging via `spatie/laravel-activitylog`.
+- **Markdown-first Editing** — Write posts in Markdown with a live editor; rendered safely via a GitHub-flavoured CommonMark pipeline and cached for performance.
 - **Admin UI** — Livewire + Flux management interface for posts, media, taxonomy, users, and settings.
 - **Authentication** — Laravel Fortify with role/permission scaffolding.
 - **RSS & Sitemap** — Public feeds for syndication and search indexing.
